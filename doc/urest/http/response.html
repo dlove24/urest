@@ -1,0 +1,743 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>urest.http.response API documentation</title>
+<meta name="description" content="Formats a basic HTTP/1.1 response. The actual body of the response is largely
+determined by the callers API layer: `urest.http.response.HTTPResponse` …" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>urest.http.response</code></h1>
+</header>
+<section id="section-intro">
+<p>Formats a basic HTTP/1.1 response. The actual body of the response is largely
+determined by the callers API layer: <code><a title="urest.http.response.HTTPResponse" href="#urest.http.response.HTTPResponse">HTTPResponse</a></code> is a
+utility class designed just handles to handle the raw response to the network
+client. As such it should be largely invisible to the API layer, and most
+consumers of the <code><a title="urest.http" href="index.html">urest.http</a></code> module <em>should not</em> create instance of the
+<code><a title="urest.http.response.HTTPResponse" href="#urest.http.response.HTTPResponse">HTTPResponse</a></code> class directly</p>
+<h2 id="standards">Standards</h2>
+<ul>
+<li>For HTTP/1.1 specification see: <a href="https://www.ietf.org/rfc/rfc2616.txt">https://www.ietf.org/rfc/rfc2616.txt</a></li>
+<li>For MIME types see: <a href="https://www.iana.org/assignments/media-types/media-types.xhtml">https://www.iana.org/assignments/media-types/media-types.xhtml</a></li>
+</ul>
+<h2 id="licence">Licence</h2>
+<p>This module, and all included code, is made available under the terms of the MIT
+Licence</p>
+<blockquote>
+<p>Copyright 2022 (c) Erik de Lange, Copyright (c) 2022-2023 David Love</p>
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:</p>
+<p>The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.</p>
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
+</blockquote>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">&#34;&#34;&#34;
+Formats a basic HTTP/1.1 response. The actual body of the response is largely
+determined by the callers API layer: `urest.http.response.HTTPResponse` is a
+utility class designed just handles to handle the raw response to the network
+client. As such it should be largely invisible to the API layer, and most
+consumers of the `urest.http` module _should not_ create instance of the
+`urest.http.response.HTTPResponse` class directly
+
+Standards
+---------
+
+  * For HTTP/1.1 specification see: https://www.ietf.org/rfc/rfc2616.txt
+  * For MIME types see: https://www.iana.org/assignments/media-types/media-types.xhtml
+
+Licence
+-------
+
+This module, and all included code, is made available under the terms of the MIT
+Licence
+
+&gt; Copyright 2022 (c) Erik de Lange, Copyright (c) 2022-2023 David Love
+
+&gt; Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the &#34;Software&#34;), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+&gt; The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+&gt; THE SOFTWARE IS PROVIDED &#34;AS IS&#34;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+&#34;&#34;&#34;
+
+# Import the enumerations library. Unfortunately not in MicroPython yet
+# from enum import Enum
+
+HTTPStatus = {&#34;OK&#34;, &#34;NOT_OK&#34;, &#34;NOT_FOUND&#34;}
+&#34;&#34;&#34;
+    Define the HTTP response codes in use. See the Mozilla [HTTP response status
+    codes](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status) for more
+    details
+&#34;&#34;&#34;
+
+
+class HTTPResponse:
+
+    ##
+    ## Constructor
+    ##
+
+    def __init__(self, body=&#34;&#34;, status=&#34;OK&#34;, mimetype=None, close=True, header=None):
+        &#34;&#34;&#34;Create a response object, representing the raw HTTP header returned to the
+        network client.
+
+        Responses returned to the client by this class _must_ be formatted according
+        to the [HTTP/1.1 specification](https://www.ietf.org/rfc/rfc2616.txt) and
+        _must_ be valid.
+
+        Parameters
+        ----------
+
+        body: string
+            The raw HTTP body returned to the client. This is `Empty` by default as
+            the return string is usually built by the caller via the `getters` and
+            `setters` of `urest.http.response.HTTPResponse`
+        status: urest.http.response.HTTPStatus
+            HTTP status code, which must be formed from the set
+            `urest.http.response.HTTPResponse`. Arbitrary return codes are **not**
+            supported by this class.
+        mimetype: string
+            A valid HTTP mime type. This is `Empty` by default and should be set
+            once the `body` of the `urest.http.response.HTTPResponse` has been
+            created.
+        close: bool
+            When set `True` the connection to the client will be closed by the
+            `urest.http.server.RESTServer` once the `urest.http.response.HTTPResponse`
+            has been sent. Otherwise, when set to `False` this will flag to the
+            client that the created `urest.http.response.HTTPResponse` is part of
+            a sequence to be sent over the same connection.
+        header:  dict
+            Raw (key, value) pairs for HTTP response header fields. This allows
+            setting of arbitrary fields by the caller, without extending/sub-classing
+            `urest.http.response.HTTPResponse`
+
+
+        Returns
+        -------
+
+        `urest.http.response.HTTPResponse`
+
+          This instance is guaranteed to be a valid _class_ on creation, and _should_
+          also be a valid HTTP response. However the caller should check the validity
+          of the header before returning to the client.
+        &#34;&#34;&#34;
+
+        if status in HTTPStatus:
+            self._status = status
+        else:
+            raise ValueError(
+                &#34;Invalid HTTP status code passed to the HTTP Response class&#34;
+            )
+
+        if body is not None and isinstance(body, str):
+            self._body = body
+        else:
+            self._body = &#34;&#34;
+
+        self._mimetype = mimetype
+        self._close = close
+
+        if header is None:
+            self._header = {}
+        else:
+            self._header = header
+
+    ##
+    ## Getters and Setters
+    ##
+
+    # HTTP Body
+
+    @property
+    def body(self):
+        &#34;&#34;&#34;The raw HTTP response, formatted to return to the client as the HTTP response.&#34;&#34;&#34;
+
+        return self._body
+
+    @body.setter
+    def body(self, new_body):
+        if new_body is not None and isinstance(new_body, str):
+            self._body = new_body
+        else:
+            self._body = &#34;&#34;
+
+    # HTTP Status
+
+    @property
+    def status(self):
+        &#34;&#34;&#34;
+        A valid `urest.http.response.HTTPResponse` representing the current
+        error/status code that will be returned to the client.
+        &#34;&#34;&#34;
+        return self._status
+
+    @status.setter
+    def status(self, new_status):
+        if new_status in HTTPStatus:
+            self._status = new_status
+        else:
+            raise ValueError(
+                &#34;Invalid HTTP status code passed to the HTTP Response class&#34;
+            )
+
+    ##
+    ## Functions
+    ##
+
+    async def send(self, writer):
+        &#34;&#34;&#34;Send an appropriate response to the client, based on the status code.
+
+        This method assembles the full HTTP 1.1 header, based on the `mimetype`
+        the content currently in the `body`, and the error code forming the
+        `status` of the response to the client.
+
+        **Note: ** The the actual sending of this HTTP 1.1 header to the client
+        is the responsibility of the caller. This function only assists in correctly
+        forming that response
+
+        Parameters
+        ----------
+
+        writer: `asyncio.StreamWriter`
+            An asynchronous stream, representing the network response to the
+            client. This is usually set-up indirectly by the caller as part of a network
+            response to the client. As such is is usually just a pass-though from the
+            dispatch call of the server. For an example see the dispatcher
+            `urest.http.server.RESTServer.dispatch_noun`.
+
+        Returns
+        -------
+
+        `async`
+
+          The return type is complex, and indicates this method is expected to be run
+          as a co-routine under the `asyncio` library.
+        &#34;&#34;&#34;
+
+        # **NOTE**: This implementation should be in &#34;match/case&#34;, but MicroPython
+        #       doesn&#39;t have a 3.10 release yet. When it does, this
+        #       implementation should be updated
+
+        if &#34;OK&#34; in self._status:
+            # First tell the client we accepted the request
+            writer.write(f&#34;HTTP/1.1 200 OK\n&#34;)
+
+            # Then we try to assemble the body
+            if self._mimetype is not None:
+                writer.write(f&#34;Content-Type: {self.mimetype}\n&#34;)
+
+        elif &#34;NOT_OK&#34; in self._status:
+            # Tell the client we think we can route it: but the request
+            # makes no sense
+            writer.write(f&#34;HTTP/1.1 400 Bad Request\n&#34;)
+
+        elif &#34;NOT_FOUND&#34; in self._status:
+            # Tell the client we can&#39;t route their request
+            writer.write(f&#34;HTTP/1.1 404 Not Found\n&#34;)
+
+        else:
+            # This _really_ shouldn&#39;t be here. Assume an internal error
+            writer.write(f&#34;HTTP/1.1 500 Internal Server Error\n&#34;)
+
+        # Send the body length
+        writer.write(f&#34;Content-Length: {len(self._body)}\n&#34;)
+
+        # Send the body content type
+        writer.write(f&#34;Content-Type: text/html\n&#34;)
+
+        # Send any other header fields
+        if len(self._header) &gt; 0:
+            for key, value in self._header.items():
+                writer.write(f&#34;{key}: {value}\n&#34;)
+
+        # Send the HTTP connection state
+        if self._close:
+            writer.write(&#34;Connection: close\n&#34;)
+        else:
+            writer.write(&#34;Connection: keep-alive\n&#34;)
+
+        # Send the body itself...
+        writer.write(f&#34;\n{self._body}\n&#34;)
+
+        # ... and ensure that it gets back to the client
+        await writer.drain()</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-variables">Global variables</h2>
+<dl>
+<dt id="urest.http.response.HTTPStatus"><code class="name">var <span class="ident">HTTPStatus</span></code></dt>
+<dd>
+<div class="desc"><p>Define the HTTP response codes in use. See the Mozilla <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status">HTTP response status
+codes</a> for more
+details</p></div>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="urest.http.response.HTTPResponse"><code class="flex name class">
+<span>class <span class="ident">HTTPResponse</span></span>
+<span>(</span><span>body='', status='OK', mimetype=None, close=True, header=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a response object, representing the raw HTTP header returned to the
+network client.</p>
+<p>Responses returned to the client by this class <em>must</em> be formatted according
+to the <a href="https://www.ietf.org/rfc/rfc2616.txt">HTTP/1.1 specification</a> and
+<em>must</em> be valid.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>body</code></strong> :&ensp;<code>string</code></dt>
+<dd>The raw HTTP body returned to the client. This is <code>Empty</code> by default as
+the return string is usually built by the caller via the <code>getters</code> and
+<code>setters</code> of <code><a title="urest.http.response.HTTPResponse" href="#urest.http.response.HTTPResponse">HTTPResponse</a></code></dd>
+<dt><strong><code>status</code></strong> :&ensp;<code><a title="urest.http.response.HTTPStatus" href="#urest.http.response.HTTPStatus">HTTPStatus</a></code></dt>
+<dd>HTTP status code, which must be formed from the set
+<code><a title="urest.http.response.HTTPResponse" href="#urest.http.response.HTTPResponse">HTTPResponse</a></code>. Arbitrary return codes are <strong>not</strong>
+supported by this class.</dd>
+<dt><strong><code>mimetype</code></strong> :&ensp;<code>string</code></dt>
+<dd>A valid HTTP mime type. This is <code>Empty</code> by default and should be set
+once the <code>body</code> of the <code><a title="urest.http.response.HTTPResponse" href="#urest.http.response.HTTPResponse">HTTPResponse</a></code> has been
+created.</dd>
+<dt><strong><code>close</code></strong> :&ensp;<code>bool</code></dt>
+<dd>When set <code>True</code> the connection to the client will be closed by the
+<code><a title="urest.http.server.RESTServer" href="server.html#urest.http.server.RESTServer">RESTServer</a></code> once the <code><a title="urest.http.response.HTTPResponse" href="#urest.http.response.HTTPResponse">HTTPResponse</a></code>
+has been sent. Otherwise, when set to <code>False</code> this will flag to the
+client that the created <code><a title="urest.http.response.HTTPResponse" href="#urest.http.response.HTTPResponse">HTTPResponse</a></code> is part of
+a sequence to be sent over the same connection.</dd>
+<dt><strong><code>header</code></strong> :&ensp;<code> dict</code></dt>
+<dd>Raw (key, value) pairs for HTTP response header fields. This allows
+setting of arbitrary fields by the caller, without extending/sub-classing
+<code><a title="urest.http.response.HTTPResponse" href="#urest.http.response.HTTPResponse">HTTPResponse</a></code></dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p><code><a title="urest.http.response.HTTPResponse" href="#urest.http.response.HTTPResponse">HTTPResponse</a></code></p>
+<p>This instance is guaranteed to be a valid <em>class</em> on creation, and <em>should</em>
+also be a valid HTTP response. However the caller should check the validity
+of the header before returning to the client.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class HTTPResponse:
+
+    ##
+    ## Constructor
+    ##
+
+    def __init__(self, body=&#34;&#34;, status=&#34;OK&#34;, mimetype=None, close=True, header=None):
+        &#34;&#34;&#34;Create a response object, representing the raw HTTP header returned to the
+        network client.
+
+        Responses returned to the client by this class _must_ be formatted according
+        to the [HTTP/1.1 specification](https://www.ietf.org/rfc/rfc2616.txt) and
+        _must_ be valid.
+
+        Parameters
+        ----------
+
+        body: string
+            The raw HTTP body returned to the client. This is `Empty` by default as
+            the return string is usually built by the caller via the `getters` and
+            `setters` of `urest.http.response.HTTPResponse`
+        status: urest.http.response.HTTPStatus
+            HTTP status code, which must be formed from the set
+            `urest.http.response.HTTPResponse`. Arbitrary return codes are **not**
+            supported by this class.
+        mimetype: string
+            A valid HTTP mime type. This is `Empty` by default and should be set
+            once the `body` of the `urest.http.response.HTTPResponse` has been
+            created.
+        close: bool
+            When set `True` the connection to the client will be closed by the
+            `urest.http.server.RESTServer` once the `urest.http.response.HTTPResponse`
+            has been sent. Otherwise, when set to `False` this will flag to the
+            client that the created `urest.http.response.HTTPResponse` is part of
+            a sequence to be sent over the same connection.
+        header:  dict
+            Raw (key, value) pairs for HTTP response header fields. This allows
+            setting of arbitrary fields by the caller, without extending/sub-classing
+            `urest.http.response.HTTPResponse`
+
+
+        Returns
+        -------
+
+        `urest.http.response.HTTPResponse`
+
+          This instance is guaranteed to be a valid _class_ on creation, and _should_
+          also be a valid HTTP response. However the caller should check the validity
+          of the header before returning to the client.
+        &#34;&#34;&#34;
+
+        if status in HTTPStatus:
+            self._status = status
+        else:
+            raise ValueError(
+                &#34;Invalid HTTP status code passed to the HTTP Response class&#34;
+            )
+
+        if body is not None and isinstance(body, str):
+            self._body = body
+        else:
+            self._body = &#34;&#34;
+
+        self._mimetype = mimetype
+        self._close = close
+
+        if header is None:
+            self._header = {}
+        else:
+            self._header = header
+
+    ##
+    ## Getters and Setters
+    ##
+
+    # HTTP Body
+
+    @property
+    def body(self):
+        &#34;&#34;&#34;The raw HTTP response, formatted to return to the client as the HTTP response.&#34;&#34;&#34;
+
+        return self._body
+
+    @body.setter
+    def body(self, new_body):
+        if new_body is not None and isinstance(new_body, str):
+            self._body = new_body
+        else:
+            self._body = &#34;&#34;
+
+    # HTTP Status
+
+    @property
+    def status(self):
+        &#34;&#34;&#34;
+        A valid `urest.http.response.HTTPResponse` representing the current
+        error/status code that will be returned to the client.
+        &#34;&#34;&#34;
+        return self._status
+
+    @status.setter
+    def status(self, new_status):
+        if new_status in HTTPStatus:
+            self._status = new_status
+        else:
+            raise ValueError(
+                &#34;Invalid HTTP status code passed to the HTTP Response class&#34;
+            )
+
+    ##
+    ## Functions
+    ##
+
+    async def send(self, writer):
+        &#34;&#34;&#34;Send an appropriate response to the client, based on the status code.
+
+        This method assembles the full HTTP 1.1 header, based on the `mimetype`
+        the content currently in the `body`, and the error code forming the
+        `status` of the response to the client.
+
+        **Note: ** The the actual sending of this HTTP 1.1 header to the client
+        is the responsibility of the caller. This function only assists in correctly
+        forming that response
+
+        Parameters
+        ----------
+
+        writer: `asyncio.StreamWriter`
+            An asynchronous stream, representing the network response to the
+            client. This is usually set-up indirectly by the caller as part of a network
+            response to the client. As such is is usually just a pass-though from the
+            dispatch call of the server. For an example see the dispatcher
+            `urest.http.server.RESTServer.dispatch_noun`.
+
+        Returns
+        -------
+
+        `async`
+
+          The return type is complex, and indicates this method is expected to be run
+          as a co-routine under the `asyncio` library.
+        &#34;&#34;&#34;
+
+        # **NOTE**: This implementation should be in &#34;match/case&#34;, but MicroPython
+        #       doesn&#39;t have a 3.10 release yet. When it does, this
+        #       implementation should be updated
+
+        if &#34;OK&#34; in self._status:
+            # First tell the client we accepted the request
+            writer.write(f&#34;HTTP/1.1 200 OK\n&#34;)
+
+            # Then we try to assemble the body
+            if self._mimetype is not None:
+                writer.write(f&#34;Content-Type: {self.mimetype}\n&#34;)
+
+        elif &#34;NOT_OK&#34; in self._status:
+            # Tell the client we think we can route it: but the request
+            # makes no sense
+            writer.write(f&#34;HTTP/1.1 400 Bad Request\n&#34;)
+
+        elif &#34;NOT_FOUND&#34; in self._status:
+            # Tell the client we can&#39;t route their request
+            writer.write(f&#34;HTTP/1.1 404 Not Found\n&#34;)
+
+        else:
+            # This _really_ shouldn&#39;t be here. Assume an internal error
+            writer.write(f&#34;HTTP/1.1 500 Internal Server Error\n&#34;)
+
+        # Send the body length
+        writer.write(f&#34;Content-Length: {len(self._body)}\n&#34;)
+
+        # Send the body content type
+        writer.write(f&#34;Content-Type: text/html\n&#34;)
+
+        # Send any other header fields
+        if len(self._header) &gt; 0:
+            for key, value in self._header.items():
+                writer.write(f&#34;{key}: {value}\n&#34;)
+
+        # Send the HTTP connection state
+        if self._close:
+            writer.write(&#34;Connection: close\n&#34;)
+        else:
+            writer.write(&#34;Connection: keep-alive\n&#34;)
+
+        # Send the body itself...
+        writer.write(f&#34;\n{self._body}\n&#34;)
+
+        # ... and ensure that it gets back to the client
+        await writer.drain()</code></pre>
+</details>
+<h3>Instance variables</h3>
+<dl>
+<dt id="urest.http.response.HTTPResponse.body"><code class="name">var <span class="ident">body</span></code></dt>
+<dd>
+<div class="desc"><p>The raw HTTP response, formatted to return to the client as the HTTP response.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def body(self):
+    &#34;&#34;&#34;The raw HTTP response, formatted to return to the client as the HTTP response.&#34;&#34;&#34;
+
+    return self._body</code></pre>
+</details>
+</dd>
+<dt id="urest.http.response.HTTPResponse.status"><code class="name">var <span class="ident">status</span></code></dt>
+<dd>
+<div class="desc"><p>A valid <code><a title="urest.http.response.HTTPResponse" href="#urest.http.response.HTTPResponse">HTTPResponse</a></code> representing the current
+error/status code that will be returned to the client.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def status(self):
+    &#34;&#34;&#34;
+    A valid `urest.http.response.HTTPResponse` representing the current
+    error/status code that will be returned to the client.
+    &#34;&#34;&#34;
+    return self._status</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="urest.http.response.HTTPResponse.send"><code class="name flex">
+<span>async def <span class="ident">send</span></span>(<span>self, writer)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Send an appropriate response to the client, based on the status code.</p>
+<p>This method assembles the full HTTP 1.1 header, based on the <code>mimetype</code>
+the content currently in the <code>body</code>, and the error code forming the
+<code>status</code> of the response to the client.</p>
+<p><strong>Note: </strong> The the actual sending of this HTTP 1.1 header to the client
+is the responsibility of the caller. This function only assists in correctly
+forming that response</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>writer</code></strong> :&ensp;<code>asyncio.StreamWriter</code></dt>
+<dd>An asynchronous stream, representing the network response to the
+client. This is usually set-up indirectly by the caller as part of a network
+response to the client. As such is is usually just a pass-though from the
+dispatch call of the server. For an example see the dispatcher
+<code><a title="urest.http.server.RESTServer.dispatch_noun" href="server.html#urest.http.server.RESTServer.dispatch_noun">RESTServer.dispatch_noun()</a></code>.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p><code>async</code></p>
+<p>The return type is complex, and indicates this method is expected to be run
+as a co-routine under the <code>asyncio</code> library.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def send(self, writer):
+    &#34;&#34;&#34;Send an appropriate response to the client, based on the status code.
+
+    This method assembles the full HTTP 1.1 header, based on the `mimetype`
+    the content currently in the `body`, and the error code forming the
+    `status` of the response to the client.
+
+    **Note: ** The the actual sending of this HTTP 1.1 header to the client
+    is the responsibility of the caller. This function only assists in correctly
+    forming that response
+
+    Parameters
+    ----------
+
+    writer: `asyncio.StreamWriter`
+        An asynchronous stream, representing the network response to the
+        client. This is usually set-up indirectly by the caller as part of a network
+        response to the client. As such is is usually just a pass-though from the
+        dispatch call of the server. For an example see the dispatcher
+        `urest.http.server.RESTServer.dispatch_noun`.
+
+    Returns
+    -------
+
+    `async`
+
+      The return type is complex, and indicates this method is expected to be run
+      as a co-routine under the `asyncio` library.
+    &#34;&#34;&#34;
+
+    # **NOTE**: This implementation should be in &#34;match/case&#34;, but MicroPython
+    #       doesn&#39;t have a 3.10 release yet. When it does, this
+    #       implementation should be updated
+
+    if &#34;OK&#34; in self._status:
+        # First tell the client we accepted the request
+        writer.write(f&#34;HTTP/1.1 200 OK\n&#34;)
+
+        # Then we try to assemble the body
+        if self._mimetype is not None:
+            writer.write(f&#34;Content-Type: {self.mimetype}\n&#34;)
+
+    elif &#34;NOT_OK&#34; in self._status:
+        # Tell the client we think we can route it: but the request
+        # makes no sense
+        writer.write(f&#34;HTTP/1.1 400 Bad Request\n&#34;)
+
+    elif &#34;NOT_FOUND&#34; in self._status:
+        # Tell the client we can&#39;t route their request
+        writer.write(f&#34;HTTP/1.1 404 Not Found\n&#34;)
+
+    else:
+        # This _really_ shouldn&#39;t be here. Assume an internal error
+        writer.write(f&#34;HTTP/1.1 500 Internal Server Error\n&#34;)
+
+    # Send the body length
+    writer.write(f&#34;Content-Length: {len(self._body)}\n&#34;)
+
+    # Send the body content type
+    writer.write(f&#34;Content-Type: text/html\n&#34;)
+
+    # Send any other header fields
+    if len(self._header) &gt; 0:
+        for key, value in self._header.items():
+            writer.write(f&#34;{key}: {value}\n&#34;)
+
+    # Send the HTTP connection state
+    if self._close:
+        writer.write(&#34;Connection: close\n&#34;)
+    else:
+        writer.write(&#34;Connection: keep-alive\n&#34;)
+
+    # Send the body itself...
+    writer.write(f&#34;\n{self._body}\n&#34;)
+
+    # ... and ensure that it gets back to the client
+    await writer.drain()</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul>
+<li><a href="#standards">Standards</a></li>
+<li><a href="#licence">Licence</a></li>
+</ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="urest.http" href="index.html">urest.http</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-variables">Global variables</a></h3>
+<ul class="">
+<li><code><a title="urest.http.response.HTTPStatus" href="#urest.http.response.HTTPStatus">HTTPStatus</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="urest.http.response.HTTPResponse" href="#urest.http.response.HTTPResponse">HTTPResponse</a></code></h4>
+<ul class="">
+<li><code><a title="urest.http.response.HTTPResponse.body" href="#urest.http.response.HTTPResponse.body">body</a></code></li>
+<li><code><a title="urest.http.response.HTTPResponse.send" href="#urest.http.response.HTTPResponse.send">send</a></code></li>
+<li><code><a title="urest.http.response.HTTPResponse.status" href="#urest.http.response.HTTPResponse.status">status</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>

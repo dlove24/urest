@@ -1,19 +1,52 @@
-# Formats a basic HTTP/1.1 response. The actual body of the response is largely
-# determined by the callers API layer: this just handles the raw response to the
-# network client. As such it should be largely invisible to the API layer.
-#
-# For HTTP/1.1 specification see: https://www.ietf.org/rfc/rfc2616.txt
-# For MIME types see: https://www.iana.org/assignments/media-types/media-types.xhtml
-#
-# Copyright 2022 (c) Erik de Lange
-# Copyright 2022 (c) David Love
-# Released under MIT license
+"""
+Formats a basic HTTP/1.1 response. The actual body of the response is largely
+determined by the callers API layer: `urest.http.response.HTTPResponse` is a
+utility class designed just handles to handle the raw response to the network
+client. As such it should be largely invisible to the API layer, and most
+consumers of the `urest.http` module _should not_ create instance of the
+`urest.http.response.HTTPResponse` class directly
+
+Standards
+---------
+
+  * For HTTP/1.1 specification see: https://www.ietf.org/rfc/rfc2616.txt
+  * For MIME types see: https://www.iana.org/assignments/media-types/media-types.xhtml
+
+Licence
+-------
+
+This module, and all included code, is made available under the terms of the MIT
+Licence
+
+> Copyright 2022 (c) Erik de Lange, Copyright (c) 2022-2023 David Love
+
+> Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+> The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+> THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+"""
 
 # Import the enumerations library. Unfortunately not in MicroPython yet
 # from enum import Enum
 
-# Define the HTTP response codes in use. See the Mozilla [HTTP response status codes](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status) for more details
 HTTPStatus = {"OK", "NOT_OK", "NOT_FOUND"}
+"""
+    Define the HTTP response codes in use. See the Mozilla [HTTP response status
+    codes](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status) for more
+    details
+"""
 
 
 class HTTPResponse:
@@ -23,13 +56,48 @@ class HTTPResponse:
     ##
 
     def __init__(self, body="", status="OK", mimetype=None, close=True, header=None):
-        """Create a response object
+        """Create a response object, representing the raw HTTP header returned to the
+        network client.
 
-        :param string _body: HTTP return body
-        :param HTTPStatus _status: HTTP status code
-        :param str _mimetype: HTTP mime type
-        :param bool _close: if true close connection else keep alive
-        :param dict _header: key,value pairs for HTTP response header fields
+        Responses returned to the client by this class _must_ be formatted according
+        to the [HTTP/1.1 specification](https://www.ietf.org/rfc/rfc2616.txt) and
+        _must_ be valid.
+
+        Parameters
+        ----------
+
+        body: string
+            The raw HTTP body returned to the client. This is `Empty` by default as
+            the return string is usually built by the caller via the `getters` and
+            `setters` of `urest.http.response.HTTPResponse`
+        status: urest.http.response.HTTPStatus
+            HTTP status code, which must be formed from the set
+            `urest.http.response.HTTPResponse`. Arbitrary return codes are **not**
+            supported by this class.
+        mimetype: string
+            A valid HTTP mime type. This is `Empty` by default and should be set
+            once the `body` of the `urest.http.response.HTTPResponse` has been
+            created.
+        close: bool
+            When set `True` the connection to the client will be closed by the
+            `urest.http.server.RESTServer` once the `urest.http.response.HTTPResponse`
+            has been sent. Otherwise, when set to `False` this will flag to the
+            client that the created `urest.http.response.HTTPResponse` is part of
+            a sequence to be sent over the same connection.
+        header:  dict
+            Raw (key, value) pairs for HTTP response header fields. This allows
+            setting of arbitrary fields by the caller, without extending/sub-classing
+            `urest.http.response.HTTPResponse`
+
+
+        Returns
+        -------
+
+        `urest.http.response.HTTPResponse`
+
+          This instance is guaranteed to be a valid _class_ on creation, and _should_
+          also be a valid HTTP response. However the caller should check the validity
+          of the header before returning to the client.
         """
 
         if status in HTTPStatus:
@@ -60,6 +128,8 @@ class HTTPResponse:
 
     @property
     def body(self):
+        """The raw HTTP response, formatted to return to the client as the HTTP response."""
+
         return self._body
 
     @body.setter
@@ -73,6 +143,10 @@ class HTTPResponse:
 
     @property
     def status(self):
+        """
+        A valid `urest.http.response.HTTPResponse` representing the current
+        error/status code that will be returned to the client.
+        """
         return self._status
 
     @status.setter
@@ -89,13 +163,39 @@ class HTTPResponse:
     ##
 
     async def send(self, writer):
-        """Send response to stream writer"""
+        """Send an appropriate response to the client, based on the status code.
 
-        # Send an appropriate response, based on the status code
-        #
-        # NOTE: This really should be in "match/case", but MicroPython
-        #       doesn't have a 3.10 release yet. When it does, this should
-        #       be updated
+        This method assembles the full HTTP 1.1 header, based on the `mimetype`
+        the content currently in the `body`, and the error code forming the
+        `status` of the response to the client.
+
+        **Note: ** The the actual sending of this HTTP 1.1 header to the client
+        is the responsibility of the caller. This function only assists in correctly
+        forming that response
+
+        Parameters
+        ----------
+
+        writer: `asyncio.StreamWriter`
+            An asynchronous stream, representing the network response to the
+            client. This is usually set-up indirectly by the caller as part of a network
+            response to the client. As such is is usually just a pass-though from the
+            dispatch call of the server. For an example see the dispatcher
+            `urest.http.server.RESTServer.dispatch_noun`.
+
+        Returns
+        -------
+
+        `async`
+
+          The return type is complex, and indicates this method is expected to be run
+          as a co-routine under the `asyncio` library.
+        """
+
+        # **NOTE**: This implementation should be in "match/case", but MicroPython
+        #       doesn't have a 3.10 release yet. When it does, this
+        #       implementation should be updated
+
         if "OK" in self._status:
             # First tell the client we accepted the request
             writer.write(f"HTTP/1.1 200 OK\n")
