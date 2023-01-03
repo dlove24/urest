@@ -1,0 +1,734 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>http API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Package <code>http</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">from enum import IntEnum
+
+__all__ = [&#39;HTTPStatus&#39;]
+
+
+class HTTPStatus(IntEnum):
+    &#34;&#34;&#34;HTTP status codes and reason phrases
+
+    Status codes from the following RFCs are all observed:
+
+        * RFC 7231: Hypertext Transfer Protocol (HTTP/1.1), obsoletes 2616
+        * RFC 6585: Additional HTTP Status Codes
+        * RFC 3229: Delta encoding in HTTP
+        * RFC 4918: HTTP Extensions for WebDAV, obsoletes 2518
+        * RFC 5842: Binding Extensions to WebDAV
+        * RFC 7238: Permanent Redirect
+        * RFC 2295: Transparent Content Negotiation in HTTP
+        * RFC 2774: An HTTP Extension Framework
+        * RFC 7725: An HTTP Status Code to Report Legal Obstacles
+        * RFC 7540: Hypertext Transfer Protocol Version 2 (HTTP/2)
+        * RFC 2324: Hyper Text Coffee Pot Control Protocol (HTCPCP/1.0)
+        * RFC 8297: An HTTP Status Code for Indicating Hints
+        * RFC 8470: Using Early Data in HTTP
+    &#34;&#34;&#34;
+    def __new__(cls, value, phrase, description=&#39;&#39;):
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+
+        obj.phrase = phrase
+        obj.description = description
+        return obj
+
+    # informational
+    CONTINUE = 100, &#39;Continue&#39;, &#39;Request received, please continue&#39;
+    SWITCHING_PROTOCOLS = (101, &#39;Switching Protocols&#39;,
+            &#39;Switching to new protocol; obey Upgrade header&#39;)
+    PROCESSING = 102, &#39;Processing&#39;
+    EARLY_HINTS = 103, &#39;Early Hints&#39;
+
+    # success
+    OK = 200, &#39;OK&#39;, &#39;Request fulfilled, document follows&#39;
+    CREATED = 201, &#39;Created&#39;, &#39;Document created, URL follows&#39;
+    ACCEPTED = (202, &#39;Accepted&#39;,
+        &#39;Request accepted, processing continues off-line&#39;)
+    NON_AUTHORITATIVE_INFORMATION = (203,
+        &#39;Non-Authoritative Information&#39;, &#39;Request fulfilled from cache&#39;)
+    NO_CONTENT = 204, &#39;No Content&#39;, &#39;Request fulfilled, nothing follows&#39;
+    RESET_CONTENT = 205, &#39;Reset Content&#39;, &#39;Clear input form for further input&#39;
+    PARTIAL_CONTENT = 206, &#39;Partial Content&#39;, &#39;Partial content follows&#39;
+    MULTI_STATUS = 207, &#39;Multi-Status&#39;
+    ALREADY_REPORTED = 208, &#39;Already Reported&#39;
+    IM_USED = 226, &#39;IM Used&#39;
+
+    # redirection
+    MULTIPLE_CHOICES = (300, &#39;Multiple Choices&#39;,
+        &#39;Object has several resources -- see URI list&#39;)
+    MOVED_PERMANENTLY = (301, &#39;Moved Permanently&#39;,
+        &#39;Object moved permanently -- see URI list&#39;)
+    FOUND = 302, &#39;Found&#39;, &#39;Object moved temporarily -- see URI list&#39;
+    SEE_OTHER = 303, &#39;See Other&#39;, &#39;Object moved -- see Method and URL list&#39;
+    NOT_MODIFIED = (304, &#39;Not Modified&#39;,
+        &#39;Document has not changed since given time&#39;)
+    USE_PROXY = (305, &#39;Use Proxy&#39;,
+        &#39;You must use proxy specified in Location to access this resource&#39;)
+    TEMPORARY_REDIRECT = (307, &#39;Temporary Redirect&#39;,
+        &#39;Object moved temporarily -- see URI list&#39;)
+    PERMANENT_REDIRECT = (308, &#39;Permanent Redirect&#39;,
+        &#39;Object moved permanently -- see URI list&#39;)
+
+    # client error
+    BAD_REQUEST = (400, &#39;Bad Request&#39;,
+        &#39;Bad request syntax or unsupported method&#39;)
+    UNAUTHORIZED = (401, &#39;Unauthorized&#39;,
+        &#39;No permission -- see authorization schemes&#39;)
+    PAYMENT_REQUIRED = (402, &#39;Payment Required&#39;,
+        &#39;No payment -- see charging schemes&#39;)
+    FORBIDDEN = (403, &#39;Forbidden&#39;,
+        &#39;Request forbidden -- authorization will not help&#39;)
+    NOT_FOUND = (404, &#39;Not Found&#39;,
+        &#39;Nothing matches the given URI&#39;)
+    METHOD_NOT_ALLOWED = (405, &#39;Method Not Allowed&#39;,
+        &#39;Specified method is invalid for this resource&#39;)
+    NOT_ACCEPTABLE = (406, &#39;Not Acceptable&#39;,
+        &#39;URI not available in preferred format&#39;)
+    PROXY_AUTHENTICATION_REQUIRED = (407,
+        &#39;Proxy Authentication Required&#39;,
+        &#39;You must authenticate with this proxy before proceeding&#39;)
+    REQUEST_TIMEOUT = (408, &#39;Request Timeout&#39;,
+        &#39;Request timed out; try again later&#39;)
+    CONFLICT = 409, &#39;Conflict&#39;, &#39;Request conflict&#39;
+    GONE = (410, &#39;Gone&#39;,
+        &#39;URI no longer exists and has been permanently removed&#39;)
+    LENGTH_REQUIRED = (411, &#39;Length Required&#39;,
+        &#39;Client must specify Content-Length&#39;)
+    PRECONDITION_FAILED = (412, &#39;Precondition Failed&#39;,
+        &#39;Precondition in headers is false&#39;)
+    REQUEST_ENTITY_TOO_LARGE = (413, &#39;Request Entity Too Large&#39;,
+        &#39;Entity is too large&#39;)
+    REQUEST_URI_TOO_LONG = (414, &#39;Request-URI Too Long&#39;,
+        &#39;URI is too long&#39;)
+    UNSUPPORTED_MEDIA_TYPE = (415, &#39;Unsupported Media Type&#39;,
+        &#39;Entity body in unsupported format&#39;)
+    REQUESTED_RANGE_NOT_SATISFIABLE = (416,
+        &#39;Requested Range Not Satisfiable&#39;,
+        &#39;Cannot satisfy request range&#39;)
+    EXPECTATION_FAILED = (417, &#39;Expectation Failed&#39;,
+        &#39;Expect condition could not be satisfied&#39;)
+    IM_A_TEAPOT = (418, &#39;I\&#39;m a Teapot&#39;,
+        &#39;Server refuses to brew coffee because it is a teapot.&#39;)
+    MISDIRECTED_REQUEST = (421, &#39;Misdirected Request&#39;,
+        &#39;Server is not able to produce a response&#39;)
+    UNPROCESSABLE_ENTITY = 422, &#39;Unprocessable Entity&#39;
+    LOCKED = 423, &#39;Locked&#39;
+    FAILED_DEPENDENCY = 424, &#39;Failed Dependency&#39;
+    TOO_EARLY = 425, &#39;Too Early&#39;
+    UPGRADE_REQUIRED = 426, &#39;Upgrade Required&#39;
+    PRECONDITION_REQUIRED = (428, &#39;Precondition Required&#39;,
+        &#39;The origin server requires the request to be conditional&#39;)
+    TOO_MANY_REQUESTS = (429, &#39;Too Many Requests&#39;,
+        &#39;The user has sent too many requests in &#39;
+        &#39;a given amount of time (&#34;rate limiting&#34;)&#39;)
+    REQUEST_HEADER_FIELDS_TOO_LARGE = (431,
+        &#39;Request Header Fields Too Large&#39;,
+        &#39;The server is unwilling to process the request because its header &#39;
+        &#39;fields are too large&#39;)
+    UNAVAILABLE_FOR_LEGAL_REASONS = (451,
+        &#39;Unavailable For Legal Reasons&#39;,
+        &#39;The server is denying access to the &#39;
+        &#39;resource as a consequence of a legal demand&#39;)
+
+    # server errors
+    INTERNAL_SERVER_ERROR = (500, &#39;Internal Server Error&#39;,
+        &#39;Server got itself in trouble&#39;)
+    NOT_IMPLEMENTED = (501, &#39;Not Implemented&#39;,
+        &#39;Server does not support this operation&#39;)
+    BAD_GATEWAY = (502, &#39;Bad Gateway&#39;,
+        &#39;Invalid responses from another server/proxy&#39;)
+    SERVICE_UNAVAILABLE = (503, &#39;Service Unavailable&#39;,
+        &#39;The server cannot process the request due to a high load&#39;)
+    GATEWAY_TIMEOUT = (504, &#39;Gateway Timeout&#39;,
+        &#39;The gateway server did not receive a timely response&#39;)
+    HTTP_VERSION_NOT_SUPPORTED = (505, &#39;HTTP Version Not Supported&#39;,
+        &#39;Cannot fulfill request&#39;)
+    VARIANT_ALSO_NEGOTIATES = 506, &#39;Variant Also Negotiates&#39;
+    INSUFFICIENT_STORAGE = 507, &#39;Insufficient Storage&#39;
+    LOOP_DETECTED = 508, &#39;Loop Detected&#39;
+    NOT_EXTENDED = 510, &#39;Not Extended&#39;
+    NETWORK_AUTHENTICATION_REQUIRED = (511,
+        &#39;Network Authentication Required&#39;,
+        &#39;The client needs to authenticate to gain network access&#39;)</code></pre>
+</details>
+</section>
+<section>
+<h2 class="section-title" id="header-submodules">Sub-modules</h2>
+<dl>
+<dt><code class="name"><a title="http.client" href="client.html">http.client</a></code></dt>
+<dd>
+<div class="desc"><p>HTTP/1.1 client library …</p></div>
+</dd>
+<dt><code class="name"><a title="http.cookiejar" href="cookiejar.html">http.cookiejar</a></code></dt>
+<dd>
+<div class="desc"><p>HTTP cookie handling for web clients …</p></div>
+</dd>
+<dt><code class="name"><a title="http.cookies" href="cookies.html">http.cookies</a></code></dt>
+<dd>
+<div class="desc"><p>Here's a sample session to show how to use this module.
+At the moment, this is the only documentation …</p></div>
+</dd>
+<dt><code class="name"><a title="http.server" href="server.html">http.server</a></code></dt>
+<dd>
+<div class="desc"><p>HTTP server classes …</p></div>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="http.HTTPStatus"><code class="flex name class">
+<span>class <span class="ident">HTTPStatus</span></span>
+<span>(</span><span>value, names=None, *, module=None, qualname=None, type=None, start=1)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>HTTP status codes and reason phrases</p>
+<p>Status codes from the following RFCs are all observed:</p>
+<pre><code>* RFC 7231: Hypertext Transfer Protocol (HTTP/1.1), obsoletes 2616
+* RFC 6585: Additional HTTP Status Codes
+* RFC 3229: Delta encoding in HTTP
+* RFC 4918: HTTP Extensions for WebDAV, obsoletes 2518
+* RFC 5842: Binding Extensions to WebDAV
+* RFC 7238: Permanent Redirect
+* RFC 2295: Transparent Content Negotiation in HTTP
+* RFC 2774: An HTTP Extension Framework
+* RFC 7725: An HTTP Status Code to Report Legal Obstacles
+* RFC 7540: Hypertext Transfer Protocol Version 2 (HTTP/2)
+* RFC 2324: Hyper Text Coffee Pot Control Protocol (HTCPCP/1.0)
+* RFC 8297: An HTTP Status Code for Indicating Hints
+* RFC 8470: Using Early Data in HTTP
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class HTTPStatus(IntEnum):
+    &#34;&#34;&#34;HTTP status codes and reason phrases
+
+    Status codes from the following RFCs are all observed:
+
+        * RFC 7231: Hypertext Transfer Protocol (HTTP/1.1), obsoletes 2616
+        * RFC 6585: Additional HTTP Status Codes
+        * RFC 3229: Delta encoding in HTTP
+        * RFC 4918: HTTP Extensions for WebDAV, obsoletes 2518
+        * RFC 5842: Binding Extensions to WebDAV
+        * RFC 7238: Permanent Redirect
+        * RFC 2295: Transparent Content Negotiation in HTTP
+        * RFC 2774: An HTTP Extension Framework
+        * RFC 7725: An HTTP Status Code to Report Legal Obstacles
+        * RFC 7540: Hypertext Transfer Protocol Version 2 (HTTP/2)
+        * RFC 2324: Hyper Text Coffee Pot Control Protocol (HTCPCP/1.0)
+        * RFC 8297: An HTTP Status Code for Indicating Hints
+        * RFC 8470: Using Early Data in HTTP
+    &#34;&#34;&#34;
+    def __new__(cls, value, phrase, description=&#39;&#39;):
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+
+        obj.phrase = phrase
+        obj.description = description
+        return obj
+
+    # informational
+    CONTINUE = 100, &#39;Continue&#39;, &#39;Request received, please continue&#39;
+    SWITCHING_PROTOCOLS = (101, &#39;Switching Protocols&#39;,
+            &#39;Switching to new protocol; obey Upgrade header&#39;)
+    PROCESSING = 102, &#39;Processing&#39;
+    EARLY_HINTS = 103, &#39;Early Hints&#39;
+
+    # success
+    OK = 200, &#39;OK&#39;, &#39;Request fulfilled, document follows&#39;
+    CREATED = 201, &#39;Created&#39;, &#39;Document created, URL follows&#39;
+    ACCEPTED = (202, &#39;Accepted&#39;,
+        &#39;Request accepted, processing continues off-line&#39;)
+    NON_AUTHORITATIVE_INFORMATION = (203,
+        &#39;Non-Authoritative Information&#39;, &#39;Request fulfilled from cache&#39;)
+    NO_CONTENT = 204, &#39;No Content&#39;, &#39;Request fulfilled, nothing follows&#39;
+    RESET_CONTENT = 205, &#39;Reset Content&#39;, &#39;Clear input form for further input&#39;
+    PARTIAL_CONTENT = 206, &#39;Partial Content&#39;, &#39;Partial content follows&#39;
+    MULTI_STATUS = 207, &#39;Multi-Status&#39;
+    ALREADY_REPORTED = 208, &#39;Already Reported&#39;
+    IM_USED = 226, &#39;IM Used&#39;
+
+    # redirection
+    MULTIPLE_CHOICES = (300, &#39;Multiple Choices&#39;,
+        &#39;Object has several resources -- see URI list&#39;)
+    MOVED_PERMANENTLY = (301, &#39;Moved Permanently&#39;,
+        &#39;Object moved permanently -- see URI list&#39;)
+    FOUND = 302, &#39;Found&#39;, &#39;Object moved temporarily -- see URI list&#39;
+    SEE_OTHER = 303, &#39;See Other&#39;, &#39;Object moved -- see Method and URL list&#39;
+    NOT_MODIFIED = (304, &#39;Not Modified&#39;,
+        &#39;Document has not changed since given time&#39;)
+    USE_PROXY = (305, &#39;Use Proxy&#39;,
+        &#39;You must use proxy specified in Location to access this resource&#39;)
+    TEMPORARY_REDIRECT = (307, &#39;Temporary Redirect&#39;,
+        &#39;Object moved temporarily -- see URI list&#39;)
+    PERMANENT_REDIRECT = (308, &#39;Permanent Redirect&#39;,
+        &#39;Object moved permanently -- see URI list&#39;)
+
+    # client error
+    BAD_REQUEST = (400, &#39;Bad Request&#39;,
+        &#39;Bad request syntax or unsupported method&#39;)
+    UNAUTHORIZED = (401, &#39;Unauthorized&#39;,
+        &#39;No permission -- see authorization schemes&#39;)
+    PAYMENT_REQUIRED = (402, &#39;Payment Required&#39;,
+        &#39;No payment -- see charging schemes&#39;)
+    FORBIDDEN = (403, &#39;Forbidden&#39;,
+        &#39;Request forbidden -- authorization will not help&#39;)
+    NOT_FOUND = (404, &#39;Not Found&#39;,
+        &#39;Nothing matches the given URI&#39;)
+    METHOD_NOT_ALLOWED = (405, &#39;Method Not Allowed&#39;,
+        &#39;Specified method is invalid for this resource&#39;)
+    NOT_ACCEPTABLE = (406, &#39;Not Acceptable&#39;,
+        &#39;URI not available in preferred format&#39;)
+    PROXY_AUTHENTICATION_REQUIRED = (407,
+        &#39;Proxy Authentication Required&#39;,
+        &#39;You must authenticate with this proxy before proceeding&#39;)
+    REQUEST_TIMEOUT = (408, &#39;Request Timeout&#39;,
+        &#39;Request timed out; try again later&#39;)
+    CONFLICT = 409, &#39;Conflict&#39;, &#39;Request conflict&#39;
+    GONE = (410, &#39;Gone&#39;,
+        &#39;URI no longer exists and has been permanently removed&#39;)
+    LENGTH_REQUIRED = (411, &#39;Length Required&#39;,
+        &#39;Client must specify Content-Length&#39;)
+    PRECONDITION_FAILED = (412, &#39;Precondition Failed&#39;,
+        &#39;Precondition in headers is false&#39;)
+    REQUEST_ENTITY_TOO_LARGE = (413, &#39;Request Entity Too Large&#39;,
+        &#39;Entity is too large&#39;)
+    REQUEST_URI_TOO_LONG = (414, &#39;Request-URI Too Long&#39;,
+        &#39;URI is too long&#39;)
+    UNSUPPORTED_MEDIA_TYPE = (415, &#39;Unsupported Media Type&#39;,
+        &#39;Entity body in unsupported format&#39;)
+    REQUESTED_RANGE_NOT_SATISFIABLE = (416,
+        &#39;Requested Range Not Satisfiable&#39;,
+        &#39;Cannot satisfy request range&#39;)
+    EXPECTATION_FAILED = (417, &#39;Expectation Failed&#39;,
+        &#39;Expect condition could not be satisfied&#39;)
+    IM_A_TEAPOT = (418, &#39;I\&#39;m a Teapot&#39;,
+        &#39;Server refuses to brew coffee because it is a teapot.&#39;)
+    MISDIRECTED_REQUEST = (421, &#39;Misdirected Request&#39;,
+        &#39;Server is not able to produce a response&#39;)
+    UNPROCESSABLE_ENTITY = 422, &#39;Unprocessable Entity&#39;
+    LOCKED = 423, &#39;Locked&#39;
+    FAILED_DEPENDENCY = 424, &#39;Failed Dependency&#39;
+    TOO_EARLY = 425, &#39;Too Early&#39;
+    UPGRADE_REQUIRED = 426, &#39;Upgrade Required&#39;
+    PRECONDITION_REQUIRED = (428, &#39;Precondition Required&#39;,
+        &#39;The origin server requires the request to be conditional&#39;)
+    TOO_MANY_REQUESTS = (429, &#39;Too Many Requests&#39;,
+        &#39;The user has sent too many requests in &#39;
+        &#39;a given amount of time (&#34;rate limiting&#34;)&#39;)
+    REQUEST_HEADER_FIELDS_TOO_LARGE = (431,
+        &#39;Request Header Fields Too Large&#39;,
+        &#39;The server is unwilling to process the request because its header &#39;
+        &#39;fields are too large&#39;)
+    UNAVAILABLE_FOR_LEGAL_REASONS = (451,
+        &#39;Unavailable For Legal Reasons&#39;,
+        &#39;The server is denying access to the &#39;
+        &#39;resource as a consequence of a legal demand&#39;)
+
+    # server errors
+    INTERNAL_SERVER_ERROR = (500, &#39;Internal Server Error&#39;,
+        &#39;Server got itself in trouble&#39;)
+    NOT_IMPLEMENTED = (501, &#39;Not Implemented&#39;,
+        &#39;Server does not support this operation&#39;)
+    BAD_GATEWAY = (502, &#39;Bad Gateway&#39;,
+        &#39;Invalid responses from another server/proxy&#39;)
+    SERVICE_UNAVAILABLE = (503, &#39;Service Unavailable&#39;,
+        &#39;The server cannot process the request due to a high load&#39;)
+    GATEWAY_TIMEOUT = (504, &#39;Gateway Timeout&#39;,
+        &#39;The gateway server did not receive a timely response&#39;)
+    HTTP_VERSION_NOT_SUPPORTED = (505, &#39;HTTP Version Not Supported&#39;,
+        &#39;Cannot fulfill request&#39;)
+    VARIANT_ALSO_NEGOTIATES = 506, &#39;Variant Also Negotiates&#39;
+    INSUFFICIENT_STORAGE = 507, &#39;Insufficient Storage&#39;
+    LOOP_DETECTED = 508, &#39;Loop Detected&#39;
+    NOT_EXTENDED = 510, &#39;Not Extended&#39;
+    NETWORK_AUTHENTICATION_REQUIRED = (511,
+        &#39;Network Authentication Required&#39;,
+        &#39;The client needs to authenticate to gain network access&#39;)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>enum.IntEnum</li>
+<li>builtins.int</li>
+<li>enum.Enum</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="http.HTTPStatus.ACCEPTED"><code class="name">var <span class="ident">ACCEPTED</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.ALREADY_REPORTED"><code class="name">var <span class="ident">ALREADY_REPORTED</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.BAD_GATEWAY"><code class="name">var <span class="ident">BAD_GATEWAY</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.BAD_REQUEST"><code class="name">var <span class="ident">BAD_REQUEST</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.CONFLICT"><code class="name">var <span class="ident">CONFLICT</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.CONTINUE"><code class="name">var <span class="ident">CONTINUE</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.CREATED"><code class="name">var <span class="ident">CREATED</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.EARLY_HINTS"><code class="name">var <span class="ident">EARLY_HINTS</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.EXPECTATION_FAILED"><code class="name">var <span class="ident">EXPECTATION_FAILED</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.FAILED_DEPENDENCY"><code class="name">var <span class="ident">FAILED_DEPENDENCY</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.FORBIDDEN"><code class="name">var <span class="ident">FORBIDDEN</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.FOUND"><code class="name">var <span class="ident">FOUND</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.GATEWAY_TIMEOUT"><code class="name">var <span class="ident">GATEWAY_TIMEOUT</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.GONE"><code class="name">var <span class="ident">GONE</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.HTTP_VERSION_NOT_SUPPORTED"><code class="name">var <span class="ident">HTTP_VERSION_NOT_SUPPORTED</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.IM_A_TEAPOT"><code class="name">var <span class="ident">IM_A_TEAPOT</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.IM_USED"><code class="name">var <span class="ident">IM_USED</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.INSUFFICIENT_STORAGE"><code class="name">var <span class="ident">INSUFFICIENT_STORAGE</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.INTERNAL_SERVER_ERROR"><code class="name">var <span class="ident">INTERNAL_SERVER_ERROR</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.LENGTH_REQUIRED"><code class="name">var <span class="ident">LENGTH_REQUIRED</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.LOCKED"><code class="name">var <span class="ident">LOCKED</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.LOOP_DETECTED"><code class="name">var <span class="ident">LOOP_DETECTED</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.METHOD_NOT_ALLOWED"><code class="name">var <span class="ident">METHOD_NOT_ALLOWED</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.MISDIRECTED_REQUEST"><code class="name">var <span class="ident">MISDIRECTED_REQUEST</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.MOVED_PERMANENTLY"><code class="name">var <span class="ident">MOVED_PERMANENTLY</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.MULTIPLE_CHOICES"><code class="name">var <span class="ident">MULTIPLE_CHOICES</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.MULTI_STATUS"><code class="name">var <span class="ident">MULTI_STATUS</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.NETWORK_AUTHENTICATION_REQUIRED"><code class="name">var <span class="ident">NETWORK_AUTHENTICATION_REQUIRED</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.NON_AUTHORITATIVE_INFORMATION"><code class="name">var <span class="ident">NON_AUTHORITATIVE_INFORMATION</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.NOT_ACCEPTABLE"><code class="name">var <span class="ident">NOT_ACCEPTABLE</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.NOT_EXTENDED"><code class="name">var <span class="ident">NOT_EXTENDED</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.NOT_FOUND"><code class="name">var <span class="ident">NOT_FOUND</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.NOT_IMPLEMENTED"><code class="name">var <span class="ident">NOT_IMPLEMENTED</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.NOT_MODIFIED"><code class="name">var <span class="ident">NOT_MODIFIED</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.NO_CONTENT"><code class="name">var <span class="ident">NO_CONTENT</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.OK"><code class="name">var <span class="ident">OK</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.PARTIAL_CONTENT"><code class="name">var <span class="ident">PARTIAL_CONTENT</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.PAYMENT_REQUIRED"><code class="name">var <span class="ident">PAYMENT_REQUIRED</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.PERMANENT_REDIRECT"><code class="name">var <span class="ident">PERMANENT_REDIRECT</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.PRECONDITION_FAILED"><code class="name">var <span class="ident">PRECONDITION_FAILED</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.PRECONDITION_REQUIRED"><code class="name">var <span class="ident">PRECONDITION_REQUIRED</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.PROCESSING"><code class="name">var <span class="ident">PROCESSING</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.PROXY_AUTHENTICATION_REQUIRED"><code class="name">var <span class="ident">PROXY_AUTHENTICATION_REQUIRED</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.REQUESTED_RANGE_NOT_SATISFIABLE"><code class="name">var <span class="ident">REQUESTED_RANGE_NOT_SATISFIABLE</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.REQUEST_ENTITY_TOO_LARGE"><code class="name">var <span class="ident">REQUEST_ENTITY_TOO_LARGE</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.REQUEST_HEADER_FIELDS_TOO_LARGE"><code class="name">var <span class="ident">REQUEST_HEADER_FIELDS_TOO_LARGE</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.REQUEST_TIMEOUT"><code class="name">var <span class="ident">REQUEST_TIMEOUT</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.REQUEST_URI_TOO_LONG"><code class="name">var <span class="ident">REQUEST_URI_TOO_LONG</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.RESET_CONTENT"><code class="name">var <span class="ident">RESET_CONTENT</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.SEE_OTHER"><code class="name">var <span class="ident">SEE_OTHER</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.SERVICE_UNAVAILABLE"><code class="name">var <span class="ident">SERVICE_UNAVAILABLE</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.SWITCHING_PROTOCOLS"><code class="name">var <span class="ident">SWITCHING_PROTOCOLS</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.TEMPORARY_REDIRECT"><code class="name">var <span class="ident">TEMPORARY_REDIRECT</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.TOO_EARLY"><code class="name">var <span class="ident">TOO_EARLY</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.TOO_MANY_REQUESTS"><code class="name">var <span class="ident">TOO_MANY_REQUESTS</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.UNAUTHORIZED"><code class="name">var <span class="ident">UNAUTHORIZED</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.UNAVAILABLE_FOR_LEGAL_REASONS"><code class="name">var <span class="ident">UNAVAILABLE_FOR_LEGAL_REASONS</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.UNPROCESSABLE_ENTITY"><code class="name">var <span class="ident">UNPROCESSABLE_ENTITY</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.UNSUPPORTED_MEDIA_TYPE"><code class="name">var <span class="ident">UNSUPPORTED_MEDIA_TYPE</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.UPGRADE_REQUIRED"><code class="name">var <span class="ident">UPGRADE_REQUIRED</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.USE_PROXY"><code class="name">var <span class="ident">USE_PROXY</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="http.HTTPStatus.VARIANT_ALSO_NEGOTIATES"><code class="name">var <span class="ident">VARIANT_ALSO_NEGOTIATES</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3><a href="#header-submodules">Sub-modules</a></h3>
+<ul>
+<li><code><a title="http.client" href="client.html">http.client</a></code></li>
+<li><code><a title="http.cookiejar" href="cookiejar.html">http.cookiejar</a></code></li>
+<li><code><a title="http.cookies" href="cookies.html">http.cookies</a></code></li>
+<li><code><a title="http.server" href="server.html">http.server</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="http.HTTPStatus" href="#http.HTTPStatus">HTTPStatus</a></code></h4>
+<ul class="">
+<li><code><a title="http.HTTPStatus.ACCEPTED" href="#http.HTTPStatus.ACCEPTED">ACCEPTED</a></code></li>
+<li><code><a title="http.HTTPStatus.ALREADY_REPORTED" href="#http.HTTPStatus.ALREADY_REPORTED">ALREADY_REPORTED</a></code></li>
+<li><code><a title="http.HTTPStatus.BAD_GATEWAY" href="#http.HTTPStatus.BAD_GATEWAY">BAD_GATEWAY</a></code></li>
+<li><code><a title="http.HTTPStatus.BAD_REQUEST" href="#http.HTTPStatus.BAD_REQUEST">BAD_REQUEST</a></code></li>
+<li><code><a title="http.HTTPStatus.CONFLICT" href="#http.HTTPStatus.CONFLICT">CONFLICT</a></code></li>
+<li><code><a title="http.HTTPStatus.CONTINUE" href="#http.HTTPStatus.CONTINUE">CONTINUE</a></code></li>
+<li><code><a title="http.HTTPStatus.CREATED" href="#http.HTTPStatus.CREATED">CREATED</a></code></li>
+<li><code><a title="http.HTTPStatus.EARLY_HINTS" href="#http.HTTPStatus.EARLY_HINTS">EARLY_HINTS</a></code></li>
+<li><code><a title="http.HTTPStatus.EXPECTATION_FAILED" href="#http.HTTPStatus.EXPECTATION_FAILED">EXPECTATION_FAILED</a></code></li>
+<li><code><a title="http.HTTPStatus.FAILED_DEPENDENCY" href="#http.HTTPStatus.FAILED_DEPENDENCY">FAILED_DEPENDENCY</a></code></li>
+<li><code><a title="http.HTTPStatus.FORBIDDEN" href="#http.HTTPStatus.FORBIDDEN">FORBIDDEN</a></code></li>
+<li><code><a title="http.HTTPStatus.FOUND" href="#http.HTTPStatus.FOUND">FOUND</a></code></li>
+<li><code><a title="http.HTTPStatus.GATEWAY_TIMEOUT" href="#http.HTTPStatus.GATEWAY_TIMEOUT">GATEWAY_TIMEOUT</a></code></li>
+<li><code><a title="http.HTTPStatus.GONE" href="#http.HTTPStatus.GONE">GONE</a></code></li>
+<li><code><a title="http.HTTPStatus.HTTP_VERSION_NOT_SUPPORTED" href="#http.HTTPStatus.HTTP_VERSION_NOT_SUPPORTED">HTTP_VERSION_NOT_SUPPORTED</a></code></li>
+<li><code><a title="http.HTTPStatus.IM_A_TEAPOT" href="#http.HTTPStatus.IM_A_TEAPOT">IM_A_TEAPOT</a></code></li>
+<li><code><a title="http.HTTPStatus.IM_USED" href="#http.HTTPStatus.IM_USED">IM_USED</a></code></li>
+<li><code><a title="http.HTTPStatus.INSUFFICIENT_STORAGE" href="#http.HTTPStatus.INSUFFICIENT_STORAGE">INSUFFICIENT_STORAGE</a></code></li>
+<li><code><a title="http.HTTPStatus.INTERNAL_SERVER_ERROR" href="#http.HTTPStatus.INTERNAL_SERVER_ERROR">INTERNAL_SERVER_ERROR</a></code></li>
+<li><code><a title="http.HTTPStatus.LENGTH_REQUIRED" href="#http.HTTPStatus.LENGTH_REQUIRED">LENGTH_REQUIRED</a></code></li>
+<li><code><a title="http.HTTPStatus.LOCKED" href="#http.HTTPStatus.LOCKED">LOCKED</a></code></li>
+<li><code><a title="http.HTTPStatus.LOOP_DETECTED" href="#http.HTTPStatus.LOOP_DETECTED">LOOP_DETECTED</a></code></li>
+<li><code><a title="http.HTTPStatus.METHOD_NOT_ALLOWED" href="#http.HTTPStatus.METHOD_NOT_ALLOWED">METHOD_NOT_ALLOWED</a></code></li>
+<li><code><a title="http.HTTPStatus.MISDIRECTED_REQUEST" href="#http.HTTPStatus.MISDIRECTED_REQUEST">MISDIRECTED_REQUEST</a></code></li>
+<li><code><a title="http.HTTPStatus.MOVED_PERMANENTLY" href="#http.HTTPStatus.MOVED_PERMANENTLY">MOVED_PERMANENTLY</a></code></li>
+<li><code><a title="http.HTTPStatus.MULTIPLE_CHOICES" href="#http.HTTPStatus.MULTIPLE_CHOICES">MULTIPLE_CHOICES</a></code></li>
+<li><code><a title="http.HTTPStatus.MULTI_STATUS" href="#http.HTTPStatus.MULTI_STATUS">MULTI_STATUS</a></code></li>
+<li><code><a title="http.HTTPStatus.NETWORK_AUTHENTICATION_REQUIRED" href="#http.HTTPStatus.NETWORK_AUTHENTICATION_REQUIRED">NETWORK_AUTHENTICATION_REQUIRED</a></code></li>
+<li><code><a title="http.HTTPStatus.NON_AUTHORITATIVE_INFORMATION" href="#http.HTTPStatus.NON_AUTHORITATIVE_INFORMATION">NON_AUTHORITATIVE_INFORMATION</a></code></li>
+<li><code><a title="http.HTTPStatus.NOT_ACCEPTABLE" href="#http.HTTPStatus.NOT_ACCEPTABLE">NOT_ACCEPTABLE</a></code></li>
+<li><code><a title="http.HTTPStatus.NOT_EXTENDED" href="#http.HTTPStatus.NOT_EXTENDED">NOT_EXTENDED</a></code></li>
+<li><code><a title="http.HTTPStatus.NOT_FOUND" href="#http.HTTPStatus.NOT_FOUND">NOT_FOUND</a></code></li>
+<li><code><a title="http.HTTPStatus.NOT_IMPLEMENTED" href="#http.HTTPStatus.NOT_IMPLEMENTED">NOT_IMPLEMENTED</a></code></li>
+<li><code><a title="http.HTTPStatus.NOT_MODIFIED" href="#http.HTTPStatus.NOT_MODIFIED">NOT_MODIFIED</a></code></li>
+<li><code><a title="http.HTTPStatus.NO_CONTENT" href="#http.HTTPStatus.NO_CONTENT">NO_CONTENT</a></code></li>
+<li><code><a title="http.HTTPStatus.OK" href="#http.HTTPStatus.OK">OK</a></code></li>
+<li><code><a title="http.HTTPStatus.PARTIAL_CONTENT" href="#http.HTTPStatus.PARTIAL_CONTENT">PARTIAL_CONTENT</a></code></li>
+<li><code><a title="http.HTTPStatus.PAYMENT_REQUIRED" href="#http.HTTPStatus.PAYMENT_REQUIRED">PAYMENT_REQUIRED</a></code></li>
+<li><code><a title="http.HTTPStatus.PERMANENT_REDIRECT" href="#http.HTTPStatus.PERMANENT_REDIRECT">PERMANENT_REDIRECT</a></code></li>
+<li><code><a title="http.HTTPStatus.PRECONDITION_FAILED" href="#http.HTTPStatus.PRECONDITION_FAILED">PRECONDITION_FAILED</a></code></li>
+<li><code><a title="http.HTTPStatus.PRECONDITION_REQUIRED" href="#http.HTTPStatus.PRECONDITION_REQUIRED">PRECONDITION_REQUIRED</a></code></li>
+<li><code><a title="http.HTTPStatus.PROCESSING" href="#http.HTTPStatus.PROCESSING">PROCESSING</a></code></li>
+<li><code><a title="http.HTTPStatus.PROXY_AUTHENTICATION_REQUIRED" href="#http.HTTPStatus.PROXY_AUTHENTICATION_REQUIRED">PROXY_AUTHENTICATION_REQUIRED</a></code></li>
+<li><code><a title="http.HTTPStatus.REQUESTED_RANGE_NOT_SATISFIABLE" href="#http.HTTPStatus.REQUESTED_RANGE_NOT_SATISFIABLE">REQUESTED_RANGE_NOT_SATISFIABLE</a></code></li>
+<li><code><a title="http.HTTPStatus.REQUEST_ENTITY_TOO_LARGE" href="#http.HTTPStatus.REQUEST_ENTITY_TOO_LARGE">REQUEST_ENTITY_TOO_LARGE</a></code></li>
+<li><code><a title="http.HTTPStatus.REQUEST_HEADER_FIELDS_TOO_LARGE" href="#http.HTTPStatus.REQUEST_HEADER_FIELDS_TOO_LARGE">REQUEST_HEADER_FIELDS_TOO_LARGE</a></code></li>
+<li><code><a title="http.HTTPStatus.REQUEST_TIMEOUT" href="#http.HTTPStatus.REQUEST_TIMEOUT">REQUEST_TIMEOUT</a></code></li>
+<li><code><a title="http.HTTPStatus.REQUEST_URI_TOO_LONG" href="#http.HTTPStatus.REQUEST_URI_TOO_LONG">REQUEST_URI_TOO_LONG</a></code></li>
+<li><code><a title="http.HTTPStatus.RESET_CONTENT" href="#http.HTTPStatus.RESET_CONTENT">RESET_CONTENT</a></code></li>
+<li><code><a title="http.HTTPStatus.SEE_OTHER" href="#http.HTTPStatus.SEE_OTHER">SEE_OTHER</a></code></li>
+<li><code><a title="http.HTTPStatus.SERVICE_UNAVAILABLE" href="#http.HTTPStatus.SERVICE_UNAVAILABLE">SERVICE_UNAVAILABLE</a></code></li>
+<li><code><a title="http.HTTPStatus.SWITCHING_PROTOCOLS" href="#http.HTTPStatus.SWITCHING_PROTOCOLS">SWITCHING_PROTOCOLS</a></code></li>
+<li><code><a title="http.HTTPStatus.TEMPORARY_REDIRECT" href="#http.HTTPStatus.TEMPORARY_REDIRECT">TEMPORARY_REDIRECT</a></code></li>
+<li><code><a title="http.HTTPStatus.TOO_EARLY" href="#http.HTTPStatus.TOO_EARLY">TOO_EARLY</a></code></li>
+<li><code><a title="http.HTTPStatus.TOO_MANY_REQUESTS" href="#http.HTTPStatus.TOO_MANY_REQUESTS">TOO_MANY_REQUESTS</a></code></li>
+<li><code><a title="http.HTTPStatus.UNAUTHORIZED" href="#http.HTTPStatus.UNAUTHORIZED">UNAUTHORIZED</a></code></li>
+<li><code><a title="http.HTTPStatus.UNAVAILABLE_FOR_LEGAL_REASONS" href="#http.HTTPStatus.UNAVAILABLE_FOR_LEGAL_REASONS">UNAVAILABLE_FOR_LEGAL_REASONS</a></code></li>
+<li><code><a title="http.HTTPStatus.UNPROCESSABLE_ENTITY" href="#http.HTTPStatus.UNPROCESSABLE_ENTITY">UNPROCESSABLE_ENTITY</a></code></li>
+<li><code><a title="http.HTTPStatus.UNSUPPORTED_MEDIA_TYPE" href="#http.HTTPStatus.UNSUPPORTED_MEDIA_TYPE">UNSUPPORTED_MEDIA_TYPE</a></code></li>
+<li><code><a title="http.HTTPStatus.UPGRADE_REQUIRED" href="#http.HTTPStatus.UPGRADE_REQUIRED">UPGRADE_REQUIRED</a></code></li>
+<li><code><a title="http.HTTPStatus.USE_PROXY" href="#http.HTTPStatus.USE_PROXY">USE_PROXY</a></code></li>
+<li><code><a title="http.HTTPStatus.VARIANT_ALSO_NEGOTIATES" href="#http.HTTPStatus.VARIANT_ALSO_NEGOTIATES">VARIANT_ALSO_NEGOTIATES</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,1159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>http.cookies API documentation</title>
+<meta name="description" content="Here&#39;s a sample session to show how to use this module.
+At the moment, this is the only documentation …" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>http.cookies</code></h1>
+</header>
+<section id="section-intro">
+<p>Here's a sample session to show how to use this module.
+At the moment, this is the only documentation.</p>
+<h2 id="the-basics">The Basics</h2>
+<p>Importing is easy&hellip;</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>from http import cookies</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>Most of the time you start by creating a cookie.</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>C = cookies.SimpleCookie()</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>Once you've created your Cookie, you can add values just as if it were
+a dictionary.</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>C = cookies.SimpleCookie()
+C["fig"] = "newton"
+C["sugar"] = "wafer"
+C.output()
+'Set-Cookie: fig=newton\r\nSet-Cookie: sugar=wafer'</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>Notice that the printable representation of a Cookie is the
+appropriate format for a Set-Cookie: header.
+This is the
+default behavior.
+You can change the header and printed
+attributes by using the .output() function</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>C = cookies.SimpleCookie()
+C["rocky"] = "road"
+C["rocky"]["path"] = "/cookie"
+print(C.output(header="Cookie:"))
+Cookie: rocky=road; Path=/cookie
+print(C.output(attrs=[], header="Cookie:"))
+Cookie: rocky=road</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>The load() method of a Cookie extracts cookies from a string.
+In a
+CGI script, you would use this method to extract the cookies from the
+HTTP_COOKIE environment variable.</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>C = cookies.SimpleCookie()
+C.load("chips=ahoy; vienna=finger")
+C.output()
+'Set-Cookie: chips=ahoy\r\nSet-Cookie: vienna=finger'</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>The load() method is darn-tootin smart about identifying cookies
+within a string.
+Escaped quotation marks, nested semicolons, and other
+such trickeries do not confuse it.</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>C = cookies.SimpleCookie()
+C.load('keebler="E=everybody; L=\"Loves\"; fudge=\012;";')
+print(C)
+Set-Cookie: keebler="E=everybody; L="Loves"; fudge=\012;"</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>Each element of the Cookie also supports all of the RFC 2109
+Cookie attributes.
+Here's an example which sets the Path
+attribute.</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>C = cookies.SimpleCookie()
+C["oreo"] = "doublestuff"
+C["oreo"]["path"] = "/"
+print(C)
+Set-Cookie: oreo=doublestuff; Path=/</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>Each dictionary element has a 'value' attribute, which gives you
+back the value associated with the key.</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>C = cookies.SimpleCookie()
+C["twix"] = "none for you"
+C["twix"].value
+'none for you'</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>The SimpleCookie expects that all values should be standard strings.
+Just to be sure, SimpleCookie invokes the str() builtin to convert
+the value to a string, when the values are set dictionary-style.</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>C = cookies.SimpleCookie()
+C["number"] = 7
+C["string"] = "seven"
+C["number"].value
+'7'
+C["string"].value
+'seven'
+C.output()
+'Set-Cookie: number=7\r\nSet-Cookie: string=seven'</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>Finis.</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">####
+# Copyright 2000 by Timothy O&#39;Malley &lt;timo@alum.mit.edu&gt;
+#
+#                All Rights Reserved
+#
+# Permission to use, copy, modify, and distribute this software
+# and its documentation for any purpose and without fee is hereby
+# granted, provided that the above copyright notice appear in all
+# copies and that both that copyright notice and this permission
+# notice appear in supporting documentation, and that the name of
+# Timothy O&#39;Malley  not be used in advertising or publicity
+# pertaining to distribution of the software without specific, written
+# prior permission.
+#
+# Timothy O&#39;Malley DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS
+# SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+# AND FITNESS, IN NO EVENT SHALL Timothy O&#39;Malley BE LIABLE FOR
+# ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
+# WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS
+# ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+# PERFORMANCE OF THIS SOFTWARE.
+#
+####
+#
+# Id: Cookie.py,v 2.29 2000/08/23 05:28:49 timo Exp
+#   by Timothy O&#39;Malley &lt;timo@alum.mit.edu&gt;
+#
+#  Cookie.py is a Python module for the handling of HTTP
+#  cookies as a Python dictionary.  See RFC 2109 for more
+#  information on cookies.
+#
+#  The original idea to treat Cookies as a dictionary came from
+#  Dave Mitchell (davem@magnet.com) in 1995, when he released the
+#  first version of nscookie.py.
+#
+####
+
+r&#34;&#34;&#34;
+Here&#39;s a sample session to show how to use this module.
+At the moment, this is the only documentation.
+
+The Basics
+----------
+
+Importing is easy...
+
+   &gt;&gt;&gt; from http import cookies
+
+Most of the time you start by creating a cookie.
+
+   &gt;&gt;&gt; C = cookies.SimpleCookie()
+
+Once you&#39;ve created your Cookie, you can add values just as if it were
+a dictionary.
+
+   &gt;&gt;&gt; C = cookies.SimpleCookie()
+   &gt;&gt;&gt; C[&#34;fig&#34;] = &#34;newton&#34;
+   &gt;&gt;&gt; C[&#34;sugar&#34;] = &#34;wafer&#34;
+   &gt;&gt;&gt; C.output()
+   &#39;Set-Cookie: fig=newton\r\nSet-Cookie: sugar=wafer&#39;
+
+Notice that the printable representation of a Cookie is the
+appropriate format for a Set-Cookie: header.  This is the
+default behavior.  You can change the header and printed
+attributes by using the .output() function
+
+   &gt;&gt;&gt; C = cookies.SimpleCookie()
+   &gt;&gt;&gt; C[&#34;rocky&#34;] = &#34;road&#34;
+   &gt;&gt;&gt; C[&#34;rocky&#34;][&#34;path&#34;] = &#34;/cookie&#34;
+   &gt;&gt;&gt; print(C.output(header=&#34;Cookie:&#34;))
+   Cookie: rocky=road; Path=/cookie
+   &gt;&gt;&gt; print(C.output(attrs=[], header=&#34;Cookie:&#34;))
+   Cookie: rocky=road
+
+The load() method of a Cookie extracts cookies from a string.  In a
+CGI script, you would use this method to extract the cookies from the
+HTTP_COOKIE environment variable.
+
+   &gt;&gt;&gt; C = cookies.SimpleCookie()
+   &gt;&gt;&gt; C.load(&#34;chips=ahoy; vienna=finger&#34;)
+   &gt;&gt;&gt; C.output()
+   &#39;Set-Cookie: chips=ahoy\r\nSet-Cookie: vienna=finger&#39;
+
+The load() method is darn-tootin smart about identifying cookies
+within a string.  Escaped quotation marks, nested semicolons, and other
+such trickeries do not confuse it.
+
+   &gt;&gt;&gt; C = cookies.SimpleCookie()
+   &gt;&gt;&gt; C.load(&#39;keebler=&#34;E=everybody; L=\\&#34;Loves\\&#34;; fudge=\\012;&#34;;&#39;)
+   &gt;&gt;&gt; print(C)
+   Set-Cookie: keebler=&#34;E=everybody; L=\&#34;Loves\&#34;; fudge=\012;&#34;
+
+Each element of the Cookie also supports all of the RFC 2109
+Cookie attributes.  Here&#39;s an example which sets the Path
+attribute.
+
+   &gt;&gt;&gt; C = cookies.SimpleCookie()
+   &gt;&gt;&gt; C[&#34;oreo&#34;] = &#34;doublestuff&#34;
+   &gt;&gt;&gt; C[&#34;oreo&#34;][&#34;path&#34;] = &#34;/&#34;
+   &gt;&gt;&gt; print(C)
+   Set-Cookie: oreo=doublestuff; Path=/
+
+Each dictionary element has a &#39;value&#39; attribute, which gives you
+back the value associated with the key.
+
+   &gt;&gt;&gt; C = cookies.SimpleCookie()
+   &gt;&gt;&gt; C[&#34;twix&#34;] = &#34;none for you&#34;
+   &gt;&gt;&gt; C[&#34;twix&#34;].value
+   &#39;none for you&#39;
+
+The SimpleCookie expects that all values should be standard strings.
+Just to be sure, SimpleCookie invokes the str() builtin to convert
+the value to a string, when the values are set dictionary-style.
+
+   &gt;&gt;&gt; C = cookies.SimpleCookie()
+   &gt;&gt;&gt; C[&#34;number&#34;] = 7
+   &gt;&gt;&gt; C[&#34;string&#34;] = &#34;seven&#34;
+   &gt;&gt;&gt; C[&#34;number&#34;].value
+   &#39;7&#39;
+   &gt;&gt;&gt; C[&#34;string&#34;].value
+   &#39;seven&#39;
+   &gt;&gt;&gt; C.output()
+   &#39;Set-Cookie: number=7\r\nSet-Cookie: string=seven&#39;
+
+Finis.
+&#34;&#34;&#34;
+
+#
+# Import our required modules
+#
+import re
+import string
+import types
+
+__all__ = [&#34;CookieError&#34;, &#34;BaseCookie&#34;, &#34;SimpleCookie&#34;]
+
+_nulljoin = &#39;&#39;.join
+_semispacejoin = &#39;; &#39;.join
+_spacejoin = &#39; &#39;.join
+
+#
+# Define an exception visible to External modules
+#
+class CookieError(Exception):
+    pass
+
+
+# These quoting routines conform to the RFC2109 specification, which in
+# turn references the character definitions from RFC2068.  They provide
+# a two-way quoting algorithm.  Any non-text character is translated
+# into a 4 character sequence: a forward-slash followed by the
+# three-digit octal equivalent of the character.  Any &#39;\&#39; or &#39;&#34;&#39; is
+# quoted with a preceding &#39;\&#39; slash.
+# Because of the way browsers really handle cookies (as opposed to what
+# the RFC says) we also encode &#34;,&#34; and &#34;;&#34;.
+#
+# These are taken from RFC2068 and RFC2109.
+#       _LegalChars       is the list of chars which don&#39;t require &#34;&#39;s
+#       _Translator       hash-table for fast quoting
+#
+_LegalChars = string.ascii_letters + string.digits + &#34;!#$%&amp;&#39;*+-.^_`|~:&#34;
+_UnescapedChars = _LegalChars + &#39; ()/&lt;=&gt;?@[]{}&#39;
+
+_Translator = {n: &#39;\\%03o&#39; % n
+               for n in set(range(256)) - set(map(ord, _UnescapedChars))}
+_Translator.update({
+    ord(&#39;&#34;&#39;): &#39;\\&#34;&#39;,
+    ord(&#39;\\&#39;): &#39;\\\\&#39;,
+})
+
+_is_legal_key = re.compile(&#39;[%s]+&#39; % re.escape(_LegalChars)).fullmatch
+
+def _quote(str):
+    r&#34;&#34;&#34;Quote a string for use in a cookie header.
+
+    If the string does not need to be double-quoted, then just return the
+    string.  Otherwise, surround the string in doublequotes and quote
+    (with a \) special characters.
+    &#34;&#34;&#34;
+    if str is None or _is_legal_key(str):
+        return str
+    else:
+        return &#39;&#34;&#39; + str.translate(_Translator) + &#39;&#34;&#39;
+
+
+_OctalPatt = re.compile(r&#34;\\[0-3][0-7][0-7]&#34;)
+_QuotePatt = re.compile(r&#34;[\\].&#34;)
+
+def _unquote(str):
+    # If there aren&#39;t any doublequotes,
+    # then there can&#39;t be any special characters.  See RFC 2109.
+    if str is None or len(str) &lt; 2:
+        return str
+    if str[0] != &#39;&#34;&#39; or str[-1] != &#39;&#34;&#39;:
+        return str
+
+    # We have to assume that we must decode this string.
+    # Down to work.
+
+    # Remove the &#34;s
+    str = str[1:-1]
+
+    # Check for special sequences.  Examples:
+    #    \012 --&gt; \n
+    #    \&#34;   --&gt; &#34;
+    #
+    i = 0
+    n = len(str)
+    res = []
+    while 0 &lt;= i &lt; n:
+        o_match = _OctalPatt.search(str, i)
+        q_match = _QuotePatt.search(str, i)
+        if not o_match and not q_match:              # Neither matched
+            res.append(str[i:])
+            break
+        # else:
+        j = k = -1
+        if o_match:
+            j = o_match.start(0)
+        if q_match:
+            k = q_match.start(0)
+        if q_match and (not o_match or k &lt; j):     # QuotePatt matched
+            res.append(str[i:k])
+            res.append(str[k+1])
+            i = k + 2
+        else:                                      # OctalPatt matched
+            res.append(str[i:j])
+            res.append(chr(int(str[j+1:j+4], 8)))
+            i = j + 4
+    return _nulljoin(res)
+
+# The _getdate() routine is used to set the expiration time in the cookie&#39;s HTTP
+# header.  By default, _getdate() returns the current time in the appropriate
+# &#34;expires&#34; format for a Set-Cookie header.  The one optional argument is an
+# offset from now, in seconds.  For example, an offset of -3600 means &#34;one hour
+# ago&#34;.  The offset may be a floating point number.
+#
+
+_weekdayname = [&#39;Mon&#39;, &#39;Tue&#39;, &#39;Wed&#39;, &#39;Thu&#39;, &#39;Fri&#39;, &#39;Sat&#39;, &#39;Sun&#39;]
+
+_monthname = [None,
+              &#39;Jan&#39;, &#39;Feb&#39;, &#39;Mar&#39;, &#39;Apr&#39;, &#39;May&#39;, &#39;Jun&#39;,
+              &#39;Jul&#39;, &#39;Aug&#39;, &#39;Sep&#39;, &#39;Oct&#39;, &#39;Nov&#39;, &#39;Dec&#39;]
+
+def _getdate(future=0, weekdayname=_weekdayname, monthname=_monthname):
+    from time import gmtime, time
+    now = time()
+    year, month, day, hh, mm, ss, wd, y, z = gmtime(now + future)
+    return &#34;%s, %02d %3s %4d %02d:%02d:%02d GMT&#34; % \
+           (weekdayname[wd], day, monthname[month], year, hh, mm, ss)
+
+
+class Morsel(dict):
+    &#34;&#34;&#34;A class to hold ONE (key, value) pair.
+
+    In a cookie, each such pair may have several attributes, so this class is
+    used to keep the attributes associated with the appropriate key,value pair.
+    This class also includes a coded_value attribute, which is used to hold
+    the network representation of the value.
+    &#34;&#34;&#34;
+    # RFC 2109 lists these attributes as reserved:
+    #   path       comment         domain
+    #   max-age    secure      version
+    #
+    # For historical reasons, these attributes are also reserved:
+    #   expires
+    #
+    # This is an extension from Microsoft:
+    #   httponly
+    #
+    # This dictionary provides a mapping from the lowercase
+    # variant on the left to the appropriate traditional
+    # formatting on the right.
+    _reserved = {
+        &#34;expires&#34;  : &#34;expires&#34;,
+        &#34;path&#34;     : &#34;Path&#34;,
+        &#34;comment&#34;  : &#34;Comment&#34;,
+        &#34;domain&#34;   : &#34;Domain&#34;,
+        &#34;max-age&#34;  : &#34;Max-Age&#34;,
+        &#34;secure&#34;   : &#34;Secure&#34;,
+        &#34;httponly&#34; : &#34;HttpOnly&#34;,
+        &#34;version&#34;  : &#34;Version&#34;,
+        &#34;samesite&#34; : &#34;SameSite&#34;,
+    }
+
+    _flags = {&#39;secure&#39;, &#39;httponly&#39;}
+
+    def __init__(self):
+        # Set defaults
+        self._key = self._value = self._coded_value = None
+
+        # Set default attributes
+        for key in self._reserved:
+            dict.__setitem__(self, key, &#34;&#34;)
+
+    @property
+    def key(self):
+        return self._key
+
+    @property
+    def value(self):
+        return self._value
+
+    @property
+    def coded_value(self):
+        return self._coded_value
+
+    def __setitem__(self, K, V):
+        K = K.lower()
+        if not K in self._reserved:
+            raise CookieError(&#34;Invalid attribute %r&#34; % (K,))
+        dict.__setitem__(self, K, V)
+
+    def setdefault(self, key, val=None):
+        key = key.lower()
+        if key not in self._reserved:
+            raise CookieError(&#34;Invalid attribute %r&#34; % (key,))
+        return dict.setdefault(self, key, val)
+
+    def __eq__(self, morsel):
+        if not isinstance(morsel, Morsel):
+            return NotImplemented
+        return (dict.__eq__(self, morsel) and
+                self._value == morsel._value and
+                self._key == morsel._key and
+                self._coded_value == morsel._coded_value)
+
+    __ne__ = object.__ne__
+
+    def copy(self):
+        morsel = Morsel()
+        dict.update(morsel, self)
+        morsel.__dict__.update(self.__dict__)
+        return morsel
+
+    def update(self, values):
+        data = {}
+        for key, val in dict(values).items():
+            key = key.lower()
+            if key not in self._reserved:
+                raise CookieError(&#34;Invalid attribute %r&#34; % (key,))
+            data[key] = val
+        dict.update(self, data)
+
+    def isReservedKey(self, K):
+        return K.lower() in self._reserved
+
+    def set(self, key, val, coded_val):
+        if key.lower() in self._reserved:
+            raise CookieError(&#39;Attempt to set a reserved key %r&#39; % (key,))
+        if not _is_legal_key(key):
+            raise CookieError(&#39;Illegal key %r&#39; % (key,))
+
+        # It&#39;s a good key, so save it.
+        self._key = key
+        self._value = val
+        self._coded_value = coded_val
+
+    def __getstate__(self):
+        return {
+            &#39;key&#39;: self._key,
+            &#39;value&#39;: self._value,
+            &#39;coded_value&#39;: self._coded_value,
+        }
+
+    def __setstate__(self, state):
+        self._key = state[&#39;key&#39;]
+        self._value = state[&#39;value&#39;]
+        self._coded_value = state[&#39;coded_value&#39;]
+
+    def output(self, attrs=None, header=&#34;Set-Cookie:&#34;):
+        return &#34;%s %s&#34; % (header, self.OutputString(attrs))
+
+    __str__ = output
+
+    def __repr__(self):
+        return &#39;&lt;%s: %s&gt;&#39; % (self.__class__.__name__, self.OutputString())
+
+    def js_output(self, attrs=None):
+        # Print javascript
+        return &#34;&#34;&#34;
+        &lt;script type=&#34;text/javascript&#34;&gt;
+        &lt;!-- begin hiding
+        document.cookie = \&#34;%s\&#34;;
+        // end hiding --&gt;
+        &lt;/script&gt;
+        &#34;&#34;&#34; % (self.OutputString(attrs).replace(&#39;&#34;&#39;, r&#39;\&#34;&#39;))
+
+    def OutputString(self, attrs=None):
+        # Build up our result
+        #
+        result = []
+        append = result.append
+
+        # First, the key=value pair
+        append(&#34;%s=%s&#34; % (self.key, self.coded_value))
+
+        # Now add any defined attributes
+        if attrs is None:
+            attrs = self._reserved
+        items = sorted(self.items())
+        for key, value in items:
+            if value == &#34;&#34;:
+                continue
+            if key not in attrs:
+                continue
+            if key == &#34;expires&#34; and isinstance(value, int):
+                append(&#34;%s=%s&#34; % (self._reserved[key], _getdate(value)))
+            elif key == &#34;max-age&#34; and isinstance(value, int):
+                append(&#34;%s=%d&#34; % (self._reserved[key], value))
+            elif key == &#34;comment&#34; and isinstance(value, str):
+                append(&#34;%s=%s&#34; % (self._reserved[key], _quote(value)))
+            elif key in self._flags:
+                if value:
+                    append(str(self._reserved[key]))
+            else:
+                append(&#34;%s=%s&#34; % (self._reserved[key], value))
+
+        # Return the result
+        return _semispacejoin(result)
+
+    __class_getitem__ = classmethod(types.GenericAlias)
+
+
+#
+# Pattern for finding cookie
+#
+# This used to be strict parsing based on the RFC2109 and RFC2068
+# specifications.  I have since discovered that MSIE 3.0x doesn&#39;t
+# follow the character rules outlined in those specs.  As a
+# result, the parsing rules here are less strict.
+#
+
+_LegalKeyChars  = r&#34;\w\d!#%&amp;&#39;~_`&gt;&lt;@,:/\$\*\+\-\.\^\|\)\(\?\}\{\=&#34;
+_LegalValueChars = _LegalKeyChars + r&#39;\[\]&#39;
+_CookiePattern = re.compile(r&#34;&#34;&#34;
+    \s*                            # Optional whitespace at start of cookie
+    (?P&lt;key&gt;                       # Start of group &#39;key&#39;
+    [&#34;&#34;&#34; + _LegalKeyChars + r&#34;&#34;&#34;]+?   # Any word of at least one letter
+    )                              # End of group &#39;key&#39;
+    (                              # Optional group: there may not be a value.
+    \s*=\s*                          # Equal Sign
+    (?P&lt;val&gt;                         # Start of group &#39;val&#39;
+    &#34;(?:[^\\&#34;]|\\.)*&#34;                  # Any doublequoted string
+    |                                  # or
+    \w{3},\s[\w\d\s-]{9,11}\s[\d:]{8}\sGMT  # Special case for &#34;expires&#34; attr
+    |                                  # or
+    [&#34;&#34;&#34; + _LegalValueChars + r&#34;&#34;&#34;]*      # Any word or empty string
+    )                                # End of group &#39;val&#39;
+    )?                             # End of optional value group
+    \s*                            # Any number of spaces.
+    (\s+|;|$)                      # Ending either at space, semicolon, or EOS.
+    &#34;&#34;&#34;, re.ASCII | re.VERBOSE)    # re.ASCII may be removed if safe.
+
+
+# At long last, here is the cookie class.  Using this class is almost just like
+# using a dictionary.  See this module&#39;s docstring for example usage.
+#
+class BaseCookie(dict):
+    &#34;&#34;&#34;A container class for a set of Morsels.&#34;&#34;&#34;
+
+    def value_decode(self, val):
+        &#34;&#34;&#34;real_value, coded_value = value_decode(STRING)
+        Called prior to setting a cookie&#39;s value from the network
+        representation.  The VALUE is the value read from HTTP
+        header.
+        Override this function to modify the behavior of cookies.
+        &#34;&#34;&#34;
+        return val, val
+
+    def value_encode(self, val):
+        &#34;&#34;&#34;real_value, coded_value = value_encode(VALUE)
+        Called prior to setting a cookie&#39;s value from the dictionary
+        representation.  The VALUE is the value being assigned.
+        Override this function to modify the behavior of cookies.
+        &#34;&#34;&#34;
+        strval = str(val)
+        return strval, strval
+
+    def __init__(self, input=None):
+        if input:
+            self.load(input)
+
+    def __set(self, key, real_value, coded_value):
+        &#34;&#34;&#34;Private method for setting a cookie&#39;s value&#34;&#34;&#34;
+        M = self.get(key, Morsel())
+        M.set(key, real_value, coded_value)
+        dict.__setitem__(self, key, M)
+
+    def __setitem__(self, key, value):
+        &#34;&#34;&#34;Dictionary style assignment.&#34;&#34;&#34;
+        if isinstance(value, Morsel):
+            # allow assignment of constructed Morsels (e.g. for pickling)
+            dict.__setitem__(self, key, value)
+        else:
+            rval, cval = self.value_encode(value)
+            self.__set(key, rval, cval)
+
+    def output(self, attrs=None, header=&#34;Set-Cookie:&#34;, sep=&#34;\015\012&#34;):
+        &#34;&#34;&#34;Return a string suitable for HTTP.&#34;&#34;&#34;
+        result = []
+        items = sorted(self.items())
+        for key, value in items:
+            result.append(value.output(attrs, header))
+        return sep.join(result)
+
+    __str__ = output
+
+    def __repr__(self):
+        l = []
+        items = sorted(self.items())
+        for key, value in items:
+            l.append(&#39;%s=%s&#39; % (key, repr(value.value)))
+        return &#39;&lt;%s: %s&gt;&#39; % (self.__class__.__name__, _spacejoin(l))
+
+    def js_output(self, attrs=None):
+        &#34;&#34;&#34;Return a string suitable for JavaScript.&#34;&#34;&#34;
+        result = []
+        items = sorted(self.items())
+        for key, value in items:
+            result.append(value.js_output(attrs))
+        return _nulljoin(result)
+
+    def load(self, rawdata):
+        &#34;&#34;&#34;Load cookies from a string (presumably HTTP_COOKIE) or
+        from a dictionary.  Loading cookies from a dictionary &#39;d&#39;
+        is equivalent to calling:
+            map(Cookie.__setitem__, d.keys(), d.values())
+        &#34;&#34;&#34;
+        if isinstance(rawdata, str):
+            self.__parse_string(rawdata)
+        else:
+            # self.update() wouldn&#39;t call our custom __setitem__
+            for key, value in rawdata.items():
+                self[key] = value
+        return
+
+    def __parse_string(self, str, patt=_CookiePattern):
+        i = 0                 # Our starting point
+        n = len(str)          # Length of string
+        parsed_items = []     # Parsed (type, key, value) triples
+        morsel_seen = False   # A key=value pair was previously encountered
+
+        TYPE_ATTRIBUTE = 1
+        TYPE_KEYVALUE = 2
+
+        # We first parse the whole cookie string and reject it if it&#39;s
+        # syntactically invalid (this helps avoid some classes of injection
+        # attacks).
+        while 0 &lt;= i &lt; n:
+            # Start looking for a cookie
+            match = patt.match(str, i)
+            if not match:
+                # No more cookies
+                break
+
+            key, value = match.group(&#34;key&#34;), match.group(&#34;val&#34;)
+            i = match.end(0)
+
+            if key[0] == &#34;$&#34;:
+                if not morsel_seen:
+                    # We ignore attributes which pertain to the cookie
+                    # mechanism as a whole, such as &#34;$Version&#34;.
+                    # See RFC 2965. (Does anyone care?)
+                    continue
+                parsed_items.append((TYPE_ATTRIBUTE, key[1:], value))
+            elif key.lower() in Morsel._reserved:
+                if not morsel_seen:
+                    # Invalid cookie string
+                    return
+                if value is None:
+                    if key.lower() in Morsel._flags:
+                        parsed_items.append((TYPE_ATTRIBUTE, key, True))
+                    else:
+                        # Invalid cookie string
+                        return
+                else:
+                    parsed_items.append((TYPE_ATTRIBUTE, key, _unquote(value)))
+            elif value is not None:
+                parsed_items.append((TYPE_KEYVALUE, key, self.value_decode(value)))
+                morsel_seen = True
+            else:
+                # Invalid cookie string
+                return
+
+        # The cookie string is valid, apply it.
+        M = None         # current morsel
+        for tp, key, value in parsed_items:
+            if tp == TYPE_ATTRIBUTE:
+                assert M is not None
+                M[key] = value
+            else:
+                assert tp == TYPE_KEYVALUE
+                rval, cval = value
+                self.__set(key, rval, cval)
+                M = self[key]
+
+
+class SimpleCookie(BaseCookie):
+    &#34;&#34;&#34;
+    SimpleCookie supports strings as cookie values.  When setting
+    the value using the dictionary assignment notation, SimpleCookie
+    calls the builtin str() to convert the value to a string.  Values
+    received from HTTP are kept as strings.
+    &#34;&#34;&#34;
+    def value_decode(self, val):
+        return _unquote(val), val
+
+    def value_encode(self, val):
+        strval = str(val)
+        return strval, _quote(strval)</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="http.cookies.BaseCookie"><code class="flex name class">
+<span>class <span class="ident">BaseCookie</span></span>
+<span>(</span><span>input=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>A container class for a set of Morsels.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class BaseCookie(dict):
+    &#34;&#34;&#34;A container class for a set of Morsels.&#34;&#34;&#34;
+
+    def value_decode(self, val):
+        &#34;&#34;&#34;real_value, coded_value = value_decode(STRING)
+        Called prior to setting a cookie&#39;s value from the network
+        representation.  The VALUE is the value read from HTTP
+        header.
+        Override this function to modify the behavior of cookies.
+        &#34;&#34;&#34;
+        return val, val
+
+    def value_encode(self, val):
+        &#34;&#34;&#34;real_value, coded_value = value_encode(VALUE)
+        Called prior to setting a cookie&#39;s value from the dictionary
+        representation.  The VALUE is the value being assigned.
+        Override this function to modify the behavior of cookies.
+        &#34;&#34;&#34;
+        strval = str(val)
+        return strval, strval
+
+    def __init__(self, input=None):
+        if input:
+            self.load(input)
+
+    def __set(self, key, real_value, coded_value):
+        &#34;&#34;&#34;Private method for setting a cookie&#39;s value&#34;&#34;&#34;
+        M = self.get(key, Morsel())
+        M.set(key, real_value, coded_value)
+        dict.__setitem__(self, key, M)
+
+    def __setitem__(self, key, value):
+        &#34;&#34;&#34;Dictionary style assignment.&#34;&#34;&#34;
+        if isinstance(value, Morsel):
+            # allow assignment of constructed Morsels (e.g. for pickling)
+            dict.__setitem__(self, key, value)
+        else:
+            rval, cval = self.value_encode(value)
+            self.__set(key, rval, cval)
+
+    def output(self, attrs=None, header=&#34;Set-Cookie:&#34;, sep=&#34;\015\012&#34;):
+        &#34;&#34;&#34;Return a string suitable for HTTP.&#34;&#34;&#34;
+        result = []
+        items = sorted(self.items())
+        for key, value in items:
+            result.append(value.output(attrs, header))
+        return sep.join(result)
+
+    __str__ = output
+
+    def __repr__(self):
+        l = []
+        items = sorted(self.items())
+        for key, value in items:
+            l.append(&#39;%s=%s&#39; % (key, repr(value.value)))
+        return &#39;&lt;%s: %s&gt;&#39; % (self.__class__.__name__, _spacejoin(l))
+
+    def js_output(self, attrs=None):
+        &#34;&#34;&#34;Return a string suitable for JavaScript.&#34;&#34;&#34;
+        result = []
+        items = sorted(self.items())
+        for key, value in items:
+            result.append(value.js_output(attrs))
+        return _nulljoin(result)
+
+    def load(self, rawdata):
+        &#34;&#34;&#34;Load cookies from a string (presumably HTTP_COOKIE) or
+        from a dictionary.  Loading cookies from a dictionary &#39;d&#39;
+        is equivalent to calling:
+            map(Cookie.__setitem__, d.keys(), d.values())
+        &#34;&#34;&#34;
+        if isinstance(rawdata, str):
+            self.__parse_string(rawdata)
+        else:
+            # self.update() wouldn&#39;t call our custom __setitem__
+            for key, value in rawdata.items():
+                self[key] = value
+        return
+
+    def __parse_string(self, str, patt=_CookiePattern):
+        i = 0                 # Our starting point
+        n = len(str)          # Length of string
+        parsed_items = []     # Parsed (type, key, value) triples
+        morsel_seen = False   # A key=value pair was previously encountered
+
+        TYPE_ATTRIBUTE = 1
+        TYPE_KEYVALUE = 2
+
+        # We first parse the whole cookie string and reject it if it&#39;s
+        # syntactically invalid (this helps avoid some classes of injection
+        # attacks).
+        while 0 &lt;= i &lt; n:
+            # Start looking for a cookie
+            match = patt.match(str, i)
+            if not match:
+                # No more cookies
+                break
+
+            key, value = match.group(&#34;key&#34;), match.group(&#34;val&#34;)
+            i = match.end(0)
+
+            if key[0] == &#34;$&#34;:
+                if not morsel_seen:
+                    # We ignore attributes which pertain to the cookie
+                    # mechanism as a whole, such as &#34;$Version&#34;.
+                    # See RFC 2965. (Does anyone care?)
+                    continue
+                parsed_items.append((TYPE_ATTRIBUTE, key[1:], value))
+            elif key.lower() in Morsel._reserved:
+                if not morsel_seen:
+                    # Invalid cookie string
+                    return
+                if value is None:
+                    if key.lower() in Morsel._flags:
+                        parsed_items.append((TYPE_ATTRIBUTE, key, True))
+                    else:
+                        # Invalid cookie string
+                        return
+                else:
+                    parsed_items.append((TYPE_ATTRIBUTE, key, _unquote(value)))
+            elif value is not None:
+                parsed_items.append((TYPE_KEYVALUE, key, self.value_decode(value)))
+                morsel_seen = True
+            else:
+                # Invalid cookie string
+                return
+
+        # The cookie string is valid, apply it.
+        M = None         # current morsel
+        for tp, key, value in parsed_items:
+            if tp == TYPE_ATTRIBUTE:
+                assert M is not None
+                M[key] = value
+            else:
+                assert tp == TYPE_KEYVALUE
+                rval, cval = value
+                self.__set(key, rval, cval)
+                M = self[key]</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>builtins.dict</li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="http.cookies.SimpleCookie" href="#http.cookies.SimpleCookie">SimpleCookie</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="http.cookies.BaseCookie.js_output"><code class="name flex">
+<span>def <span class="ident">js_output</span></span>(<span>self, attrs=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return a string suitable for JavaScript.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def js_output(self, attrs=None):
+    &#34;&#34;&#34;Return a string suitable for JavaScript.&#34;&#34;&#34;
+    result = []
+    items = sorted(self.items())
+    for key, value in items:
+        result.append(value.js_output(attrs))
+    return _nulljoin(result)</code></pre>
+</details>
+</dd>
+<dt id="http.cookies.BaseCookie.load"><code class="name flex">
+<span>def <span class="ident">load</span></span>(<span>self, rawdata)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Load cookies from a string (presumably HTTP_COOKIE) or
+from a dictionary.
+Loading cookies from a dictionary 'd'
+is equivalent to calling:
+map(Cookie.<strong>setitem</strong>, d.keys(), d.values())</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def load(self, rawdata):
+    &#34;&#34;&#34;Load cookies from a string (presumably HTTP_COOKIE) or
+    from a dictionary.  Loading cookies from a dictionary &#39;d&#39;
+    is equivalent to calling:
+        map(Cookie.__setitem__, d.keys(), d.values())
+    &#34;&#34;&#34;
+    if isinstance(rawdata, str):
+        self.__parse_string(rawdata)
+    else:
+        # self.update() wouldn&#39;t call our custom __setitem__
+        for key, value in rawdata.items():
+            self[key] = value
+    return</code></pre>
+</details>
+</dd>
+<dt id="http.cookies.BaseCookie.output"><code class="name flex">
+<span>def <span class="ident">output</span></span>(<span>self, attrs=None, header='Set-Cookie:', sep='\r\n')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return a string suitable for HTTP.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def output(self, attrs=None, header=&#34;Set-Cookie:&#34;, sep=&#34;\015\012&#34;):
+    &#34;&#34;&#34;Return a string suitable for HTTP.&#34;&#34;&#34;
+    result = []
+    items = sorted(self.items())
+    for key, value in items:
+        result.append(value.output(attrs, header))
+    return sep.join(result)</code></pre>
+</details>
+</dd>
+<dt id="http.cookies.BaseCookie.value_decode"><code class="name flex">
+<span>def <span class="ident">value_decode</span></span>(<span>self, val)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>real_value, coded_value = value_decode(STRING)
+Called prior to setting a cookie's value from the network
+representation.
+The VALUE is the value read from HTTP
+header.
+Override this function to modify the behavior of cookies.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def value_decode(self, val):
+    &#34;&#34;&#34;real_value, coded_value = value_decode(STRING)
+    Called prior to setting a cookie&#39;s value from the network
+    representation.  The VALUE is the value read from HTTP
+    header.
+    Override this function to modify the behavior of cookies.
+    &#34;&#34;&#34;
+    return val, val</code></pre>
+</details>
+</dd>
+<dt id="http.cookies.BaseCookie.value_encode"><code class="name flex">
+<span>def <span class="ident">value_encode</span></span>(<span>self, val)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>real_value, coded_value = value_encode(VALUE)
+Called prior to setting a cookie's value from the dictionary
+representation.
+The VALUE is the value being assigned.
+Override this function to modify the behavior of cookies.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def value_encode(self, val):
+    &#34;&#34;&#34;real_value, coded_value = value_encode(VALUE)
+    Called prior to setting a cookie&#39;s value from the dictionary
+    representation.  The VALUE is the value being assigned.
+    Override this function to modify the behavior of cookies.
+    &#34;&#34;&#34;
+    strval = str(val)
+    return strval, strval</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="http.cookies.CookieError"><code class="flex name class">
+<span>class <span class="ident">CookieError</span></span>
+<span>(</span><span>*args, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Common base class for all non-exit exceptions.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class CookieError(Exception):
+    pass</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>builtins.Exception</li>
+<li>builtins.BaseException</li>
+</ul>
+</dd>
+<dt id="http.cookies.SimpleCookie"><code class="flex name class">
+<span>class <span class="ident">SimpleCookie</span></span>
+<span>(</span><span>input=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>SimpleCookie supports strings as cookie values.
+When setting
+the value using the dictionary assignment notation, SimpleCookie
+calls the builtin str() to convert the value to a string.
+Values
+received from HTTP are kept as strings.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class SimpleCookie(BaseCookie):
+    &#34;&#34;&#34;
+    SimpleCookie supports strings as cookie values.  When setting
+    the value using the dictionary assignment notation, SimpleCookie
+    calls the builtin str() to convert the value to a string.  Values
+    received from HTTP are kept as strings.
+    &#34;&#34;&#34;
+    def value_decode(self, val):
+        return _unquote(val), val
+
+    def value_encode(self, val):
+        strval = str(val)
+        return strval, _quote(strval)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="http.cookies.BaseCookie" href="#http.cookies.BaseCookie">BaseCookie</a></li>
+<li>builtins.dict</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="http.cookies.BaseCookie" href="#http.cookies.BaseCookie">BaseCookie</a></b></code>:
+<ul class="hlist">
+<li><code><a title="http.cookies.BaseCookie.js_output" href="#http.cookies.BaseCookie.js_output">js_output</a></code></li>
+<li><code><a title="http.cookies.BaseCookie.load" href="#http.cookies.BaseCookie.load">load</a></code></li>
+<li><code><a title="http.cookies.BaseCookie.output" href="#http.cookies.BaseCookie.output">output</a></code></li>
+<li><code><a title="http.cookies.BaseCookie.value_decode" href="#http.cookies.BaseCookie.value_decode">value_decode</a></code></li>
+<li><code><a title="http.cookies.BaseCookie.value_encode" href="#http.cookies.BaseCookie.value_encode">value_encode</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul>
+<li><a href="#the-basics">The Basics</a></li>
+</ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="http" href="index.html">http</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="http.cookies.BaseCookie" href="#http.cookies.BaseCookie">BaseCookie</a></code></h4>
+<ul class="">
+<li><code><a title="http.cookies.BaseCookie.js_output" href="#http.cookies.BaseCookie.js_output">js_output</a></code></li>
+<li><code><a title="http.cookies.BaseCookie.load" href="#http.cookies.BaseCookie.load">load</a></code></li>
+<li><code><a title="http.cookies.BaseCookie.output" href="#http.cookies.BaseCookie.output">output</a></code></li>
+<li><code><a title="http.cookies.BaseCookie.value_decode" href="#http.cookies.BaseCookie.value_decode">value_decode</a></code></li>
+<li><code><a title="http.cookies.BaseCookie.value_encode" href="#http.cookies.BaseCookie.value_encode">value_encode</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="http.cookies.CookieError" href="#http.cookies.CookieError">CookieError</a></code></h4>
+</li>
+<li>
+<h4><code><a title="http.cookies.SimpleCookie" href="#http.cookies.SimpleCookie">SimpleCookie</a></code></h4>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>

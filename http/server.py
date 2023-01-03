@@ -94,7 +94,7 @@ class RESTServer:
                 response.body = ""
 
             elif verb == "GET":
-                response.body = "<http><body><p>OK Request</p></body></http>"
+                response.body = "<http><body><p>Test Request</p></body></http>"
 
             elif verb == "POST":
                 response.body = ""
@@ -135,7 +135,7 @@ class RESTServer:
             writer.close()
 
             # ... if the client doesn't take the hint, wait
-            # for `timeout` seconds and then force the close
+            # for `write_timeout` seconds and then force the close
             await asyncio.sleep(self.write_timeout)
             await writer.wait_closed()
 
