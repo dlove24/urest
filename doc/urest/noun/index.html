@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
-<title>urest.http API documentation</title>
-<meta name="description" content="Network interface and helper classes for abstracting the underlying HTTP stream …" />
+<title>urest.noun API documentation</title>
+<meta name="description" content="Abstract base class and helper classes for the server-proivded REST API …" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -19,59 +19,23 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>urest.http</code></h1>
+<h1 class="title">Module <code>urest.noun</code></h1>
 </header>
 <section id="section-intro">
-<p>Network interface and helper classes for abstracting the underlying HTTP stream</p>
+<p>Abstract base class and helper classes for the server-proivded REST API</p>
 <h2 id="overview">Overview</h2>
-<p>This module provides the abstraction of the underlying socket handling code,
-using in marshaling requests from clients and building the response. All the
-socket handling is built around the Python 3 <code>asyncio</code> library for the low-level
-network interface, and for the use of co-routines to simplify request handling.</p>
-<p>In most cases, consumers of this module only need to provide an <code>asynio</code> event
-loop: see "Creating the Network Server" in the Section <em>Using the Module</em> below.
-By default the module will also bind to the <em>network</em> address of the host on the
-standard port 80 used by HTTP requests. This can be changed in the instantiation
-of the
-<code><a title="urest.http.server.RESTServer" href="server.html#urest.http.server.RESTServer">RESTServer</a></code> class.</p>
+<p>During the marsheling of client requests (provided by the <code><a title="urest.http.server.RESTServer" href="../http/server.html#urest.http.server.RESTServer">RESTServer</a></code>
+class), the path portion of the URI is extracted from the client. This path is
+expected to take the form of</p>
+<blockquote>
+<p><code>/ noun / verb</code></p>
+</blockquote>
+<p>The 'noun' determines the resource of the request, and the 'verb' the action to
+be taken on that resource. Also important is the intent of the client as
+inferred from the underlying HTTP request, e.g. <code>GET</code> or <code>PUT</code>. Taken together
+the URI and the client intent are mapped as follows</p>
 <h2 id="implementation">Implementation</h2>
-<p>During the instantiation of the <code><a title="urest.http.server.RESTServer" href="server.html#urest.http.server.RESTServer">RESTServer</a></code> class, the resulting
-object creates a socket bound to the specified address and port (or the host network
-address and port 80 by default). This binding is undertaken as part of the <code>asyncio</code></p>
 <h2 id="using-the-module">Using The Module</h2>
-<h3 id="creating-the-network-server">Creating the Network Server</h3>
-<p>All network clients are assumed to be handled by an instance of the
-<code><a title="urest.http.server.RESTServer" href="server.html#urest.http.server.RESTServer">RESTServer</a></code> class from the <code><a title="urest.http.server" href="server.html">urest.http.server</a></code> module. The
-<code><a title="urest.http.server.RESTServer" href="server.html#urest.http.server.RESTServer">RESTServer</a></code> class provides both an event loop for the
-<code>asyncio</code> library, and also takes care of the lower-level networking interface
-for the clients. Unless working with multiple instances (e.g. via a thread
-library), most model consumers are assumed have a single instance of the
-<code><a title="urest.http.server.RESTServer" href="server.html#urest.http.server.RESTServer">RESTServer</a></code> &mdash; <strong>but the module will not check this</strong>.</p>
-<p>In most cases, something similar to the following will suffice</p>
-<pre><code class="language-python">  # Import the Asynchronous IO Library
-  try:
-    import uasyncio as asyncio
-  except ImportError:
-    import asyncio
-
-  from urest.http import RESTServer
-
-  app = RESTServer()
-
-  if __name__ == &quot;__main__&quot;:
-    loop = asyncio.get_event_loop()
-    loop.create_task(app.start())
-    loop.run_forever()
-</code></pre>
-<p><strong>NOTE:</strong> There is no guarantee of thread-safety in this module, and all
-'concurrency' is assumed to be via co-routines provided by the <code>asyncio</code>
-library. For an overview of how multiple clients can be handled using
-co-routines, <a href="https://realpython.com/async-io-python">Async IO in Python</a> is
-highly recommended reading.</p>
-<h3 id="creating-the-api-responses">Creating the API Responses</h3>
-<p>Most module consumers will not use the <code><a title="urest.http.response" href="response.html">urest.http.response</a></code> module directly: but
-will instead sub-class <code><a title="urest.api.base.APIBase" href="../api/base.html#urest.api.base.APIBase">APIBase</a></code> to provide the core of the response
-to the network clients.</p>
 <h2 id="tested-implementations">Tested Implementations</h2>
 <p>This version is written for MicroPython 3.4, and has been tested on:</p>
 <ul>
@@ -80,7 +44,7 @@ to the network clients.</p>
 <h2 id="licence">Licence</h2>
 <p>This module, and all included code, is made available under the terms of the MIT Licence</p>
 <blockquote>
-<p>Copyright 2021&ndash;2022 (c) Erik de Lange, Copyright (c) 2022&ndash;2023 David Love</p>
+<p>Copyright (c) 2022&ndash;2023 David Love</p>
 <p>Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal in
 the Software without restriction, including without limitation the rights to
@@ -101,73 +65,30 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">&#34;&#34;&#34;
-Network interface and helper classes for abstracting the underlying HTTP stream
+Abstract base class and helper classes for the server-proivded REST API
 
 Overview
 --------
 
-This module provides the abstraction of the underlying socket handling code,
-using in marshaling requests from clients and building the response. All the
-socket handling is built around the Python 3 `asyncio` library for the low-level
-network interface, and for the use of co-routines to simplify request handling.
+During the marsheling of client requests (provided by the `urest.http.server.RESTServer`
+class), the path portion of the URI is extracted from the client. This path is
+expected to take the form of
 
-In most cases, consumers of this module only need to provide an `asynio` event
-loop: see &#34;Creating the Network Server&#34; in the Section _Using the Module_ below.
-By default the module will also bind to the _network_ address of the host on the
-standard port 80 used by HTTP requests. This can be changed in the instantiation
-of the  `urest.http.server.RESTServer` class.
+&gt; `/ noun / verb`
+
+The &#39;noun&#39; determines the resource of the request, and the &#39;verb&#39; the action to
+be taken on that resource. Also important is the intent of the client as
+inferred from the underlying HTTP request, e.g. `GET` or `PUT`. Taken together
+the URI and the client intent are mapped as follows
+
 
 Implementation
 --------------
 
-During the instantiation of the `urest.http.server.RESTServer` class, the resulting
-object creates a socket bound to the specified address and port (or the host network
-address and port 80 by default). This binding is undertaken as part of the `asyncio`
 
 
 Using the Module
 ----------------
-
-### Creating the Network Server
-
-All network clients are assumed to be handled by an instance of the
-`urest.http.server.RESTServer` class from the `urest.http.server` module. The
-`urest.http.server.RESTServer` class provides both an event loop for the
-`asyncio` library, and also takes care of the lower-level networking interface
-for the clients. Unless working with multiple instances (e.g. via a thread
-library), most model consumers are assumed have a single instance of the
-`urest.http.server.RESTServer` --- **but the module will not check this**.
-
-In most cases, something similar to the following will suffice
-
-```python
-  # Import the Asynchronous IO Library
-  try:
-    import uasyncio as asyncio
-  except ImportError:
-    import asyncio
-
-  from urest.http import RESTServer
-
-  app = RESTServer()
-
-  if __name__ == &#34;__main__&#34;:
-    loop = asyncio.get_event_loop()
-    loop.create_task(app.start())
-    loop.run_forever()
-```
-
-**NOTE:** There is no guarantee of thread-safety in this module, and all
-&#39;concurrency&#39; is assumed to be via co-routines provided by the `asyncio`
-library. For an overview of how multiple clients can be handled using
-co-routines, [Async IO in Python](https://realpython.com/async-io-python) is
-highly recommended reading.
-
-### Creating the API Responses
-
-Most module consumers will not use the `urest.http.response` module directly: but
-will instead sub-class `urest.api.base.APIBase` to provide the core of the response
-to the network clients.
 
 
 Tested Implementations
@@ -182,7 +103,7 @@ Licence
 
 This module, and all included code, is made available under the terms of the MIT Licence
 
-&gt; Copyright 2021--2022 (c) Erik de Lange, Copyright (c) 2022--2023 David Love
+&gt; Copyright (c) 2022--2023 David Love
 
 &gt; Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the &#34;Software&#34;), to deal in
@@ -203,19 +124,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 &#34;&#34;&#34;
 
 ### Expose the `http` module interface
-from .server import RESTServer
-from .response import HTTPResponse</code></pre>
+from .base import NounBase</code></pre>
 </details>
 </section>
 <section>
 <h2 class="section-title" id="header-submodules">Sub-modules</h2>
 <dl>
-<dt><code class="name"><a title="urest.http.response" href="response.html">urest.http.response</a></code></dt>
-<dd>
-<div class="desc"><p>Formats a basic HTTP/1.1 response. The actual body of the response is largely
-determined by the callers API layer: <code><a title="urest.http.response.HTTPResponse" href="response.html#urest.http.response.HTTPResponse">HTTPResponse</a></code> …</p></div>
-</dd>
-<dt><code class="name"><a title="urest.http.server" href="server.html">urest.http.server</a></code></dt>
+<dt><code class="name"><a title="urest.noun.base" href="base.html">urest.noun.base</a></code></dt>
 <dd>
 <div class="desc"><p>Micro HTTP server dedicated to REST-style API Requests. Inspired by the
 [MicroPython HTTP …</p></div>
@@ -235,11 +150,7 @@ determined by the callers API layer: <code><a title="urest.http.response.HTTPRes
 <ul>
 <li><a href="#overview">Overview</a></li>
 <li><a href="#implementation">Implementation</a></li>
-<li><a href="#using-the-module">Using the Module</a><ul>
-<li><a href="#creating-the-network-server">Creating the Network Server</a></li>
-<li><a href="#creating-the-api-responses">Creating the API Responses</a></li>
-</ul>
-</li>
+<li><a href="#using-the-module">Using the Module</a></li>
 <li><a href="#tested-implementations">Tested Implementations</a></li>
 <li><a href="#licence">Licence</a></li>
 </ul>
@@ -252,8 +163,7 @@ determined by the callers API layer: <code><a title="urest.http.response.HTTPRes
 </li>
 <li><h3><a href="#header-submodules">Sub-modules</a></h3>
 <ul>
-<li><code><a title="urest.http.response" href="response.html">urest.http.response</a></code></li>
-<li><code><a title="urest.http.server" href="server.html">urest.http.server</a></code></li>
+<li><code><a title="urest.noun.base" href="base.html">urest.noun.base</a></code></li>
 </ul>
 </li>
 </ul>

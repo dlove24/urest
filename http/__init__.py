@@ -1,10 +1,27 @@
 """
-Micro HTTP server dedicated to REST-style API Requests.
+Network interface and helper classes for abstracting the underlying HTTP stream
 
-Inspired by the [MicroPython HTTP
-Server](https://github.com/erikdelange/MicroPython-HTTP-Server) by Erik de
-Lange, as a simple consumer of the Python 3 `asyncio` library for the low-level
-socket handling and use of co-routines to simplify request handling.
+Overview
+--------
+
+This module provides the abstraction of the underlying socket handling code,
+using in marshaling requests from clients and building the response. All the
+socket handling is built around the Python 3 `asyncio` library for the low-level
+network interface, and for the use of co-routines to simplify request handling.
+
+In most cases, consumers of this module only need to provide an `asynio` event
+loop: see "Creating the Network Server" in the Section _Using the Module_ below.
+By default the module will also bind to the _network_ address of the host on the
+standard port 80 used by HTTP requests. This can be changed in the instantiation
+of the  `urest.http.server.RESTServer` class.
+
+Implementation
+--------------
+
+During the instantiation of the `urest.http.server.RESTServer` class, the resulting
+object creates a socket bound to the specified address and port (or the host network
+address and port 80 by default). This binding is undertaken as part of the `asyncio`
+
 
 Using the Module
 ----------------
@@ -46,8 +63,8 @@ highly recommended reading.
 
 ### Creating the API Responses
 
-Most module consumers will not use the `urest.http.reponse` module directly: but
-will instead sub-class `urest.api.APIBase` to provide the core of the response
+Most module consumers will not use the `urest.http.response` module directly: but
+will instead sub-class `urest.api.base.APIBase` to provide the core of the response
 to the network clients.
 
 
