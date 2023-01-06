@@ -169,9 +169,10 @@ class HTTPResponse:
         the content currently in the `body`, and the error code forming the
         `status` of the response to the client.
 
-        **Note: ** The the actual sending of this HTTP 1.1 header to the client
-        is the responsibility of the caller. This function only assists in correctly
-        forming that response
+        .. Note::
+          The the actual sending of this HTTP 1.1 header to the client
+          is the responsibility of the caller. This function only assists in correctly
+          forming that response
 
         Parameters
         ----------
