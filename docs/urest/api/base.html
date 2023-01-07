@@ -34,10 +34,11 @@ language-level support for abstract base classes. Therefore the
 passed as a resource for the API to ensure they derive from <code><a title="urest.api.base.APIBase" href="#urest.api.base.APIBase">APIBase</a></code>.
 Any class which <em>does not</em> have <code><a title="urest.api.base.APIBase" href="#urest.api.base.APIBase">APIBase</a></code> as an ancestor will
 therefore <strong>not</strong> work as a valid resource.</p>
-<p>This also means that <code><a title="urest.api.base.APIBase" href="#urest.api.base.APIBase">APIBase</a></code> is not a pure virtual ABC, and so
-implements a minimum set of methods which hold and manipulate resource state.
-However both <code><a title="urest.api.base.APIBase.get_state" href="#urest.api.base.APIBase.get_state">APIBase.get_state()</a></code> and <code><a title="urest.api.base.APIBase.set_state" href="#urest.api.base.APIBase.set_state">APIBase.set_state()</a></code>
-are expected to be overridden in working implementations.</p>
+<p>This also means that <code><a title="urest.api.base.APIBase" href="#urest.api.base.APIBase">APIBase</a></code> is not a pure virtual ABC, and
+so implements a minimum set of methods which hold and manipulate resource state.
+However all methods such as <code><a title="urest.api.base.APIBase.get_state" href="#urest.api.base.APIBase.get_state">APIBase.get_state()</a></code> and
+<code><a title="urest.api.base.APIBase.set_state" href="#urest.api.base.APIBase.set_state">APIBase.set_state()</a></code> are expected to be overridden in working
+implementations.</p>
 </div>
 <h2 id="licence">Licence</h2>
 <p>This module, and all included code, is made available under the terms of the MIT
@@ -77,10 +78,11 @@ Implements the &#39;Abstract&#39; Base Class for all the nouns used by the
   Any class which _does not_ have `urest.api.base.APIBase` as an ancestor will
   therefore **not** work as a valid resource.
 
-  This also means that `urest.api.base.APIBase` is not a pure virtual ABC, and so
-  implements a minimum set of methods which hold and manipulate resource state.
-  However both `urest.api.base.APIBase.get_state` and `urest.api.base.APIBase.set_state`
-  are expected to be overridden in working implementations.
+  This also means that `urest.api.base.APIBase` is not a pure virtual ABC, and
+  so implements a minimum set of methods which hold and manipulate resource state.
+  However all methods such as `urest.api.base.APIBase.get_state` and
+  `urest.api.base.APIBase.set_state` are expected to be overridden in working
+  implementations.
 
 Licence
 -------
@@ -121,7 +123,25 @@ class APIBase:
         This base class defines the minimum interface used in marshalling requests from
         the clients by the `urest.http.server.RESTServer` class. The API defined by the
         server consists of &#39;nouns&#39; representing the resources defined by the sub-classes
-        of this base class, and the methods which act upon those resources.
+        of this base class, and the methods which act upon those resources (which map to
+        the &#39;verbs&#39; of the HTTP requests made to the `urest.http.server.RESTServer` class.
+
+        Where data is returned to the client by the, e.g by the `get_state` method, JSON
+        will ultimately be used as the encoding format. Sub-classes do not need to
+        implement the saving of the object state to the client: however to assist they
+        should be aware of the type of the each `value` returned as part of a `key/value`
+        pair in the `Dictionary`.
+
+        When returning data to the client, the `value` of each entry in the `Dictionary`
+        will attempt to be inferred using the normal Python type library. If the type can be
+        identified, then an appropriate JSON type will be used: otherwise the `value` of that
+        `Dictionary` entry will be returned as a string.
+
+        .. Warning:: Data will be returned to the client &#39;as is&#39;
+            No further checking on the validity (or otherwise) of the content of
+            the `Dictionary` will be undertaken past this point. Anything that appear to be in
+            a valid `Dictionary` will be returned to the client. It is the module consumers
+            responsibility to ensure the returned data follows the form expected by those clients.
         &#34;&#34;&#34;
 
         self._state_attributes = []
@@ -131,85 +151,121 @@ class APIBase:
     ## State Manipulation Methods
     ##
 
-    def get_state(self, selector=[]):
-        &#34;&#34;&#34;Returns the state of the resource, optionally confined to the context stated
-        by the `selector`.
+    def get_state(self):
+        &#34;&#34;&#34;Returns the state of the resource.
 
         Return the state of the resource, as defined by the sub-classes. By default
-        this method will return the contents of the private `state_attributes` dictionary
-        to the client; assuming that dictionary has been appropriately completed
+        this method will return the contents of the private `state_attributes` `Dictionary`
+        to the client; assuming that `Dictionary` has been appropriately completed
         in the processing of the resource.
-
-        .. Warning:: Data will be returned to the client &#39;as is&#39;
-          No further checking on the validity (or otherwise) of the content of
-          the dictionary will be undertaken past this point. Anything that appear to be in
-          a valid dictionary will be returned to the client. It is the module consumers
-          responsibility to ensure the returned data follows the form expected by those clients.
-
-        Parameters
-        ----------
-
-        selector: dict
-            An optional list of (key, value) pairs which the method may use to return
-            only a sub-set of the resource state represented by this class.
 
         Returns
         -------
 
-        dict
+        Dictionary
           A mapping of (key, value) pairs which defines the resource state to return to the
-          client. Each &#39;key&#39; of the dictionary will be returned to the client on a separate
-          line in the HTTP body: with the value converted to a string using the normal Python
-          coercion methods.
-
-
+          client.
         &#34;&#34;&#34;
 
         return self._state_attributes
 
-    def set_state(self, state_attributes, selector=[]):
-        &#34;&#34;&#34;Updates the state of the resource, optionally only updating the sub-state(s)
-        set by the `selector`.
+    def set_state(self, state_attributes):
+        &#34;&#34;&#34;Sets the full state of the resource.
 
         The exact mechanism for updating the internal state of the resource represented
         by sub-classes is implementation defined. By default this method expects the
         _full_ state to be represented by the `state_attributes` parameters; and by
-        default the new state will be exactly as stated by the dictionary passed in
+        default the new state will be exactly as stated by the `Dictionary` passed in
         through `state_attributes`.
-
-        A sub-class may, though, choose to update only part of the state through the
-        use of the `selector`. This defines a dictionary of (key, value) pairs which
-        can be interpreted by sub-classes as needed.
 
         Parameters
         ----------
 
-        state_attributes: dict
+        state_attributes: Dictionary
             A list of (key, value) pairs representing the _full_ state of the
             resource. No merging of state is undertaken, or attempted.
-
-        selector: dict
-            An optional list of (key, value) pairs which the method may use to return
-            only a sub-set of the resource state represented by this class.
 
         Returns
         -------
 
-        dict
+        Dictionary
           A mapping of (key, value) pairs which defines the resource state to return to the
-          client. Each &#39;key&#39; of the dictionary will be returned to the client on a separate
-          line in the HTTP body: with the value converted to a string using the normal Python
-          coercion methods.
-
-          .. Warning:: Data will be returned to the client &#39;as is&#39;
-            No further checking on the validity (or otherwise) of the content of
-            the dictionary will be undertaken past this point. Anything that appear to be in
-            a valid dictionary will be returned to the client. It is the module consumers
-            responsibility to ensure the returned data follows the form expected by those clients.
+          client.
         &#34;&#34;&#34;
 
         if state_attributes is not None and isinstance(state_attributes, dict):
             self._state_attributes = state_attributes
+        else:
+            self._state_attributes = []
+
+    def update_state(self, state_attributes):
+        &#34;&#34;&#34;Updates the state of the resource, using the &#39;key/value&#39; pairs of the
+        `Dictionary` in `state_attributes`.
+
+
+        The exact mechanism for updating the internal state of the resource represented
+        by sub-classes is implementation defined. By default this expects to update
+        only part of the state through the use of the partial state defined in
+        `state_attributes`. This defines a `Dictionary` of (key, value) pairs which
+        can be interpreted by sub-classes to update the true internal state as needed.
+
+        Parameters
+        ----------
+
+        state_attributes: Dictionary
+            A list of (key, value) pairs representing the _partial_ state of the
+            resource. The exact mechanism for merging this partial state if left
+            to the implementation of the sub-classes.
+
+        Returns
+        -------
+
+        Dictionary
+          A mapping of (key, value) pairs which defines the resource state to return to the
+          client.
+        &#34;&#34;&#34;
+
+        if state_attributes is not None and isinstance(state_attributes, dict):
+            for key in state_attributes:
+                try:
+                    self._state_attributes[key] = state_attributes[key]
+                except:
+                    self._state_attributes[key] = None
+        else:
+            self._state_attributes = []
+
+    def delete_state(self, state_attributes):
+        &#34;&#34;&#34;Removes the internal state of the resource, essentially &#39;resetting&#39; or
+        re-initialising the object.
+
+        The exact mechanism for updating the internal state of the resource represented
+        by sub-classes is implementation defined. An implementation may By default this expects to update
+        only part of the state through the use of the partial state defined in
+        `state_attributes`. This defines a `Dictionary` of (key, value) pairs which
+        can be interpreted by sub-classes to update the true internal state as needed.
+
+        Parameters
+        ----------
+
+        state_attributes: Dictionary
+            A list of (key, value) pairs representing the _partial_ state of the
+            resource. The exact mechanism for merging this partial state if left
+            to the implementation of the sub-classes.
+
+        Returns
+        -------
+
+        Dictionary
+          A mapping of (key, value) pairs which defines the resource state to return to the
+          client.
+        &#34;&#34;&#34;
+
+        if state_attributes is not None and isinstance(state_attributes, dict):
+            for key in state_attributes:
+                try:
+                    self._state_attributes[key] = state_attributes[key]
+                except:
+                    self._state_attributes[key] = None
         else:
             self._state_attributes = []</code></pre>
 </details>
@@ -231,7 +287,24 @@ class APIBase:
 <p>This base class defines the minimum interface used in marshalling requests from
 the clients by the <code><a title="urest.http.server.RESTServer" href="../http/server.html#urest.http.server.RESTServer">RESTServer</a></code> class. The API defined by the
 server consists of 'nouns' representing the resources defined by the sub-classes
-of this base class, and the methods which act upon those resources.</p></div>
+of this base class, and the methods which act upon those resources (which map to
+the 'verbs' of the HTTP requests made to the <code><a title="urest.http.server.RESTServer" href="../http/server.html#urest.http.server.RESTServer">RESTServer</a></code> class.</p>
+<p>Where data is returned to the client by the, e.g by the <code>get_state</code> method, JSON
+will ultimately be used as the encoding format. Sub-classes do not need to
+implement the saving of the object state to the client: however to assist they
+should be aware of the type of the each <code>value</code> returned as part of a <code>key/value</code>
+pair in the <code>Dictionary</code>.</p>
+<p>When returning data to the client, the <code>value</code> of each entry in the <code>Dictionary</code>
+will attempt to be inferred using the normal Python type library. If the type can be
+identified, then an appropriate JSON type will be used: otherwise the <code>value</code> of that
+<code>Dictionary</code> entry will be returned as a string.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning:&ensp;Data will be returned to the client 'as is'</p>
+<p>No further checking on the validity (or otherwise) of the content of
+the <code>Dictionary</code> will be undertaken past this point. Anything that appear to be in
+a valid <code>Dictionary</code> will be returned to the client. It is the module consumers
+responsibility to ensure the returned data follows the form expected by those clients.</p>
+</div></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -248,7 +321,25 @@ of this base class, and the methods which act upon those resources.</p></div>
         This base class defines the minimum interface used in marshalling requests from
         the clients by the `urest.http.server.RESTServer` class. The API defined by the
         server consists of &#39;nouns&#39; representing the resources defined by the sub-classes
-        of this base class, and the methods which act upon those resources.
+        of this base class, and the methods which act upon those resources (which map to
+        the &#39;verbs&#39; of the HTTP requests made to the `urest.http.server.RESTServer` class.
+
+        Where data is returned to the client by the, e.g by the `get_state` method, JSON
+        will ultimately be used as the encoding format. Sub-classes do not need to
+        implement the saving of the object state to the client: however to assist they
+        should be aware of the type of the each `value` returned as part of a `key/value`
+        pair in the `Dictionary`.
+
+        When returning data to the client, the `value` of each entry in the `Dictionary`
+        will attempt to be inferred using the normal Python type library. If the type can be
+        identified, then an appropriate JSON type will be used: otherwise the `value` of that
+        `Dictionary` entry will be returned as a string.
+
+        .. Warning:: Data will be returned to the client &#39;as is&#39;
+            No further checking on the validity (or otherwise) of the content of
+            the `Dictionary` will be undertaken past this point. Anything that appear to be in
+            a valid `Dictionary` will be returned to the client. It is the module consumers
+            responsibility to ensure the returned data follows the form expected by those clients.
         &#34;&#34;&#34;
 
         self._state_attributes = []
@@ -258,85 +349,121 @@ of this base class, and the methods which act upon those resources.</p></div>
     ## State Manipulation Methods
     ##
 
-    def get_state(self, selector=[]):
-        &#34;&#34;&#34;Returns the state of the resource, optionally confined to the context stated
-        by the `selector`.
+    def get_state(self):
+        &#34;&#34;&#34;Returns the state of the resource.
 
         Return the state of the resource, as defined by the sub-classes. By default
-        this method will return the contents of the private `state_attributes` dictionary
-        to the client; assuming that dictionary has been appropriately completed
+        this method will return the contents of the private `state_attributes` `Dictionary`
+        to the client; assuming that `Dictionary` has been appropriately completed
         in the processing of the resource.
-
-        .. Warning:: Data will be returned to the client &#39;as is&#39;
-          No further checking on the validity (or otherwise) of the content of
-          the dictionary will be undertaken past this point. Anything that appear to be in
-          a valid dictionary will be returned to the client. It is the module consumers
-          responsibility to ensure the returned data follows the form expected by those clients.
-
-        Parameters
-        ----------
-
-        selector: dict
-            An optional list of (key, value) pairs which the method may use to return
-            only a sub-set of the resource state represented by this class.
 
         Returns
         -------
 
-        dict
+        Dictionary
           A mapping of (key, value) pairs which defines the resource state to return to the
-          client. Each &#39;key&#39; of the dictionary will be returned to the client on a separate
-          line in the HTTP body: with the value converted to a string using the normal Python
-          coercion methods.
-
-
+          client.
         &#34;&#34;&#34;
 
         return self._state_attributes
 
-    def set_state(self, state_attributes, selector=[]):
-        &#34;&#34;&#34;Updates the state of the resource, optionally only updating the sub-state(s)
-        set by the `selector`.
+    def set_state(self, state_attributes):
+        &#34;&#34;&#34;Sets the full state of the resource.
 
         The exact mechanism for updating the internal state of the resource represented
         by sub-classes is implementation defined. By default this method expects the
         _full_ state to be represented by the `state_attributes` parameters; and by
-        default the new state will be exactly as stated by the dictionary passed in
+        default the new state will be exactly as stated by the `Dictionary` passed in
         through `state_attributes`.
-
-        A sub-class may, though, choose to update only part of the state through the
-        use of the `selector`. This defines a dictionary of (key, value) pairs which
-        can be interpreted by sub-classes as needed.
 
         Parameters
         ----------
 
-        state_attributes: dict
+        state_attributes: Dictionary
             A list of (key, value) pairs representing the _full_ state of the
             resource. No merging of state is undertaken, or attempted.
-
-        selector: dict
-            An optional list of (key, value) pairs which the method may use to return
-            only a sub-set of the resource state represented by this class.
 
         Returns
         -------
 
-        dict
+        Dictionary
           A mapping of (key, value) pairs which defines the resource state to return to the
-          client. Each &#39;key&#39; of the dictionary will be returned to the client on a separate
-          line in the HTTP body: with the value converted to a string using the normal Python
-          coercion methods.
-
-          .. Warning:: Data will be returned to the client &#39;as is&#39;
-            No further checking on the validity (or otherwise) of the content of
-            the dictionary will be undertaken past this point. Anything that appear to be in
-            a valid dictionary will be returned to the client. It is the module consumers
-            responsibility to ensure the returned data follows the form expected by those clients.
+          client.
         &#34;&#34;&#34;
 
         if state_attributes is not None and isinstance(state_attributes, dict):
             self._state_attributes = state_attributes
+        else:
+            self._state_attributes = []
+
+    def update_state(self, state_attributes):
+        &#34;&#34;&#34;Updates the state of the resource, using the &#39;key/value&#39; pairs of the
+        `Dictionary` in `state_attributes`.
+
+
+        The exact mechanism for updating the internal state of the resource represented
+        by sub-classes is implementation defined. By default this expects to update
+        only part of the state through the use of the partial state defined in
+        `state_attributes`. This defines a `Dictionary` of (key, value) pairs which
+        can be interpreted by sub-classes to update the true internal state as needed.
+
+        Parameters
+        ----------
+
+        state_attributes: Dictionary
+            A list of (key, value) pairs representing the _partial_ state of the
+            resource. The exact mechanism for merging this partial state if left
+            to the implementation of the sub-classes.
+
+        Returns
+        -------
+
+        Dictionary
+          A mapping of (key, value) pairs which defines the resource state to return to the
+          client.
+        &#34;&#34;&#34;
+
+        if state_attributes is not None and isinstance(state_attributes, dict):
+            for key in state_attributes:
+                try:
+                    self._state_attributes[key] = state_attributes[key]
+                except:
+                    self._state_attributes[key] = None
+        else:
+            self._state_attributes = []
+
+    def delete_state(self, state_attributes):
+        &#34;&#34;&#34;Removes the internal state of the resource, essentially &#39;resetting&#39; or
+        re-initialising the object.
+
+        The exact mechanism for updating the internal state of the resource represented
+        by sub-classes is implementation defined. An implementation may By default this expects to update
+        only part of the state through the use of the partial state defined in
+        `state_attributes`. This defines a `Dictionary` of (key, value) pairs which
+        can be interpreted by sub-classes to update the true internal state as needed.
+
+        Parameters
+        ----------
+
+        state_attributes: Dictionary
+            A list of (key, value) pairs representing the _partial_ state of the
+            resource. The exact mechanism for merging this partial state if left
+            to the implementation of the sub-classes.
+
+        Returns
+        -------
+
+        Dictionary
+          A mapping of (key, value) pairs which defines the resource state to return to the
+          client.
+        &#34;&#34;&#34;
+
+        if state_attributes is not None and isinstance(state_attributes, dict):
+            for key in state_attributes:
+                try:
+                    self._state_attributes[key] = state_attributes[key]
+                except:
+                    self._state_attributes[key] = None
         else:
             self._state_attributes = []</code></pre>
 </details>
@@ -346,163 +473,229 @@ of this base class, and the methods which act upon those resources.</p></div>
 </ul>
 <h3>Methods</h3>
 <dl>
-<dt id="urest.api.base.APIBase.get_state"><code class="name flex">
-<span>def <span class="ident">get_state</span></span>(<span>self, selector=[])</span>
+<dt id="urest.api.base.APIBase.delete_state"><code class="name flex">
+<span>def <span class="ident">delete_state</span></span>(<span>self, state_attributes)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Returns the state of the resource, optionally confined to the context stated
-by the <code>selector</code>.</p>
-<p>Return the state of the resource, as defined by the sub-classes. By default
-this method will return the contents of the private <code>state_attributes</code> dictionary
-to the client; assuming that dictionary has been appropriately completed
-in the processing of the resource.</p>
-<div class="admonition warning">
-<p class="admonition-title">Warning:&ensp;Data will be returned to the client 'as is'</p>
-<p>No further checking on the validity (or otherwise) of the content of
-the dictionary will be undertaken past this point. Anything that appear to be in
-a valid dictionary will be returned to the client. It is the module consumers
-responsibility to ensure the returned data follows the form expected by those clients.</p>
-</div>
+<div class="desc"><p>Removes the internal state of the resource, essentially 'resetting' or
+re-initialising the object.</p>
+<p>The exact mechanism for updating the internal state of the resource represented
+by sub-classes is implementation defined. An implementation may By default this expects to update
+only part of the state through the use of the partial state defined in
+<code>state_attributes</code>. This defines a <code>Dictionary</code> of (key, value) pairs which
+can be interpreted by sub-classes to update the true internal state as needed.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
-<dt><strong><code>selector</code></strong> :&ensp;<code>dict</code></dt>
-<dd>An optional list of (key, value) pairs which the method may use to return
-only a sub-set of the resource state represented by this class.</dd>
+<dt><strong><code>state_attributes</code></strong> :&ensp;<code>Dictionary</code></dt>
+<dd>A list of (key, value) pairs representing the <em>partial</em> state of the
+resource. The exact mechanism for merging this partial state if left
+to the implementation of the sub-classes.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><code>dict</code></dt>
+<dt><code>Dictionary</code></dt>
 <dd>&nbsp;</dd>
 </dl>
 <p>A mapping of (key, value) pairs which defines the resource state to return to the
-client. Each 'key' of the dictionary will be returned to the client on a separate
-line in the HTTP body: with the value converted to a string using the normal Python
-coercion methods.</p></div>
+client.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def get_state(self, selector=[]):
-    &#34;&#34;&#34;Returns the state of the resource, optionally confined to the context stated
-    by the `selector`.
+<pre><code class="python">def delete_state(self, state_attributes):
+    &#34;&#34;&#34;Removes the internal state of the resource, essentially &#39;resetting&#39; or
+    re-initialising the object.
 
-    Return the state of the resource, as defined by the sub-classes. By default
-    this method will return the contents of the private `state_attributes` dictionary
-    to the client; assuming that dictionary has been appropriately completed
-    in the processing of the resource.
-
-    .. Warning:: Data will be returned to the client &#39;as is&#39;
-      No further checking on the validity (or otherwise) of the content of
-      the dictionary will be undertaken past this point. Anything that appear to be in
-      a valid dictionary will be returned to the client. It is the module consumers
-      responsibility to ensure the returned data follows the form expected by those clients.
+    The exact mechanism for updating the internal state of the resource represented
+    by sub-classes is implementation defined. An implementation may By default this expects to update
+    only part of the state through the use of the partial state defined in
+    `state_attributes`. This defines a `Dictionary` of (key, value) pairs which
+    can be interpreted by sub-classes to update the true internal state as needed.
 
     Parameters
     ----------
 
-    selector: dict
-        An optional list of (key, value) pairs which the method may use to return
-        only a sub-set of the resource state represented by this class.
+    state_attributes: Dictionary
+        A list of (key, value) pairs representing the _partial_ state of the
+        resource. The exact mechanism for merging this partial state if left
+        to the implementation of the sub-classes.
 
     Returns
     -------
 
-    dict
+    Dictionary
       A mapping of (key, value) pairs which defines the resource state to return to the
-      client. Each &#39;key&#39; of the dictionary will be returned to the client on a separate
-      line in the HTTP body: with the value converted to a string using the normal Python
-      coercion methods.
+      client.
+    &#34;&#34;&#34;
 
+    if state_attributes is not None and isinstance(state_attributes, dict):
+        for key in state_attributes:
+            try:
+                self._state_attributes[key] = state_attributes[key]
+            except:
+                self._state_attributes[key] = None
+    else:
+        self._state_attributes = []</code></pre>
+</details>
+</dd>
+<dt id="urest.api.base.APIBase.get_state"><code class="name flex">
+<span>def <span class="ident">get_state</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the state of the resource.</p>
+<p>Return the state of the resource, as defined by the sub-classes. By default
+this method will return the contents of the private <code>state_attributes</code> <code>Dictionary</code>
+to the client; assuming that <code>Dictionary</code> has been appropriately completed
+in the processing of the resource.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Dictionary</code></dt>
+<dd>&nbsp;</dd>
+</dl>
+<p>A mapping of (key, value) pairs which defines the resource state to return to the
+client.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_state(self):
+    &#34;&#34;&#34;Returns the state of the resource.
 
+    Return the state of the resource, as defined by the sub-classes. By default
+    this method will return the contents of the private `state_attributes` `Dictionary`
+    to the client; assuming that `Dictionary` has been appropriately completed
+    in the processing of the resource.
+
+    Returns
+    -------
+
+    Dictionary
+      A mapping of (key, value) pairs which defines the resource state to return to the
+      client.
     &#34;&#34;&#34;
 
     return self._state_attributes</code></pre>
 </details>
 </dd>
 <dt id="urest.api.base.APIBase.set_state"><code class="name flex">
-<span>def <span class="ident">set_state</span></span>(<span>self, state_attributes, selector=[])</span>
+<span>def <span class="ident">set_state</span></span>(<span>self, state_attributes)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Updates the state of the resource, optionally only updating the sub-state(s)
-set by the <code>selector</code>.</p>
+<div class="desc"><p>Sets the full state of the resource.</p>
 <p>The exact mechanism for updating the internal state of the resource represented
 by sub-classes is implementation defined. By default this method expects the
 <em>full</em> state to be represented by the <code>state_attributes</code> parameters; and by
-default the new state will be exactly as stated by the dictionary passed in
+default the new state will be exactly as stated by the <code>Dictionary</code> passed in
 through <code>state_attributes</code>.</p>
-<p>A sub-class may, though, choose to update only part of the state through the
-use of the <code>selector</code>. This defines a dictionary of (key, value) pairs which
-can be interpreted by sub-classes as needed.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
-<dt><strong><code>state_attributes</code></strong> :&ensp;<code>dict</code></dt>
+<dt><strong><code>state_attributes</code></strong> :&ensp;<code>Dictionary</code></dt>
 <dd>A list of (key, value) pairs representing the <em>full</em> state of the
 resource. No merging of state is undertaken, or attempted.</dd>
-<dt><strong><code>selector</code></strong> :&ensp;<code>dict</code></dt>
-<dd>An optional list of (key, value) pairs which the method may use to return
-only a sub-set of the resource state represented by this class.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><code>dict</code></dt>
+<dt><code>Dictionary</code></dt>
 <dd>&nbsp;</dd>
 </dl>
 <p>A mapping of (key, value) pairs which defines the resource state to return to the
-client. Each 'key' of the dictionary will be returned to the client on a separate
-line in the HTTP body: with the value converted to a string using the normal Python
-coercion methods.</p>
-<p>!!! Warning "Warning:&ensp;Data will be returned to the client 'as is'"
-No further checking on the validity (or otherwise) of the content of
-the dictionary will be undertaken past this point. Anything that appear to be in
-a valid dictionary will be returned to the client. It is the module consumers
-responsibility to ensure the returned data follows the form expected by those clients.</p></div>
+client.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def set_state(self, state_attributes, selector=[]):
-    &#34;&#34;&#34;Updates the state of the resource, optionally only updating the sub-state(s)
-    set by the `selector`.
+<pre><code class="python">def set_state(self, state_attributes):
+    &#34;&#34;&#34;Sets the full state of the resource.
 
     The exact mechanism for updating the internal state of the resource represented
     by sub-classes is implementation defined. By default this method expects the
     _full_ state to be represented by the `state_attributes` parameters; and by
-    default the new state will be exactly as stated by the dictionary passed in
+    default the new state will be exactly as stated by the `Dictionary` passed in
     through `state_attributes`.
-
-    A sub-class may, though, choose to update only part of the state through the
-    use of the `selector`. This defines a dictionary of (key, value) pairs which
-    can be interpreted by sub-classes as needed.
 
     Parameters
     ----------
 
-    state_attributes: dict
+    state_attributes: Dictionary
         A list of (key, value) pairs representing the _full_ state of the
         resource. No merging of state is undertaken, or attempted.
-
-    selector: dict
-        An optional list of (key, value) pairs which the method may use to return
-        only a sub-set of the resource state represented by this class.
 
     Returns
     -------
 
-    dict
+    Dictionary
       A mapping of (key, value) pairs which defines the resource state to return to the
-      client. Each &#39;key&#39; of the dictionary will be returned to the client on a separate
-      line in the HTTP body: with the value converted to a string using the normal Python
-      coercion methods.
-
-      .. Warning:: Data will be returned to the client &#39;as is&#39;
-        No further checking on the validity (or otherwise) of the content of
-        the dictionary will be undertaken past this point. Anything that appear to be in
-        a valid dictionary will be returned to the client. It is the module consumers
-        responsibility to ensure the returned data follows the form expected by those clients.
+      client.
     &#34;&#34;&#34;
 
     if state_attributes is not None and isinstance(state_attributes, dict):
         self._state_attributes = state_attributes
+    else:
+        self._state_attributes = []</code></pre>
+</details>
+</dd>
+<dt id="urest.api.base.APIBase.update_state"><code class="name flex">
+<span>def <span class="ident">update_state</span></span>(<span>self, state_attributes)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Updates the state of the resource, using the 'key/value' pairs of the
+<code>Dictionary</code> in <code>state_attributes</code>.</p>
+<p>The exact mechanism for updating the internal state of the resource represented
+by sub-classes is implementation defined. By default this expects to update
+only part of the state through the use of the partial state defined in
+<code>state_attributes</code>. This defines a <code>Dictionary</code> of (key, value) pairs which
+can be interpreted by sub-classes to update the true internal state as needed.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>state_attributes</code></strong> :&ensp;<code>Dictionary</code></dt>
+<dd>A list of (key, value) pairs representing the <em>partial</em> state of the
+resource. The exact mechanism for merging this partial state if left
+to the implementation of the sub-classes.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Dictionary</code></dt>
+<dd>&nbsp;</dd>
+</dl>
+<p>A mapping of (key, value) pairs which defines the resource state to return to the
+client.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def update_state(self, state_attributes):
+    &#34;&#34;&#34;Updates the state of the resource, using the &#39;key/value&#39; pairs of the
+    `Dictionary` in `state_attributes`.
+
+
+    The exact mechanism for updating the internal state of the resource represented
+    by sub-classes is implementation defined. By default this expects to update
+    only part of the state through the use of the partial state defined in
+    `state_attributes`. This defines a `Dictionary` of (key, value) pairs which
+    can be interpreted by sub-classes to update the true internal state as needed.
+
+    Parameters
+    ----------
+
+    state_attributes: Dictionary
+        A list of (key, value) pairs representing the _partial_ state of the
+        resource. The exact mechanism for merging this partial state if left
+        to the implementation of the sub-classes.
+
+    Returns
+    -------
+
+    Dictionary
+      A mapping of (key, value) pairs which defines the resource state to return to the
+      client.
+    &#34;&#34;&#34;
+
+    if state_attributes is not None and isinstance(state_attributes, dict):
+        for key in state_attributes:
+            try:
+                self._state_attributes[key] = state_attributes[key]
+            except:
+                self._state_attributes[key] = None
     else:
         self._state_attributes = []</code></pre>
 </details>
@@ -530,8 +723,10 @@ responsibility to ensure the returned data follows the form expected by those cl
 <li>
 <h4><code><a title="urest.api.base.APIBase" href="#urest.api.base.APIBase">APIBase</a></code></h4>
 <ul class="">
+<li><code><a title="urest.api.base.APIBase.delete_state" href="#urest.api.base.APIBase.delete_state">delete_state</a></code></li>
 <li><code><a title="urest.api.base.APIBase.get_state" href="#urest.api.base.APIBase.get_state">get_state</a></code></li>
 <li><code><a title="urest.api.base.APIBase.set_state" href="#urest.api.base.APIBase.set_state">set_state</a></code></li>
+<li><code><a title="urest.api.base.APIBase.update_state" href="#urest.api.base.APIBase.update_state">update_state</a></code></li>
 </ul>
 </li>
 </ul>

@@ -72,9 +72,9 @@ co-routines, <a href="https://realpython.com/async-io-python">Async IO in Python
 highly recommended reading.</p>
 </div>
 <h3 id="creating-the-api-responses">Creating the API Responses</h3>
-<p>Most module consumers will not use the <code><a title="urest.http.response" href="response.html">urest.http.response</a></code> module directly: but
-will instead sub-class <code><a title="urest.api.base.APIBase" href="../api/base.html#urest.api.base.APIBase">APIBase</a></code> to provide the core of the response
-to the network clients.</p>
+<p>Most module consumers will not use the <code><a title="urest.http.response" href="response.html">urest.http.response</a></code> module directly:
+but will instead sub-class <code><a title="urest.api.base.APIBase" href="../api/base.html#urest.api.base.APIBase">APIBase</a></code> to provide the core of the
+response to the network clients. For details of how the <code><a title="urest.http.server.RESTServer" href="server.html#urest.http.server.RESTServer">RESTServer</a></code> and <code><a title="urest.api.base.APIBase" href="../api/base.html#urest.api.base.APIBase">APIBase</a></code> classes interact, the module documentation for <code><a title="urest.api" href="../api/index.html">urest.api</a></code> should be consulted. In addition, the documentation for the <code><a title="urest.example.simpleled.SimpleLED" href="../example/simpleled.html#urest.example.simpleled.SimpleLED">SimpleLED</a></code> class might prove useful as an example of a simple implementation of the API.</p>
 <h2 id="tested-implementations">Tested Implementations</h2>
 <p>This version is written for MicroPython 3.4, and has been tested on:</p>
 <ul>
@@ -170,9 +170,9 @@ In most cases, something similar to the following will suffice
 
 ### Creating the API Responses
 
-Most module consumers will not use the `urest.http.response` module directly: but
-will instead sub-class `urest.api.base.APIBase` to provide the core of the response
-to the network clients.
+Most module consumers will not use the `urest.http.response` module directly:
+but will instead sub-class `urest.api.base.APIBase` to provide the core of the
+response to the network clients. For details of how the `urest.http.server.RESTServer` and `urest.api.base.APIBase` classes interact, the module documentation for `urest.api` should be consulted. In addition, the documentation for the `urest.example.simpleled.SimpleLED` class might prove useful as an example of a simple implementation of the API.
 
 
 Tested Implementations

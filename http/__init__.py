@@ -65,9 +65,9 @@ In most cases, something similar to the following will suffice
 
 ### Creating the API Responses
 
-Most module consumers will not use the `urest.http.response` module directly: but
-will instead sub-class `urest.api.base.APIBase` to provide the core of the response
-to the network clients.
+Most module consumers will not use the `urest.http.response` module directly:
+but will instead sub-class `urest.api.base.APIBase` to provide the core of the
+response to the network clients. For details of how the `urest.http.server.RESTServer` and `urest.api.base.APIBase` classes interact, the module documentation for `urest.api` should be consulted. In addition, the documentation for the `urest.example.simpleled.SimpleLED` class might prove useful as an example of a simple implementation of the API.
 
 
 Tested Implementations

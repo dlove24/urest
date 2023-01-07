@@ -63,28 +63,28 @@ found by the HTTP request
 GET /led HTTP 1.1
 ```
 
-.. Note:: All Lookup's Are Case Insensitive
+### All Lookup's Are Case Insensitive
 
-  All nouns are registered with `urest.http.server.RESTServer` in **lowercase**.
-  Likewise all routing of API requests will also assume that the name of the noun
-  to be used will be in lowercase. Thus, for instance, calling
+All nouns are registered with `urest.http.server.RESTServer` in **lowercase**.
+Likewise all routing of API requests will also assume that the name of the noun
+to be used will be in lowercase. Thus, for instance, calling
 
-  ```python app.register_noun('leD', SimpleLED(28)) ```
+```python app.register_noun('leD', SimpleLED(28)) ```
 
-  or
+or
 
-  ```python app.register_noun('LED', SimpleLED(28)) ```
+```python app.register_noun('LED', SimpleLED(28)) ```
 
-  will **all** route to the name noun with the canonical name `led`. Likewise
-  the request
+will **all** route to the name noun with the canonical name `led`. Likewise
+the request
 
-  ``` GET /lEd HTTP 1.1 ```
+``` GET /lEd HTTP 1.1 ```
 
-  or
+or
 
-  ``` GET /LED HTTP 1.1 ```
+``` GET /LED HTTP 1.1 ```
 
-  will **also** route to the same noun with the canonical name `led`.
+will **also** route to the same noun with the canonical name `led`.
 
 ### Setting the Noun State
 
@@ -114,9 +114,12 @@ Content-Length: 11
 {"led":"0"}
 ```
 
-.. Note:: JSON is Required
+.. NOTE:: JSON is Required
 
-  The only format accepted by the `urest.http.server.RESTServer` for the state of the nouns is [JSON](https://www.json.org/json-en.html). The `urest.http.server.RESTServer` will also only accept a sub-set of the JSON standard: notably assuming a single object, and a collection of key/value pairs.
+  The only format accepted by the `urest.http.server.RESTServer` for the state
+  of the nouns is [JSON](https://www.json.org/json-en.html). The
+  `urest.http.server.RESTServer` will also only accept a sub-set of the JSON
+  standard: notably assuming a single object, and a collection of key/value pairs.
 
 The exact interpretation of the JSON is left to the implementation of the noun,
 but in most cases the name of the noun is used to set the state value. For

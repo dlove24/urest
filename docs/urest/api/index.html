@@ -65,12 +65,12 @@ as follows</p>
 <tr>
 <td>Update</td>
 <td><code>POST</code></td>
-<td><code>urest.api.base.APIBase.update_state</code></td>
+<td><code><a title="urest.api.base.APIBase.update_state" href="base.html#urest.api.base.APIBase.update_state">APIBase.update_state()</a></code></td>
 </tr>
 <tr>
 <td>Delete</td>
 <td><code>DELETE</code></td>
-<td><code>urest.api.base.APIBase.delete_state</code></td>
+<td><code><a title="urest.api.base.APIBase.delete_state" href="base.html#urest.api.base.APIBase.delete_state">APIBase.delete_state()</a></code></td>
 </tr>
 </tbody>
 </table>
@@ -92,7 +92,7 @@ values.</p>
 found by the HTTP request</p>
 <pre><code>GET /led HTTP 1.1
 </code></pre>
-<p>.. Note:: All Lookup's Are Case Insensitive</p>
+<h3 id="all-lookups-are-case-insensitive">All Lookup's Are Case Insensitive</h3>
 <p>All nouns are registered with <code>urest.http.server.RESTServer</code> in <strong>lowercase</strong>.
 Likewise all routing of API requests will also assume that the name of the noun
 to be used will be in lowercase. Thus, for instance, calling</p>
@@ -127,7 +127,10 @@ Content-Length: 11
 </code></pre>
 <div class="admonition note">
 <p class="admonition-title">Note:&ensp;JSON is Required</p>
-<p>The only format accepted by the <code><a title="urest.http.server.RESTServer" href="../http/server.html#urest.http.server.RESTServer">RESTServer</a></code> for the state of the nouns is <a href="https://www.json.org/json-en.html">JSON</a>. The <code><a title="urest.http.server.RESTServer" href="../http/server.html#urest.http.server.RESTServer">RESTServer</a></code> will also only accept a sub-set of the JSON standard: notably assuming a single object, and a collection of key/value pairs.</p>
+<p>The only format accepted by the <code><a title="urest.http.server.RESTServer" href="../http/server.html#urest.http.server.RESTServer">RESTServer</a></code> for the state
+of the nouns is <a href="https://www.json.org/json-en.html">JSON</a>. The
+<code><a title="urest.http.server.RESTServer" href="../http/server.html#urest.http.server.RESTServer">RESTServer</a></code> will also only accept a sub-set of the JSON
+standard: notably assuming a single object, and a collection of key/value pairs.</p>
 </div>
 <p>The exact interpretation of the JSON is left to the implementation of the noun,
 but in most cases the name of the noun is used to set the state value. For
@@ -229,28 +232,28 @@ found by the HTTP request
 GET /led HTTP 1.1
 ```
 
-.. Note:: All Lookup&#39;s Are Case Insensitive
+### All Lookup&#39;s Are Case Insensitive
 
-  All nouns are registered with `urest.http.server.RESTServer` in **lowercase**.
-  Likewise all routing of API requests will also assume that the name of the noun
-  to be used will be in lowercase. Thus, for instance, calling
+All nouns are registered with `urest.http.server.RESTServer` in **lowercase**.
+Likewise all routing of API requests will also assume that the name of the noun
+to be used will be in lowercase. Thus, for instance, calling
 
-  ```python app.register_noun(&#39;leD&#39;, SimpleLED(28)) ```
+```python app.register_noun(&#39;leD&#39;, SimpleLED(28)) ```
 
-  or
+or
 
-  ```python app.register_noun(&#39;LED&#39;, SimpleLED(28)) ```
+```python app.register_noun(&#39;LED&#39;, SimpleLED(28)) ```
 
-  will **all** route to the name noun with the canonical name `led`. Likewise
-  the request
+will **all** route to the name noun with the canonical name `led`. Likewise
+the request
 
-  ``` GET /lEd HTTP 1.1 ```
+``` GET /lEd HTTP 1.1 ```
 
-  or
+or
 
-  ``` GET /LED HTTP 1.1 ```
+``` GET /LED HTTP 1.1 ```
 
-  will **also** route to the same noun with the canonical name `led`.
+will **also** route to the same noun with the canonical name `led`.
 
 ### Setting the Noun State
 
@@ -280,9 +283,12 @@ Content-Length: 11
 {&#34;led&#34;:&#34;0&#34;}
 ```
 
-.. Note:: JSON is Required
+.. NOTE:: JSON is Required
 
-  The only format accepted by the `urest.http.server.RESTServer` for the state of the nouns is [JSON](https://www.json.org/json-en.html). The `urest.http.server.RESTServer` will also only accept a sub-set of the JSON standard: notably assuming a single object, and a collection of key/value pairs.
+  The only format accepted by the `urest.http.server.RESTServer` for the state
+  of the nouns is [JSON](https://www.json.org/json-en.html). The
+  `urest.http.server.RESTServer` will also only accept a sub-set of the JSON
+  standard: notably assuming a single object, and a collection of key/value pairs.
 
 The exact interpretation of the JSON is left to the implementation of the noun,
 but in most cases the name of the noun is used to set the state value. For
@@ -352,6 +358,7 @@ from .base import APIBase</code></pre>
 <li><a href="#overview">Overview</a></li>
 <li><a href="#example">Example</a><ul>
 <li><a href="#getting-the-noun-state">Getting the Noun State</a></li>
+<li><a href="#all-lookups-are-case-insensitive">All Lookup's Are Case Insensitive</a></li>
 <li><a href="#setting-the-noun-state">Setting the Noun State</a></li>
 </ul>
 </li>

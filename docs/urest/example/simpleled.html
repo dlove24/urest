@@ -80,7 +80,24 @@ class SimpleLED(APIBase):
 <p>This base class defines the minimum interface used in marshalling requests from
 the clients by the <code><a title="urest.http.server.RESTServer" href="../http/server.html#urest.http.server.RESTServer">RESTServer</a></code> class. The API defined by the
 server consists of 'nouns' representing the resources defined by the sub-classes
-of this base class, and the methods which act upon those resources.</p></div>
+of this base class, and the methods which act upon those resources (which map to
+the 'verbs' of the HTTP requests made to the <code><a title="urest.http.server.RESTServer" href="../http/server.html#urest.http.server.RESTServer">RESTServer</a></code> class.</p>
+<p>Where data is returned to the client by the, e.g by the <code>get_state</code> method, JSON
+will ultimately be used as the encoding format. Sub-classes do not need to
+implement the saving of the object state to the client: however to assist they
+should be aware of the type of the each <code>value</code> returned as part of a <code>key/value</code>
+pair in the <code>Dictionary</code>.</p>
+<p>When returning data to the client, the <code>value</code> of each entry in the <code>Dictionary</code>
+will attempt to be inferred using the normal Python type library. If the type can be
+identified, then an appropriate JSON type will be used: otherwise the <code>value</code> of that
+<code>Dictionary</code> entry will be returned as a string.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning:&ensp;Data will be returned to the client 'as is'</p>
+<p>No further checking on the validity (or otherwise) of the content of
+the <code>Dictionary</code> will be undertaken past this point. Anything that appear to be in
+a valid <code>Dictionary</code> will be returned to the client. It is the module consumers
+responsibility to ensure the returned data follows the form expected by those clients.</p>
+</div></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -118,8 +135,10 @@ of this base class, and the methods which act upon those resources.</p></div>
 <ul class="hlist">
 <li><code><b><a title="urest.api.base.APIBase" href="../api/base.html#urest.api.base.APIBase">APIBase</a></b></code>:
 <ul class="hlist">
+<li><code><a title="urest.api.base.APIBase.delete_state" href="../api/base.html#urest.api.base.APIBase.delete_state">delete_state</a></code></li>
 <li><code><a title="urest.api.base.APIBase.get_state" href="../api/base.html#urest.api.base.APIBase.get_state">get_state</a></code></li>
 <li><code><a title="urest.api.base.APIBase.set_state" href="../api/base.html#urest.api.base.APIBase.set_state">set_state</a></code></li>
+<li><code><a title="urest.api.base.APIBase.update_state" href="../api/base.html#urest.api.base.APIBase.update_state">update_state</a></code></li>
 </ul>
 </li>
 </ul>
