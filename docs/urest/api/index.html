@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
 <title>urest.api API documentation</title>
-<meta name="description" content="Abstract base class and helper classes for the server-proivded REST API …" />
+<meta name="description" content="Abstract base class and helper classes for the server-provided REST API …" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -22,20 +22,120 @@
 <h1 class="title">Module <code>urest.api</code></h1>
 </header>
 <section id="section-intro">
-<p>Abstract base class and helper classes for the server-proivded REST API</p>
+<p>Abstract base class and helper classes for the server-provided REST API</p>
 <h2 id="overview">Overview</h2>
-<p>During the marsheling of client requests (provided by the <code><a title="urest.http.server.RESTServer" href="../http/server.html#urest.http.server.RESTServer">RESTServer</a></code>
-class), the path portion of the URI is extracted from the client. This path is
-expected to take the form of</p>
+<p>During the marshalling of client requests (provided by the
+<code><a title="urest.http.server.RESTServer" href="../http/server.html#urest.http.server.RESTServer">RESTServer</a></code> class), the path portion of the URI is extracted
+from the client. This path is expected to take the form of</p>
 <blockquote>
-<p><code>/ noun / verb</code></p>
+<p><code>/&lt; noun &gt;</code></p>
 </blockquote>
+<p>with the 'verb' denoted by the HTTP methods. Each 'noun' is implemented by a
+class which inherits from <code><a title="urest.api.base.APIBase" href="base.html#urest.api.base.APIBase">APIBase</a></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>All nouns are checked by<code><a title="urest.http.server.RESTServer" href="../http/server.html#urest.http.server.RESTServer">RESTServer</a></code>, and nouns will not be
+properly routed unless <code><a title="urest.api.base.APIBase" href="base.html#urest.api.base.APIBase">APIBase</a></code> is an ancestor of the derived
+class.</p>
+</div>
 <p>The 'noun' determines the resource of the request, and the 'verb' the action to
 be taken on that resource. Also important is the intent of the client as
 inferred from the underlying HTTP request, e.g. <code>GET</code> or <code>PUT</code>. Taken together
-the URI and the client intent are mapped as follows</p>
-<h2 id="implementation">Implementation</h2>
-<h2 id="using-the-module">Using The Module</h2>
+the URI and the client intent are mapped to methods of <code><a title="urest.api.base.APIBase" href="base.html#urest.api.base.APIBase">APIBase</a></code>
+as follows</p>
+<table>
+<thead>
+<tr>
+<th>Verb</th>
+<th>HTTP Method</th>
+<th><code><a title="urest.api.base.APIBase" href="base.html#urest.api.base.APIBase">APIBase</a></code> method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Get</td>
+<td><code>GET</code></td>
+<td><code><a title="urest.api.base.APIBase.get_state" href="base.html#urest.api.base.APIBase.get_state">APIBase.get_state()</a></code></td>
+</tr>
+<tr>
+<td>Set</td>
+<td><code>PUT</code></td>
+<td><code><a title="urest.api.base.APIBase.set_state" href="base.html#urest.api.base.APIBase.set_state">APIBase.set_state()</a></code></td>
+</tr>
+<tr>
+<td>Update</td>
+<td><code>POST</code></td>
+<td><code>urest.api.base.APIBase.update_state</code></td>
+</tr>
+<tr>
+<td>Delete</td>
+<td><code>DELETE</code></td>
+<td><code>urest.api.base.APIBase.delete_state</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="example">Example</h2>
+<h3 id="getting-the-noun-state">Getting the Noun State</h3>
+<p>See <code><a title="urest.example.simpleled.SimpleLED" href="../example/simpleled.html#urest.example.simpleled.SimpleLED">SimpleLED</a></code> class a minimal implementation of a noun
+controlling on GPIO pin, using the MicroPython <code>Pin</code> library. For the
+<code><a title="urest.example.simpleled.SimpleLED" href="../example/simpleled.html#urest.example.simpleled.SimpleLED">SimpleLED</a></code> class, the exact pin being controlled is set
+during the object instantiation, via the class constructor.</p>
+<p>Assuming the <code><a title="urest.http.server.RESTServer" href="../http/server.html#urest.http.server.RESTServer">RESTServer</a></code> has been created as</p>
+<p><code>python app = RESTServer()</code></p>
+<p>then a 'noun' <code>led</code> can be registered via the
+<code>urest.http.server.RESTServer.register_noun</code> method as</p>
+<p><code>python app.register_noun('led', SimpleLED(28))</code></p>
+<p>This will also bind the controlled GPIO pin to <code>Pin 28</code>: documentation for the
+micro-controller and platform being used will be need to determine suitable
+values.</p>
+<p>Once the 'noun' has been registered, then the state of GPIO <code>Pin 28</code> can be
+found by the HTTP request</p>
+<pre><code>GET /led HTTP 1.1
+</code></pre>
+<p>.. Note:: All Lookup's Are Case Insensitive</p>
+<p>All nouns are registered with <code>urest.http.server.RESTServer</code> in <strong>lowercase</strong>.
+Likewise all routing of API requests will also assume that the name of the noun
+to be used will be in lowercase. Thus, for instance, calling</p>
+<p><code>python app.register_noun('leD', SimpleLED(28))</code></p>
+<p>or</p>
+<p><code>python app.register_noun('LED', SimpleLED(28))</code></p>
+<p>will <strong>all</strong> route to the name noun with the canonical name <code>led</code>. Likewise
+the request</p>
+<p><code>GET /lEd HTTP 1.1</code></p>
+<p>or</p>
+<p><code>GET /LED HTTP 1.1</code></p>
+<p>will <strong>also</strong> route to the same noun with the canonical name <code>led</code>.</p>
+<h3 id="setting-the-noun-state">Setting the Noun State</h3>
+<p>Setting the state of the noun is a little more involved, as this will require
+the desired state of the noun to be sent to the server. A useful tool for
+testing purposes is the <a href="https://curl.se">curl</a> utility; available on most
+platforms.</p>
+<p>Continuing the minimal example above, the command line</p>
+<pre><code>curl -X PUT -d '{&quot;led&quot;:&quot;0&quot;}' -H &quot;Content-Type: application/json&quot; &lt;http://10.0.30.225/LED&gt;
+</code></pre>
+<p>will transmit something like the following HTTP request to
+<code>urest.http.server.RESTServer</code></p>
+<pre><code>PUT /LED HTTP/1.1
+
+Host: 10.0.30.225
+User-Agent: curl/7.81.0
+Accept: */*
+Content-Type: application/json
+Content-Length: 11
+
+{&quot;led&quot;:&quot;0&quot;}
+</code></pre>
+<div class="admonition note">
+<p class="admonition-title">Note:&ensp;JSON is Required</p>
+<p>The only format accepted by the <code><a title="urest.http.server.RESTServer" href="../http/server.html#urest.http.server.RESTServer">RESTServer</a></code> for the state of the nouns is <a href="https://www.json.org/json-en.html">JSON</a>. The <code><a title="urest.http.server.RESTServer" href="../http/server.html#urest.http.server.RESTServer">RESTServer</a></code> will also only accept a sub-set of the JSON standard: notably assuming a single object, and a collection of key/value pairs.</p>
+</div>
+<p>The exact interpretation of the JSON is left to the implementation of the noun,
+but in most cases the name of the noun is used to set the state value. For
+instance in the above example the key <code>led</code> is interpreted as referring to the
+noun, and the value <code>0</code> as the state value. In this case setting the GPIO <code>Pin
+28&lt;code&gt; to the value &lt;/code&gt;0&lt;code&gt; (or &lt;/code&gt;off</code>). A close correspondence between the name of the
+noun as referred to the API, and the name of the noun in the state list is
+<strong>strongly</strong> advised: but is not strictly required.</p>
 <h2 id="tested-implementations">Tested Implementations</h2>
 <p>This version is written for MicroPython 3.4, and has been tested on:</p>
 <ul>
@@ -65,31 +165,132 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">&#34;&#34;&#34;
-Abstract base class and helper classes for the server-proivded REST API
+Abstract base class and helper classes for the server-provided REST API
 
 Overview
 --------
 
-During the marsheling of client requests (provided by the `urest.http.server.RESTServer`
-class), the path portion of the URI is extracted from the client. This path is
-expected to take the form of
+During the marshalling of client requests (provided by the
+`urest.http.server.RESTServer` class), the path portion of the URI is extracted
+from the client. This path is expected to take the form of
 
-&gt; `/ noun / verb`
+&gt; `/&lt; noun &gt;`
+
+with the &#39;verb&#39; denoted by the HTTP methods. Each &#39;noun&#39; is implemented by a
+class which inherits from `urest.api.base.APIBase`.
+
+.. Note::
+
+  All nouns are checked by`urest.http.server.RESTServer`, and nouns will not be
+  properly routed unless `urest.api.base.APIBase` is an ancestor of the derived
+  class.
 
 The &#39;noun&#39; determines the resource of the request, and the &#39;verb&#39; the action to
 be taken on that resource. Also important is the intent of the client as
 inferred from the underlying HTTP request, e.g. `GET` or `PUT`. Taken together
-the URI and the client intent are mapped as follows
+the URI and the client intent are mapped to methods of `urest.api.base.APIBase`
+as follows
+
+| Verb   | HTTP Method | `urest.api.base.APIBase` method      |
+|--------|-------------|--------------------------------------------|
+| Get    | `GET`       | `urest.api.base.APIBase.get_state`    |
+| Set    | `PUT`       | `urest.api.base.APIBase.set_state`    |
+| Update | `POST`      | `urest.api.base.APIBase.update_state` |
+| Delete | `DELETE`    | `urest.api.base.APIBase.delete_state` |
 
 
-Implementation
+Example
 --------------
 
+### Getting the Noun State
 
+See `urest.example.simpleled.SimpleLED` class a minimal implementation of a noun
+controlling on GPIO pin, using the MicroPython `Pin` library. For the
+`urest.example.simpleled.SimpleLED` class, the exact pin being controlled is set
+during the object instantiation, via the class constructor.
 
-Using the Module
-----------------
+Assuming the `urest.http.server.RESTServer` has been created as
 
+```python app = RESTServer() ```
+
+then a &#39;noun&#39; `led` can be registered via the
+`urest.http.server.RESTServer.register_noun` method as
+
+```python app.register_noun(&#39;led&#39;, SimpleLED(28)) ```
+
+This will also bind the controlled GPIO pin to `Pin 28`: documentation for the
+micro-controller and platform being used will be need to determine suitable
+values.
+
+Once the &#39;noun&#39; has been registered, then the state of GPIO `Pin 28` can be
+found by the HTTP request
+
+```
+GET /led HTTP 1.1
+```
+
+.. Note:: All Lookup&#39;s Are Case Insensitive
+
+  All nouns are registered with `urest.http.server.RESTServer` in **lowercase**.
+  Likewise all routing of API requests will also assume that the name of the noun
+  to be used will be in lowercase. Thus, for instance, calling
+
+  ```python app.register_noun(&#39;leD&#39;, SimpleLED(28)) ```
+
+  or
+
+  ```python app.register_noun(&#39;LED&#39;, SimpleLED(28)) ```
+
+  will **all** route to the name noun with the canonical name `led`. Likewise
+  the request
+
+  ``` GET /lEd HTTP 1.1 ```
+
+  or
+
+  ``` GET /LED HTTP 1.1 ```
+
+  will **also** route to the same noun with the canonical name `led`.
+
+### Setting the Noun State
+
+Setting the state of the noun is a little more involved, as this will require
+the desired state of the noun to be sent to the server. A useful tool for
+testing purposes is the [curl](https://curl.se) utility; available on most
+platforms.
+
+Continuing the minimal example above, the command line
+
+```
+curl -X PUT -d &#39;{&#34;led&#34;:&#34;0&#34;}&#39; -H &#34;Content-Type: application/json&#34; http://10.0.30.225/LED
+```
+
+will transmit something like the following HTTP request to
+`urest.http.server.RESTServer`
+
+```
+PUT /LED HTTP/1.1
+
+Host: 10.0.30.225
+User-Agent: curl/7.81.0
+Accept: */*
+Content-Type: application/json
+Content-Length: 11
+
+{&#34;led&#34;:&#34;0&#34;}
+```
+
+.. Note:: JSON is Required
+
+  The only format accepted by the `urest.http.server.RESTServer` for the state of the nouns is [JSON](https://www.json.org/json-en.html). The `urest.http.server.RESTServer` will also only accept a sub-set of the JSON standard: notably assuming a single object, and a collection of key/value pairs.
+
+The exact interpretation of the JSON is left to the implementation of the noun,
+but in most cases the name of the noun is used to set the state value. For
+instance in the above example the key `led` is interpreted as referring to the
+noun, and the value `0` as the state value. In this case setting the GPIO `Pin
+28` to the value `0` (or `off`). A close correspondence between the name of the
+noun as referred to the API, and the name of the noun in the state list is
+**strongly** advised: but is not strictly required.
 
 Tested Implementations
 ----------------------
@@ -149,8 +350,11 @@ from .base import APIBase</code></pre>
 <div class="toc">
 <ul>
 <li><a href="#overview">Overview</a></li>
-<li><a href="#implementation">Implementation</a></li>
-<li><a href="#using-the-module">Using the Module</a></li>
+<li><a href="#example">Example</a><ul>
+<li><a href="#getting-the-noun-state">Getting the Noun State</a></li>
+<li><a href="#setting-the-noun-state">Setting the Noun State</a></li>
+</ul>
+</li>
 <li><a href="#tested-implementations">Tested Implementations</a></li>
 <li><a href="#licence">Licence</a></li>
 </ul>

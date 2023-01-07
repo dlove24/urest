@@ -55,11 +55,13 @@ In most cases, something similar to the following will suffice
     loop.run_forever()
 ```
 
-**NOTE:** There is no guarantee of thread-safety in this module, and all
-'concurrency' is assumed to be via co-routines provided by the `asyncio`
-library. For an overview of how multiple clients can be handled using
-co-routines, [Async IO in Python](https://realpython.com/async-io-python) is
-highly recommended reading.
+.. Warning::
+
+  There is no guarantee of thread-safety in this module, and all
+  'concurrency' is assumed to be via co-routines provided by the `asyncio`
+  library. For an overview of how multiple clients can be handled using
+  co-routines, [Async IO in Python](https://realpython.com/async-io-python) is
+  highly recommended reading.
 
 ### Creating the API Responses
 
