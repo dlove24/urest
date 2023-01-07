@@ -86,7 +86,12 @@ class RESTServer:
 
     #
     def __init__(
-        self, host="0.0.0.0", port=80, backlog=5, read_timeout=30, write_timeout=5
+        self,
+        host: str = "0.0.0.0",
+        port: int = 80,
+        backlog: int = 5,
+        read_timeout: int = 30,
+        write_timeout: int = 5,
     ):
         """Initialise the server with reasonable defaults. These should work
         for most cases, and should be set so that most clients won't have
@@ -141,7 +146,7 @@ class RESTServer:
 
             **Default:** An IPv4 sock on the local host.
 
-        port: string
+        port: integer
             The local (server) port to bind the socket to. Note that the exact requirements are
             determined by the
             [`asyncio.BaseEventLoop.create_server`](https://docs.python.org/3.4/library/
@@ -183,7 +188,7 @@ class RESTServer:
         self._server = None
         self._nouns = {}
 
-    def parse_data(self, data_str):
+    def parse_data(self, data_str: str) -> dict:
         """
         Attempt to parse a string containing JSON-like formatting into a single dictionary.
 
@@ -295,14 +300,14 @@ class RESTServer:
 
         return return_dictionary
 
-    def register_noun(self, noun, handler):
+    def register_noun(self, noun: str, handler: APIBase):
         """
         Register a new object handler for the noun passed by the client.
 
         Parameters
         ----------
 
-        noun: str
+        noun: string
             String representing the noun to use in the API
 
         handler: `urest.api.base.APIBase`
@@ -324,7 +329,9 @@ class RESTServer:
             if old_handler is not None:
                 self._nouns[noun] = old_handler
 
-    async def dispatch_noun(self, reader, writer):
+    async def dispatch_noun(
+        self, reader: asyncio.StreamReader, writer: asyncio.StreamWriter
+    ):
         """
         Core client handling routine. This connects the `reader` and `writer`
         streams from the IO library to the API requests detailed by the rest

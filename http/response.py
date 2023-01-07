@@ -38,6 +38,13 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
+# Import the Asynchronous IO Library, preferring the MicroPython library if
+# available
+try:
+    import uasyncio as asyncio
+except ImportError:
+    import asyncio
+
 # Import the enumerations library. Unfortunately not in MicroPython yet
 # from enum import Enum
 
@@ -55,13 +62,23 @@ class HTTPResponse:
     ## Constructor
     ##
 
-    def __init__(self, body="", status="OK", mimetype=None, close=True, header=None):
+    def __init__(
+        self,
+        body: str = "",
+        status: HTTPStatus = "OK",
+        mimetype: str = None,
+        close: bool = True,
+        header: dict = None,
+    ):
         """Create a response object, representing the raw HTTP header returned to the
         network client.
 
-        Responses returned to the client by this class _must_ be formatted according
-        to the [HTTP/1.1 specification](https://www.ietf.org/rfc/rfc2616.txt) and
-        _must_ be valid.
+        This instance is guaranteed to be a valid _class_ on creation, and
+        _should_ also be a valid HTTP response. However the caller should check the
+        validity of the header before returning to the client. In particular,  responses
+        returned to the client by this class _must_ be formatted according to the
+        [HTTP/1.1 specification](https://www.ietf.org/rfc/rfc2616.txt) and _must_ be
+        valid.
 
         Parameters
         ----------
@@ -84,20 +101,11 @@ class HTTPResponse:
             has been sent. Otherwise, when set to `False` this will flag to the
             client that the created `urest.http.response.HTTPResponse` is part of
             a sequence to be sent over the same connection.
-        header:  dict
+        header:  Dictionary
             Raw (key, value) pairs for HTTP response header fields. This allows
             setting of arbitrary fields by the caller, without extending/sub-classing
             `urest.http.response.HTTPResponse`
 
-
-        Returns
-        -------
-
-        `urest.http.response.HTTPResponse`
-
-          This instance is guaranteed to be a valid _class_ on creation, and _should_
-          also be a valid HTTP response. However the caller should check the validity
-          of the header before returning to the client.
         """
 
         if status in HTTPStatus:
@@ -133,7 +141,7 @@ class HTTPResponse:
         return self._body
 
     @body.setter
-    def body(self, new_body):
+    def body(self, new_body: str):
         if new_body is not None and isinstance(new_body, str):
             self._body = new_body
         else:
@@ -150,7 +158,7 @@ class HTTPResponse:
         return self._status
 
     @status.setter
-    def status(self, new_status):
+    def status(self, new_status: HTTPStatus):
         if new_status in HTTPStatus:
             self._status = new_status
         else:
@@ -162,7 +170,7 @@ class HTTPResponse:
     ## Functions
     ##
 
-    async def send(self, writer):
+    async def send(self, writer: asyncio.StreamWriter):
         """Send an appropriate response to the client, based on the status code.
 
         This method assembles the full HTTP 1.1 header, based on the `mimetype`

@@ -98,6 +98,13 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 &#34;&#34;&#34;
 
+# Import the Asynchronous IO Library, preferring the MicroPython library if
+# available
+try:
+    import uasyncio as asyncio
+except ImportError:
+    import asyncio
+
 # Import the enumerations library. Unfortunately not in MicroPython yet
 # from enum import Enum
 
@@ -115,13 +122,23 @@ class HTTPResponse:
     ## Constructor
     ##
 
-    def __init__(self, body=&#34;&#34;, status=&#34;OK&#34;, mimetype=None, close=True, header=None):
+    def __init__(
+        self,
+        body: str = &#34;&#34;,
+        status: HTTPStatus = &#34;OK&#34;,
+        mimetype: str = None,
+        close: bool = True,
+        header: dict = None,
+    ):
         &#34;&#34;&#34;Create a response object, representing the raw HTTP header returned to the
         network client.
 
-        Responses returned to the client by this class _must_ be formatted according
-        to the [HTTP/1.1 specification](https://www.ietf.org/rfc/rfc2616.txt) and
-        _must_ be valid.
+        This instance is guaranteed to be a valid _class_ on creation, and
+        _should_ also be a valid HTTP response. However the caller should check the
+        validity of the header before returning to the client. In particular,  responses
+        returned to the client by this class _must_ be formatted according to the
+        [HTTP/1.1 specification](https://www.ietf.org/rfc/rfc2616.txt) and _must_ be
+        valid.
 
         Parameters
         ----------
@@ -144,20 +161,11 @@ class HTTPResponse:
             has been sent. Otherwise, when set to `False` this will flag to the
             client that the created `urest.http.response.HTTPResponse` is part of
             a sequence to be sent over the same connection.
-        header:  dict
+        header:  Dictionary
             Raw (key, value) pairs for HTTP response header fields. This allows
             setting of arbitrary fields by the caller, without extending/sub-classing
             `urest.http.response.HTTPResponse`
 
-
-        Returns
-        -------
-
-        `urest.http.response.HTTPResponse`
-
-          This instance is guaranteed to be a valid _class_ on creation, and _should_
-          also be a valid HTTP response. However the caller should check the validity
-          of the header before returning to the client.
         &#34;&#34;&#34;
 
         if status in HTTPStatus:
@@ -193,7 +201,7 @@ class HTTPResponse:
         return self._body
 
     @body.setter
-    def body(self, new_body):
+    def body(self, new_body: str):
         if new_body is not None and isinstance(new_body, str):
             self._body = new_body
         else:
@@ -210,7 +218,7 @@ class HTTPResponse:
         return self._status
 
     @status.setter
-    def status(self, new_status):
+    def status(self, new_status: HTTPStatus):
         if new_status in HTTPStatus:
             self._status = new_status
         else:
@@ -222,7 +230,7 @@ class HTTPResponse:
     ## Functions
     ##
 
-    async def send(self, writer):
+    async def send(self, writer: asyncio.StreamWriter):
         &#34;&#34;&#34;Send an appropriate response to the client, based on the status code.
 
         This method assembles the full HTTP 1.1 header, based on the `mimetype`
@@ -322,14 +330,18 @@ details</p></div>
 <dl>
 <dt id="urest.http.response.HTTPResponse"><code class="flex name class">
 <span>class <span class="ident">HTTPResponse</span></span>
-<span>(</span><span>body='', status='OK', mimetype=None, close=True, header=None)</span>
+<span>(</span><span>body: str = '', status: {'NOT_FOUND', 'NOT_OK', 'OK'} = 'OK', mimetype: str = None, close: bool = True, header: dict = None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Create a response object, representing the raw HTTP header returned to the
 network client.</p>
-<p>Responses returned to the client by this class <em>must</em> be formatted according
-to the <a href="https://www.ietf.org/rfc/rfc2616.txt">HTTP/1.1 specification</a> and
-<em>must</em> be valid.</p>
+<p>This instance is guaranteed to be a valid <em>class</em> on creation, and
+<em>should</em> also be a valid HTTP response. However the caller should check the
+validity of the header before returning to the client. In particular,
+responses
+returned to the client by this class <em>must</em> be formatted according to the
+<a href="https://www.ietf.org/rfc/rfc2616.txt">HTTP/1.1 specification</a> and <em>must</em> be
+valid.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>body</code></strong> :&ensp;<code>string</code></dt>
@@ -350,16 +362,11 @@ created.</dd>
 has been sent. Otherwise, when set to <code>False</code> this will flag to the
 client that the created <code><a title="urest.http.response.HTTPResponse" href="#urest.http.response.HTTPResponse">HTTPResponse</a></code> is part of
 a sequence to be sent over the same connection.</dd>
-<dt><strong><code>header</code></strong> :&ensp;<code> dict</code></dt>
+<dt><strong><code>header</code></strong> :&ensp;<code> Dictionary</code></dt>
 <dd>Raw (key, value) pairs for HTTP response header fields. This allows
 setting of arbitrary fields by the caller, without extending/sub-classing
 <code><a title="urest.http.response.HTTPResponse" href="#urest.http.response.HTTPResponse">HTTPResponse</a></code></dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<p><code><a title="urest.http.response.HTTPResponse" href="#urest.http.response.HTTPResponse">HTTPResponse</a></code></p>
-<p>This instance is guaranteed to be a valid <em>class</em> on creation, and <em>should</em>
-also be a valid HTTP response. However the caller should check the validity
-of the header before returning to the client.</p></div>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -370,13 +377,23 @@ of the header before returning to the client.</p></div>
     ## Constructor
     ##
 
-    def __init__(self, body=&#34;&#34;, status=&#34;OK&#34;, mimetype=None, close=True, header=None):
+    def __init__(
+        self,
+        body: str = &#34;&#34;,
+        status: HTTPStatus = &#34;OK&#34;,
+        mimetype: str = None,
+        close: bool = True,
+        header: dict = None,
+    ):
         &#34;&#34;&#34;Create a response object, representing the raw HTTP header returned to the
         network client.
 
-        Responses returned to the client by this class _must_ be formatted according
-        to the [HTTP/1.1 specification](https://www.ietf.org/rfc/rfc2616.txt) and
-        _must_ be valid.
+        This instance is guaranteed to be a valid _class_ on creation, and
+        _should_ also be a valid HTTP response. However the caller should check the
+        validity of the header before returning to the client. In particular,  responses
+        returned to the client by this class _must_ be formatted according to the
+        [HTTP/1.1 specification](https://www.ietf.org/rfc/rfc2616.txt) and _must_ be
+        valid.
 
         Parameters
         ----------
@@ -399,20 +416,11 @@ of the header before returning to the client.</p></div>
             has been sent. Otherwise, when set to `False` this will flag to the
             client that the created `urest.http.response.HTTPResponse` is part of
             a sequence to be sent over the same connection.
-        header:  dict
+        header:  Dictionary
             Raw (key, value) pairs for HTTP response header fields. This allows
             setting of arbitrary fields by the caller, without extending/sub-classing
             `urest.http.response.HTTPResponse`
 
-
-        Returns
-        -------
-
-        `urest.http.response.HTTPResponse`
-
-          This instance is guaranteed to be a valid _class_ on creation, and _should_
-          also be a valid HTTP response. However the caller should check the validity
-          of the header before returning to the client.
         &#34;&#34;&#34;
 
         if status in HTTPStatus:
@@ -448,7 +456,7 @@ of the header before returning to the client.</p></div>
         return self._body
 
     @body.setter
-    def body(self, new_body):
+    def body(self, new_body: str):
         if new_body is not None and isinstance(new_body, str):
             self._body = new_body
         else:
@@ -465,7 +473,7 @@ of the header before returning to the client.</p></div>
         return self._status
 
     @status.setter
-    def status(self, new_status):
+    def status(self, new_status: HTTPStatus):
         if new_status in HTTPStatus:
             self._status = new_status
         else:
@@ -477,7 +485,7 @@ of the header before returning to the client.</p></div>
     ## Functions
     ##
 
-    async def send(self, writer):
+    async def send(self, writer: asyncio.StreamWriter):
         &#34;&#34;&#34;Send an appropriate response to the client, based on the status code.
 
         This method assembles the full HTTP 1.1 header, based on the `mimetype`
@@ -593,7 +601,7 @@ def status(self):
 <h3>Methods</h3>
 <dl>
 <dt id="urest.http.response.HTTPResponse.send"><code class="name flex">
-<span>async def <span class="ident">send</span></span>(<span>self, writer)</span>
+<span>async def <span class="ident">send</span></span>(<span>self, writer: asyncio.streams.StreamWriter)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Send an appropriate response to the client, based on the status code.</p>
@@ -623,7 +631,7 @@ as a co-routine under the <code>asyncio</code> library.</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def send(self, writer):
+<pre><code class="python">async def send(self, writer: asyncio.StreamWriter):
     &#34;&#34;&#34;Send an appropriate response to the client, based on the status code.
 
     This method assembles the full HTTP 1.1 header, based on the `mimetype`

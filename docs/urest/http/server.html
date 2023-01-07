@@ -147,7 +147,12 @@ class RESTServer:
 
     #
     def __init__(
-        self, host=&#34;0.0.0.0&#34;, port=80, backlog=5, read_timeout=30, write_timeout=5
+        self,
+        host: str = &#34;0.0.0.0&#34;,
+        port: int = 80,
+        backlog: int = 5,
+        read_timeout: int = 30,
+        write_timeout: int = 5,
     ):
         &#34;&#34;&#34;Initialise the server with reasonable defaults. These should work
         for most cases, and should be set so that most clients won&#39;t have
@@ -202,7 +207,7 @@ class RESTServer:
 
             **Default:** An IPv4 sock on the local host.
 
-        port: string
+        port: integer
             The local (server) port to bind the socket to. Note that the exact requirements are
             determined by the
             [`asyncio.BaseEventLoop.create_server`](https://docs.python.org/3.4/library/
@@ -244,7 +249,7 @@ class RESTServer:
         self._server = None
         self._nouns = {}
 
-    def parse_data(self, data_str):
+    def parse_data(self, data_str: str) -&gt; dict:
         &#34;&#34;&#34;
         Attempt to parse a string containing JSON-like formatting into a single dictionary.
 
@@ -356,14 +361,14 @@ class RESTServer:
 
         return return_dictionary
 
-    def register_noun(self, noun, handler):
+    def register_noun(self, noun: str, handler: APIBase):
         &#34;&#34;&#34;
         Register a new object handler for the noun passed by the client.
 
         Parameters
         ----------
 
-        noun: str
+        noun: string
             String representing the noun to use in the API
 
         handler: `urest.api.base.APIBase`
@@ -385,7 +390,9 @@ class RESTServer:
             if old_handler is not None:
                 self._nouns[noun] = old_handler
 
-    async def dispatch_noun(self, reader, writer):
+    async def dispatch_noun(
+        self, reader: asyncio.StreamReader, writer: asyncio.StreamWriter
+    ):
         &#34;&#34;&#34;
         Core client handling routine. This connects the `reader` and `writer`
         streams from the IO library to the API requests detailed by the rest
@@ -648,7 +655,7 @@ class RESTServer:
 </dd>
 <dt id="urest.http.server.RESTServer"><code class="flex name class">
 <span>class <span class="ident">RESTServer</span></span>
-<span>(</span><span>host='0.0.0.0', port=80, backlog=5, read_timeout=30, write_timeout=5)</span>
+<span>(</span><span>host: str = '0.0.0.0', port: int = 80, backlog: int = 5, read_timeout: int = 30, write_timeout: int = 5)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Initialise the server with reasonable defaults. These should work
@@ -697,7 +704,7 @@ asyncio-eventloop.html#asyncio.BaseEventLoop.create_server"><code>asyncio.BaseEv
 be checked carefully for implementation defined limitations.</p>
 <p><strong>Default:</strong> An IPv4 sock on the local host.</p>
 </dd>
-<dt><strong><code>port</code></strong> :&ensp;<code>string</code></dt>
+<dt><strong><code>port</code></strong> :&ensp;<code>integer</code></dt>
 <dd>
 <p>The local (server) port to bind the socket to. Note that the exact requirements are
 determined by the
@@ -738,7 +745,12 @@ client, before declaring failure.</p>
 
     #
     def __init__(
-        self, host=&#34;0.0.0.0&#34;, port=80, backlog=5, read_timeout=30, write_timeout=5
+        self,
+        host: str = &#34;0.0.0.0&#34;,
+        port: int = 80,
+        backlog: int = 5,
+        read_timeout: int = 30,
+        write_timeout: int = 5,
     ):
         &#34;&#34;&#34;Initialise the server with reasonable defaults. These should work
         for most cases, and should be set so that most clients won&#39;t have
@@ -793,7 +805,7 @@ client, before declaring failure.</p>
 
             **Default:** An IPv4 sock on the local host.
 
-        port: string
+        port: integer
             The local (server) port to bind the socket to. Note that the exact requirements are
             determined by the
             [`asyncio.BaseEventLoop.create_server`](https://docs.python.org/3.4/library/
@@ -835,7 +847,7 @@ client, before declaring failure.</p>
         self._server = None
         self._nouns = {}
 
-    def parse_data(self, data_str):
+    def parse_data(self, data_str: str) -&gt; dict:
         &#34;&#34;&#34;
         Attempt to parse a string containing JSON-like formatting into a single dictionary.
 
@@ -947,14 +959,14 @@ client, before declaring failure.</p>
 
         return return_dictionary
 
-    def register_noun(self, noun, handler):
+    def register_noun(self, noun: str, handler: APIBase):
         &#34;&#34;&#34;
         Register a new object handler for the noun passed by the client.
 
         Parameters
         ----------
 
-        noun: str
+        noun: string
             String representing the noun to use in the API
 
         handler: `urest.api.base.APIBase`
@@ -976,7 +988,9 @@ client, before declaring failure.</p>
             if old_handler is not None:
                 self._nouns[noun] = old_handler
 
-    async def dispatch_noun(self, reader, writer):
+    async def dispatch_noun(
+        self, reader: asyncio.StreamReader, writer: asyncio.StreamWriter
+    ):
         &#34;&#34;&#34;
         Core client handling routine. This connects the `reader` and `writer`
         streams from the IO library to the API requests detailed by the rest
@@ -1211,7 +1225,7 @@ client, before declaring failure.</p>
 <h3>Methods</h3>
 <dl>
 <dt id="urest.http.server.RESTServer.dispatch_noun"><code class="name flex">
-<span>async def <span class="ident">dispatch_noun</span></span>(<span>self, reader, writer)</span>
+<span>async def <span class="ident">dispatch_noun</span></span>(<span>self, reader: asyncio.streams.StreamReader, writer: asyncio.streams.StreamWriter)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Core client handling routine. This connects the <code>reader</code> and <code>writer</code>
@@ -1245,7 +1259,9 @@ streamwriter">asyncio.StreamWriter</a>.</dd>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def dispatch_noun(self, reader, writer):
+<pre><code class="python">async def dispatch_noun(
+    self, reader: asyncio.StreamReader, writer: asyncio.StreamWriter
+):
     &#34;&#34;&#34;
     Core client handling routine. This connects the `reader` and `writer`
     streams from the IO library to the API requests detailed by the rest
@@ -1438,7 +1454,7 @@ streamwriter">asyncio.StreamWriter</a>.</dd>
 </details>
 </dd>
 <dt id="urest.http.server.RESTServer.parse_data"><code class="name flex">
-<span>def <span class="ident">parse_data</span></span>(<span>self, data_str)</span>
+<span>def <span class="ident">parse_data</span></span>(<span>self, data_str: str) ‑> dict</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Attempt to parse a string containing JSON-like formatting into a single dictionary.</p>
@@ -1472,7 +1488,7 @@ defined in the <code>data_str</code> object.</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def parse_data(self, data_str):
+<pre><code class="python">def parse_data(self, data_str: str) -&gt; dict:
     &#34;&#34;&#34;
     Attempt to parse a string containing JSON-like formatting into a single dictionary.
 
@@ -1586,13 +1602,13 @@ defined in the <code>data_str</code> object.</p></div>
 </details>
 </dd>
 <dt id="urest.http.server.RESTServer.register_noun"><code class="name flex">
-<span>def <span class="ident">register_noun</span></span>(<span>self, noun, handler)</span>
+<span>def <span class="ident">register_noun</span></span>(<span>self, noun: str, handler: <a title="urest.api.base.APIBase" href="../api/base.html#urest.api.base.APIBase">APIBase</a>)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Register a new object handler for the noun passed by the client.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
-<dt><strong><code>noun</code></strong> :&ensp;<code>str</code></dt>
+<dt><strong><code>noun</code></strong> :&ensp;<code>string</code></dt>
 <dd>String representing the noun to use in the API</dd>
 <dt><strong><code>handler</code></strong> :&ensp;<code><a title="urest.api.base.APIBase" href="../api/base.html#urest.api.base.APIBase">APIBase</a></code></dt>
 <dd>Object handling the request from the client</dd>
@@ -1601,14 +1617,14 @@ defined in the <code>data_str</code> object.</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def register_noun(self, noun, handler):
+<pre><code class="python">def register_noun(self, noun: str, handler: APIBase):
     &#34;&#34;&#34;
     Register a new object handler for the noun passed by the client.
 
     Parameters
     ----------
 
-    noun: str
+    noun: string
         String representing the noun to use in the API
 
     handler: `urest.api.base.APIBase`

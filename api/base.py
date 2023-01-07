@@ -85,7 +85,7 @@ class APIBase:
     ## State Manipulation Methods
     ##
 
-    def get_state(self):
+    def get_state(self) -> dict:
         """Returns the state of the resource.
 
         Return the state of the resource, as defined by the sub-classes. By default
@@ -103,7 +103,7 @@ class APIBase:
 
         return self._state_attributes
 
-    def set_state(self, state_attributes):
+    def set_state(self, state_attributes: dict):
         """Sets the full state of the resource.
 
         The exact mechanism for updating the internal state of the resource represented
@@ -118,13 +118,6 @@ class APIBase:
         state_attributes: Dictionary
             A list of (key, value) pairs representing the _full_ state of the
             resource. No merging of state is undertaken, or attempted.
-
-        Returns
-        -------
-
-        Dictionary
-          A mapping of (key, value) pairs which defines the resource state to return to the
-          client.
         """
 
         if state_attributes is not None and isinstance(state_attributes, dict):
@@ -132,7 +125,7 @@ class APIBase:
         else:
             self._state_attributes = []
 
-    def update_state(self, state_attributes):
+    def update_state(self, state_attributes: dict):
         """Updates the state of the resource, using the 'key/value' pairs of the
         `Dictionary` in `state_attributes`.
 
@@ -150,13 +143,6 @@ class APIBase:
             A list of (key, value) pairs representing the _partial_ state of the
             resource. The exact mechanism for merging this partial state if left
             to the implementation of the sub-classes.
-
-        Returns
-        -------
-
-        Dictionary
-          A mapping of (key, value) pairs which defines the resource state to return to the
-          client.
         """
 
         if state_attributes is not None and isinstance(state_attributes, dict):
@@ -168,7 +154,7 @@ class APIBase:
         else:
             self._state_attributes = []
 
-    def delete_state(self, state_attributes):
+    def delete_state(self, state_attributes: dict):
         """Removes the internal state of the resource, essentially 'resetting' or
         re-initialising the object.
 
@@ -186,12 +172,6 @@ class APIBase:
             resource. The exact mechanism for merging this partial state if left
             to the implementation of the sub-classes.
 
-        Returns
-        -------
-
-        Dictionary
-          A mapping of (key, value) pairs which defines the resource state to return to the
-          client.
         """
 
         if state_attributes is not None and isinstance(state_attributes, dict):

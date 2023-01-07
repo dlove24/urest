@@ -151,7 +151,7 @@ class APIBase:
     ## State Manipulation Methods
     ##
 
-    def get_state(self):
+    def get_state(self) -&gt; dict:
         &#34;&#34;&#34;Returns the state of the resource.
 
         Return the state of the resource, as defined by the sub-classes. By default
@@ -169,7 +169,7 @@ class APIBase:
 
         return self._state_attributes
 
-    def set_state(self, state_attributes):
+    def set_state(self, state_attributes: dict):
         &#34;&#34;&#34;Sets the full state of the resource.
 
         The exact mechanism for updating the internal state of the resource represented
@@ -184,13 +184,6 @@ class APIBase:
         state_attributes: Dictionary
             A list of (key, value) pairs representing the _full_ state of the
             resource. No merging of state is undertaken, or attempted.
-
-        Returns
-        -------
-
-        Dictionary
-          A mapping of (key, value) pairs which defines the resource state to return to the
-          client.
         &#34;&#34;&#34;
 
         if state_attributes is not None and isinstance(state_attributes, dict):
@@ -198,7 +191,7 @@ class APIBase:
         else:
             self._state_attributes = []
 
-    def update_state(self, state_attributes):
+    def update_state(self, state_attributes: dict):
         &#34;&#34;&#34;Updates the state of the resource, using the &#39;key/value&#39; pairs of the
         `Dictionary` in `state_attributes`.
 
@@ -216,13 +209,6 @@ class APIBase:
             A list of (key, value) pairs representing the _partial_ state of the
             resource. The exact mechanism for merging this partial state if left
             to the implementation of the sub-classes.
-
-        Returns
-        -------
-
-        Dictionary
-          A mapping of (key, value) pairs which defines the resource state to return to the
-          client.
         &#34;&#34;&#34;
 
         if state_attributes is not None and isinstance(state_attributes, dict):
@@ -234,7 +220,7 @@ class APIBase:
         else:
             self._state_attributes = []
 
-    def delete_state(self, state_attributes):
+    def delete_state(self, state_attributes: dict):
         &#34;&#34;&#34;Removes the internal state of the resource, essentially &#39;resetting&#39; or
         re-initialising the object.
 
@@ -252,12 +238,6 @@ class APIBase:
             resource. The exact mechanism for merging this partial state if left
             to the implementation of the sub-classes.
 
-        Returns
-        -------
-
-        Dictionary
-          A mapping of (key, value) pairs which defines the resource state to return to the
-          client.
         &#34;&#34;&#34;
 
         if state_attributes is not None and isinstance(state_attributes, dict):
@@ -349,7 +329,7 @@ responsibility to ensure the returned data follows the form expected by those cl
     ## State Manipulation Methods
     ##
 
-    def get_state(self):
+    def get_state(self) -&gt; dict:
         &#34;&#34;&#34;Returns the state of the resource.
 
         Return the state of the resource, as defined by the sub-classes. By default
@@ -367,7 +347,7 @@ responsibility to ensure the returned data follows the form expected by those cl
 
         return self._state_attributes
 
-    def set_state(self, state_attributes):
+    def set_state(self, state_attributes: dict):
         &#34;&#34;&#34;Sets the full state of the resource.
 
         The exact mechanism for updating the internal state of the resource represented
@@ -382,13 +362,6 @@ responsibility to ensure the returned data follows the form expected by those cl
         state_attributes: Dictionary
             A list of (key, value) pairs representing the _full_ state of the
             resource. No merging of state is undertaken, or attempted.
-
-        Returns
-        -------
-
-        Dictionary
-          A mapping of (key, value) pairs which defines the resource state to return to the
-          client.
         &#34;&#34;&#34;
 
         if state_attributes is not None and isinstance(state_attributes, dict):
@@ -396,7 +369,7 @@ responsibility to ensure the returned data follows the form expected by those cl
         else:
             self._state_attributes = []
 
-    def update_state(self, state_attributes):
+    def update_state(self, state_attributes: dict):
         &#34;&#34;&#34;Updates the state of the resource, using the &#39;key/value&#39; pairs of the
         `Dictionary` in `state_attributes`.
 
@@ -414,13 +387,6 @@ responsibility to ensure the returned data follows the form expected by those cl
             A list of (key, value) pairs representing the _partial_ state of the
             resource. The exact mechanism for merging this partial state if left
             to the implementation of the sub-classes.
-
-        Returns
-        -------
-
-        Dictionary
-          A mapping of (key, value) pairs which defines the resource state to return to the
-          client.
         &#34;&#34;&#34;
 
         if state_attributes is not None and isinstance(state_attributes, dict):
@@ -432,7 +398,7 @@ responsibility to ensure the returned data follows the form expected by those cl
         else:
             self._state_attributes = []
 
-    def delete_state(self, state_attributes):
+    def delete_state(self, state_attributes: dict):
         &#34;&#34;&#34;Removes the internal state of the resource, essentially &#39;resetting&#39; or
         re-initialising the object.
 
@@ -450,12 +416,6 @@ responsibility to ensure the returned data follows the form expected by those cl
             resource. The exact mechanism for merging this partial state if left
             to the implementation of the sub-classes.
 
-        Returns
-        -------
-
-        Dictionary
-          A mapping of (key, value) pairs which defines the resource state to return to the
-          client.
         &#34;&#34;&#34;
 
         if state_attributes is not None and isinstance(state_attributes, dict):
@@ -474,7 +434,7 @@ responsibility to ensure the returned data follows the form expected by those cl
 <h3>Methods</h3>
 <dl>
 <dt id="urest.api.base.APIBase.delete_state"><code class="name flex">
-<span>def <span class="ident">delete_state</span></span>(<span>self, state_attributes)</span>
+<span>def <span class="ident">delete_state</span></span>(<span>self, state_attributes: dict)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Removes the internal state of the resource, essentially 'resetting' or
@@ -490,19 +450,12 @@ can be interpreted by sub-classes to update the true internal state as needed.</
 <dd>A list of (key, value) pairs representing the <em>partial</em> state of the
 resource. The exact mechanism for merging this partial state if left
 to the implementation of the sub-classes.</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>Dictionary</code></dt>
-<dd>&nbsp;</dd>
-</dl>
-<p>A mapping of (key, value) pairs which defines the resource state to return to the
-client.</p></div>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def delete_state(self, state_attributes):
+<pre><code class="python">def delete_state(self, state_attributes: dict):
     &#34;&#34;&#34;Removes the internal state of the resource, essentially &#39;resetting&#39; or
     re-initialising the object.
 
@@ -520,12 +473,6 @@ client.</p></div>
         resource. The exact mechanism for merging this partial state if left
         to the implementation of the sub-classes.
 
-    Returns
-    -------
-
-    Dictionary
-      A mapping of (key, value) pairs which defines the resource state to return to the
-      client.
     &#34;&#34;&#34;
 
     if state_attributes is not None and isinstance(state_attributes, dict):
@@ -539,7 +486,7 @@ client.</p></div>
 </details>
 </dd>
 <dt id="urest.api.base.APIBase.get_state"><code class="name flex">
-<span>def <span class="ident">get_state</span></span>(<span>self)</span>
+<span>def <span class="ident">get_state</span></span>(<span>self) ‑> dict</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Returns the state of the resource.</p>
@@ -558,7 +505,7 @@ client.</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def get_state(self):
+<pre><code class="python">def get_state(self) -&gt; dict:
     &#34;&#34;&#34;Returns the state of the resource.
 
     Return the state of the resource, as defined by the sub-classes. By default
@@ -578,7 +525,7 @@ client.</p></div>
 </details>
 </dd>
 <dt id="urest.api.base.APIBase.set_state"><code class="name flex">
-<span>def <span class="ident">set_state</span></span>(<span>self, state_attributes)</span>
+<span>def <span class="ident">set_state</span></span>(<span>self, state_attributes: dict)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Sets the full state of the resource.</p>
@@ -592,19 +539,12 @@ through <code>state_attributes</code>.</p>
 <dt><strong><code>state_attributes</code></strong> :&ensp;<code>Dictionary</code></dt>
 <dd>A list of (key, value) pairs representing the <em>full</em> state of the
 resource. No merging of state is undertaken, or attempted.</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>Dictionary</code></dt>
-<dd>&nbsp;</dd>
-</dl>
-<p>A mapping of (key, value) pairs which defines the resource state to return to the
-client.</p></div>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def set_state(self, state_attributes):
+<pre><code class="python">def set_state(self, state_attributes: dict):
     &#34;&#34;&#34;Sets the full state of the resource.
 
     The exact mechanism for updating the internal state of the resource represented
@@ -619,13 +559,6 @@ client.</p></div>
     state_attributes: Dictionary
         A list of (key, value) pairs representing the _full_ state of the
         resource. No merging of state is undertaken, or attempted.
-
-    Returns
-    -------
-
-    Dictionary
-      A mapping of (key, value) pairs which defines the resource state to return to the
-      client.
     &#34;&#34;&#34;
 
     if state_attributes is not None and isinstance(state_attributes, dict):
@@ -635,7 +568,7 @@ client.</p></div>
 </details>
 </dd>
 <dt id="urest.api.base.APIBase.update_state"><code class="name flex">
-<span>def <span class="ident">update_state</span></span>(<span>self, state_attributes)</span>
+<span>def <span class="ident">update_state</span></span>(<span>self, state_attributes: dict)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Updates the state of the resource, using the 'key/value' pairs of the
@@ -651,19 +584,12 @@ can be interpreted by sub-classes to update the true internal state as needed.</
 <dd>A list of (key, value) pairs representing the <em>partial</em> state of the
 resource. The exact mechanism for merging this partial state if left
 to the implementation of the sub-classes.</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>Dictionary</code></dt>
-<dd>&nbsp;</dd>
-</dl>
-<p>A mapping of (key, value) pairs which defines the resource state to return to the
-client.</p></div>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def update_state(self, state_attributes):
+<pre><code class="python">def update_state(self, state_attributes: dict):
     &#34;&#34;&#34;Updates the state of the resource, using the &#39;key/value&#39; pairs of the
     `Dictionary` in `state_attributes`.
 
@@ -681,13 +607,6 @@ client.</p></div>
         A list of (key, value) pairs representing the _partial_ state of the
         resource. The exact mechanism for merging this partial state if left
         to the implementation of the sub-classes.
-
-    Returns
-    -------
-
-    Dictionary
-      A mapping of (key, value) pairs which defines the resource state to return to the
-      client.
     &#34;&#34;&#34;
 
     if state_attributes is not None and isinstance(state_attributes, dict):
