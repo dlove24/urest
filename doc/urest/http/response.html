@@ -229,9 +229,10 @@ class HTTPResponse:
         the content currently in the `body`, and the error code forming the
         `status` of the response to the client.
 
-        **Note: ** The the actual sending of this HTTP 1.1 header to the client
-        is the responsibility of the caller. This function only assists in correctly
-        forming that response
+        .. Note::
+          The the actual sending of this HTTP 1.1 header to the client
+          is the responsibility of the caller. This function only assists in correctly
+          forming that response
 
         Parameters
         ----------
@@ -483,9 +484,10 @@ of the header before returning to the client.</p></div>
         the content currently in the `body`, and the error code forming the
         `status` of the response to the client.
 
-        **Note: ** The the actual sending of this HTTP 1.1 header to the client
-        is the responsibility of the caller. This function only assists in correctly
-        forming that response
+        .. Note::
+          The the actual sending of this HTTP 1.1 header to the client
+          is the responsibility of the caller. This function only assists in correctly
+          forming that response
 
         Parameters
         ----------
@@ -598,9 +600,12 @@ def status(self):
 <p>This method assembles the full HTTP 1.1 header, based on the <code>mimetype</code>
 the content currently in the <code>body</code>, and the error code forming the
 <code>status</code> of the response to the client.</p>
-<p><strong>Note: </strong> The the actual sending of this HTTP 1.1 header to the client
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The the actual sending of this HTTP 1.1 header to the client
 is the responsibility of the caller. This function only assists in correctly
 forming that response</p>
+</div>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>writer</code></strong> :&ensp;<code>asyncio.StreamWriter</code></dt>
@@ -625,9 +630,10 @@ as a co-routine under the <code>asyncio</code> library.</p></div>
     the content currently in the `body`, and the error code forming the
     `status` of the response to the client.
 
-    **Note: ** The the actual sending of this HTTP 1.1 header to the client
-    is the responsibility of the caller. This function only assists in correctly
-    forming that response
+    .. Note::
+      The the actual sending of this HTTP 1.1 header to the client
+      is the responsibility of the caller. This function only assists in correctly
+      forming that response
 
     Parameters
     ----------

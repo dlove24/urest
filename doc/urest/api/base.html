@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
 <title>urest.api.base API documentation</title>
-<meta name="description" content="Micro HTTP server dedicated to REST-style API Requests. Inspired by the
-[MicroPython HTTP …" />
+<meta name="description" content="Implements the &#39;Abstract&#39; Base Class for all the nouns used by the
+`urest.http.server.RESTServer` class in defining resources …" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -23,23 +23,27 @@
 <h1 class="title">Module <code>urest.api.base</code></h1>
 </header>
 <section id="section-intro">
-<p>Micro HTTP server dedicated to REST-style API Requests. Inspired by the
-<a href="https://github.com/erikdelange/MicroPython-HTTP-Server">MicroPython HTTP Server</a>
-by Erik de Lange, as a simple consumer of the Python 3 <code>asyncio</code> library for the
-low-level socket handling and use of co-routines to simplify request handling.</p>
-<p>This version is written for MicroPython 3.4, and has been tested on:</p>
-<ul>
-<li>Raspberry Pi Pico W</li>
-</ul>
-<h2 id="standards">Standards</h2>
-<ul>
-<li>For HTTP/1.1 specification see: <a href="https://www.ietf.org/rfc/rfc2616.txt">https://www.ietf.org/rfc/rfc2616.txt</a></li>
-</ul>
+<p>Implements the 'Abstract' Base Class for all the nouns used by the
+<code><a title="urest.http.server.RESTServer" href="../http/server.html#urest.http.server.RESTServer">RESTServer</a></code> class in defining resources.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>MicroPython does not implement the
+<a href="https://docs.python.org/3.10/library/abc.html"><code>abc</code> module</a> which provides
+language-level support for abstract base classes. Therefore the
+<code><a title="urest.http.server.RESTServer" href="../http/server.html#urest.http.server.RESTServer">RESTServer</a></code> class checks the ancestors of the class
+passed as a resource for the API to ensure they derive from <code><a title="urest.api.base.APIBase" href="#urest.api.base.APIBase">APIBase</a></code>.
+Any class which <em>does not</em> have <code><a title="urest.api.base.APIBase" href="#urest.api.base.APIBase">APIBase</a></code> as an ancestor will
+therefore <strong>not</strong> work as a valid resource.</p>
+<p>This also means that <code><a title="urest.api.base.APIBase" href="#urest.api.base.APIBase">APIBase</a></code> is not a pure virtual ABC, and so
+implements a minimum set of methods which hold and manipulate resource state.
+However both <code><a title="urest.api.base.APIBase.get_state" href="#urest.api.base.APIBase.get_state">APIBase.get_state()</a></code> and <code><a title="urest.api.base.APIBase.set_state" href="#urest.api.base.APIBase.set_state">APIBase.set_state()</a></code>
+are expected to be overridden in working implementations.</p>
+</div>
 <h2 id="licence">Licence</h2>
 <p>This module, and all included code, is made available under the terms of the MIT
 Licence</p>
 <blockquote>
-<p>Copyright 2022 (c) Erik de Lange, Copyright (c) 2022-2023 David Love</p>
+<p>Copyright (c) 2022-2023 David Love</p>
 <p>Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal in
 the Software without restriction, including without limitation the rights to
@@ -60,20 +64,23 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">&#34;&#34;&#34;
-Micro HTTP server dedicated to REST-style API Requests. Inspired by the
-[MicroPython HTTP Server](https://github.com/erikdelange/MicroPython-HTTP-Server)
-by Erik de Lange, as a simple consumer of the Python 3 `asyncio` library for the
-low-level socket handling and use of co-routines to simplify request handling.
-
-This version is written for MicroPython 3.4, and has been tested on:
-
-  * Raspberry Pi Pico W
+Implements the &#39;Abstract&#39; Base Class for all the nouns used by the
+`urest.http.server.RESTServer` class in defining resources.
 
 
-Standards
----------
+.. Note::
+  MicroPython does not implement the
+  [`abc` module](https://docs.python.org/3.10/library/abc.html) which provides
+  language-level support for abstract base classes. Therefore the
+  `urest.http.server.RESTServer` class checks the ancestors of the class
+  passed as a resource for the API to ensure they derive from `urest.api.base.APIBase`.
+  Any class which _does not_ have `urest.api.base.APIBase` as an ancestor will
+  therefore **not** work as a valid resource.
 
-  * For HTTP/1.1 specification see: https://www.ietf.org/rfc/rfc2616.txt
+  This also means that `urest.api.base.APIBase` is not a pure virtual ABC, and so
+  implements a minimum set of methods which hold and manipulate resource state.
+  However both `urest.api.base.APIBase.get_state` and `urest.api.base.APIBase.set_state`
+  are expected to be overridden in working implementations.
 
 Licence
 -------
@@ -81,7 +88,7 @@ Licence
 This module, and all included code, is made available under the terms of the MIT
 Licence
 
-&gt; Copyright 2022 (c) Erik de Lange, Copyright (c) 2022-2023 David Love
+&gt; Copyright (c) 2022-2023 David Love
 
 &gt; Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the &#34;Software&#34;), to deal in
@@ -101,11 +108,8 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 &#34;&#34;&#34;
 
-# Import the Metaclass for Abstract Base Classes
-from abc import ABC, abstractmethod
 
-
-class APIBase(ABC):
+class APIBase:
 
     ##
     ## Constructor
@@ -120,15 +124,14 @@ class APIBase(ABC):
         of this base class, and the methods which act upon those resources.
         &#34;&#34;&#34;
 
-        _state_attributes = []
+        self._state_attributes = []
         &#34;&#34;&#34; Holds the current state and attributes of the resource &#34;&#34;&#34;
 
     ##
     ## State Manipulation Methods
     ##
 
-    @abstractmethod
-    def get_state(selector=[]):
+    def get_state(self, selector=[]):
         &#34;&#34;&#34;Returns the state of the resource, optionally confined to the context stated
         by the `selector`.
 
@@ -136,6 +139,12 @@ class APIBase(ABC):
         this method will return the contents of the private `state_attributes` dictionary
         to the client; assuming that dictionary has been appropriately completed
         in the processing of the resource.
+
+        .. Warning:: Data will be returned to the client &#39;as is&#39;
+          No further checking on the validity (or otherwise) of the content of
+          the dictionary will be undertaken past this point. Anything that appear to be in
+          a valid dictionary will be returned to the client. It is the module consumers
+          responsibility to ensure the returned data follows the form expected by those clients.
 
         Parameters
         ----------
@@ -153,16 +162,11 @@ class APIBase(ABC):
           line in the HTTP body: with the value converted to a string using the normal Python
           coercion methods.
 
-          .. Warning:: Data will be returned to the client &#39;as is&#39;
-            No further checking on the validity (or otherwise) of the content of
-            the dictionary will be undertaken past this point. Anything that appear to be in
-            a valid dictionary will be returned to the client. It is the module consumers
-            responsibility to ensure the returned data follows the form expected by those clients.
+
         &#34;&#34;&#34;
 
         return self._state_attributes
 
-    @abstractmethod
     def set_state(self, state_attributes, selector=[]):
         &#34;&#34;&#34;Updates the state of the resource, optionally only updating the sub-state(s)
         set by the `selector`.
@@ -223,9 +227,7 @@ class APIBase(ABC):
 <span>class <span class="ident">APIBase</span></span>
 </code></dt>
 <dd>
-<div class="desc"><p>Helper class that provides a standard way to create an ABC using
-inheritance.</p>
-<p>The Abstract Base Class for the nouns, used in the response from the server.</p>
+<div class="desc"><p>The Abstract Base Class for the nouns, used in the response from the server.</p>
 <p>This base class defines the minimum interface used in marshalling requests from
 the clients by the <code><a title="urest.http.server.RESTServer" href="../http/server.html#urest.http.server.RESTServer">RESTServer</a></code> class. The API defined by the
 server consists of 'nouns' representing the resources defined by the sub-classes
@@ -234,7 +236,7 @@ of this base class, and the methods which act upon those resources.</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class APIBase(ABC):
+<pre><code class="python">class APIBase:
 
     ##
     ## Constructor
@@ -249,15 +251,14 @@ of this base class, and the methods which act upon those resources.</p></div>
         of this base class, and the methods which act upon those resources.
         &#34;&#34;&#34;
 
-        _state_attributes = []
+        self._state_attributes = []
         &#34;&#34;&#34; Holds the current state and attributes of the resource &#34;&#34;&#34;
 
     ##
     ## State Manipulation Methods
     ##
 
-    @abstractmethod
-    def get_state(selector=[]):
+    def get_state(self, selector=[]):
         &#34;&#34;&#34;Returns the state of the resource, optionally confined to the context stated
         by the `selector`.
 
@@ -265,6 +266,12 @@ of this base class, and the methods which act upon those resources.</p></div>
         this method will return the contents of the private `state_attributes` dictionary
         to the client; assuming that dictionary has been appropriately completed
         in the processing of the resource.
+
+        .. Warning:: Data will be returned to the client &#39;as is&#39;
+          No further checking on the validity (or otherwise) of the content of
+          the dictionary will be undertaken past this point. Anything that appear to be in
+          a valid dictionary will be returned to the client. It is the module consumers
+          responsibility to ensure the returned data follows the form expected by those clients.
 
         Parameters
         ----------
@@ -282,16 +289,11 @@ of this base class, and the methods which act upon those resources.</p></div>
           line in the HTTP body: with the value converted to a string using the normal Python
           coercion methods.
 
-          .. Warning:: Data will be returned to the client &#39;as is&#39;
-            No further checking on the validity (or otherwise) of the content of
-            the dictionary will be undertaken past this point. Anything that appear to be in
-            a valid dictionary will be returned to the client. It is the module consumers
-            responsibility to ensure the returned data follows the form expected by those clients.
+
         &#34;&#34;&#34;
 
         return self._state_attributes
 
-    @abstractmethod
     def set_state(self, state_attributes, selector=[]):
         &#34;&#34;&#34;Updates the state of the resource, optionally only updating the sub-state(s)
         set by the `selector`.
@@ -338,14 +340,10 @@ of this base class, and the methods which act upon those resources.</p></div>
         else:
             self._state_attributes = []</code></pre>
 </details>
-<h3>Ancestors</h3>
-<ul class="hlist">
-<li>abc.ABC</li>
-</ul>
 <h3>Methods</h3>
 <dl>
 <dt id="urest.api.base.APIBase.get_state"><code class="name flex">
-<span>def <span class="ident">get_state</span></span>(<span>selector=[])</span>
+<span>def <span class="ident">get_state</span></span>(<span>self, selector=[])</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Returns the state of the resource, optionally confined to the context stated
@@ -354,6 +352,13 @@ by the <code>selector</code>.</p>
 this method will return the contents of the private <code>state_attributes</code> dictionary
 to the client; assuming that dictionary has been appropriately completed
 in the processing of the resource.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning:&ensp;Data will be returned to the client 'as is'</p>
+<p>No further checking on the validity (or otherwise) of the content of
+the dictionary will be undertaken past this point. Anything that appear to be in
+a valid dictionary will be returned to the client. It is the module consumers
+responsibility to ensure the returned data follows the form expected by those clients.</p>
+</div>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>selector</code></strong> :&ensp;<code>dict</code></dt>
@@ -368,18 +373,12 @@ only a sub-set of the resource state represented by this class.</dd>
 <p>A mapping of (key, value) pairs which defines the resource state to return to the
 client. Each 'key' of the dictionary will be returned to the client on a separate
 line in the HTTP body: with the value converted to a string using the normal Python
-coercion methods.</p>
-<p>!!! Warning "Warning:&ensp;Data will be returned to the client 'as is'"
-No further checking on the validity (or otherwise) of the content of
-the dictionary will be undertaken past this point. Anything that appear to be in
-a valid dictionary will be returned to the client. It is the module consumers
-responsibility to ensure the returned data follows the form expected by those clients.</p></div>
+coercion methods.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">@abstractmethod
-def get_state(selector=[]):
+<pre><code class="python">def get_state(self, selector=[]):
     &#34;&#34;&#34;Returns the state of the resource, optionally confined to the context stated
     by the `selector`.
 
@@ -387,6 +386,12 @@ def get_state(selector=[]):
     this method will return the contents of the private `state_attributes` dictionary
     to the client; assuming that dictionary has been appropriately completed
     in the processing of the resource.
+
+    .. Warning:: Data will be returned to the client &#39;as is&#39;
+      No further checking on the validity (or otherwise) of the content of
+      the dictionary will be undertaken past this point. Anything that appear to be in
+      a valid dictionary will be returned to the client. It is the module consumers
+      responsibility to ensure the returned data follows the form expected by those clients.
 
     Parameters
     ----------
@@ -404,11 +409,7 @@ def get_state(selector=[]):
       line in the HTTP body: with the value converted to a string using the normal Python
       coercion methods.
 
-      .. Warning:: Data will be returned to the client &#39;as is&#39;
-        No further checking on the validity (or otherwise) of the content of
-        the dictionary will be undertaken past this point. Anything that appear to be in
-        a valid dictionary will be returned to the client. It is the module consumers
-        responsibility to ensure the returned data follows the form expected by those clients.
+
     &#34;&#34;&#34;
 
     return self._state_attributes</code></pre>
@@ -455,8 +456,7 @@ responsibility to ensure the returned data follows the form expected by those cl
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">@abstractmethod
-def set_state(self, state_attributes, selector=[]):
+<pre><code class="python">def set_state(self, state_attributes, selector=[]):
     &#34;&#34;&#34;Updates the state of the resource, optionally only updating the sub-state(s)
     set by the `selector`.
 
@@ -512,7 +512,6 @@ def set_state(self, state_attributes, selector=[]):
 <h1>Index</h1>
 <div class="toc">
 <ul>
-<li><a href="#standards">Standards</a></li>
 <li><a href="#licence">Licence</a></li>
 </ul>
 </div>

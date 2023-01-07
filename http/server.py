@@ -274,10 +274,10 @@ class RESTServer:
                         key = parse_stack.pop()
 
                         if token_type == "STR":
-                           return_dictionary[key] = str(value)
+                            return_dictionary[key] = str(value)
 
                         if token_type == "INT":
-                           return_dictionary[key] = int(value)
+                            return_dictionary[key] = int(value)
 
                     # If this is the end of the object, then return ...
                     if char in ["}"]:

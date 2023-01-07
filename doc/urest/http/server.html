@@ -114,9 +114,33 @@ except ImportError:
 # Import the RAWResponse class
 from .response import HTTPResponse
 
+# Import the API Base class
+from ..api.base import APIBase
+
+##
+## Constants
+##
+
+ASCII_UPPERCASE = set(&#34;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&#34;)
+DIGITS = set(&#34;0123456789&#34;)
+JSON_TYPE = {&#34;STR&#34;, &#34;INT&#34;, &#34;ERROR&#34;}
+
+##
+## Exceptions
+##
+
 
 class RESTServerError(Exception):
     pass
+
+
+class RESTParseError(Exception):
+    pass
+
+
+##
+## Classes
+##
 
 
 class RESTServer:
@@ -160,10 +184,11 @@ class RESTServer:
         method. If the event loop is required to be closed, or destroyed, the tasks
         can be removed using the `urest.http.server.RESTServer.stop` method.
 
-        **NOTE:** The code in this class assumes the `asyncio` library with an interface
-        roughly equivalent to Python 3.4: although the MicroPython module supports _some_
-        later extensions. Given the code churn in the `asyncio` module between Python 3.4
-        and Python 3.10, careful testing is required to ensure implementation compatibility.
+        .. Note::
+          The code in this class assumes the `asyncio` library with an interface
+          roughly equivalent to Python 3.4: although the MicroPython module supports _some_
+          later extensions. Given the code churn in the `asyncio` module between Python 3.4
+          and Python 3.10, careful testing is required to ensure implementation compatibility.
 
         Parameters
         ----------
@@ -217,6 +242,148 @@ class RESTServer:
         self.read_timeout = read_timeout
         self.write_timeout = write_timeout
         self._server = None
+        self._nouns = {}
+
+    def parse_data(self, data_str):
+        &#34;&#34;&#34;
+        Attempt to parse a string containing JSON-like formatting into a single dictionary.
+
+        This function is **very** far from a full JSON parser: quite deliberately it will
+        only accept a single object of name/value pairs. Any arrays are **not** accepted.
+        In addition, this parser will coerce the &#39;name&#39; side of the dictionary into a
+        string; or if this cannot be done will raise a &#39;RESTParseError&#39;. The &#39;value&#39; of a
+        name/value pair will like-wise be coerced into its JSON type; or a &#39;RESTParseError&#39;
+        raised if this cannot be done.
+
+        The parsing is done via a very simple stack-based parser, assuming no backtracking.
+        This will cope with valid JSON: but will quickly abort if the JSON is malformed,
+        raising a &#39;RESTParseError&#39;. This is quite deliberate as we will only accept valid
+        JSON from the client: if we can&#39;t parse the result that is the clients problem...
+
+        The parser will also finish after the first found JSON object. We are expecting
+        only a single dictionary from the client, and so attempts to add something more
+        exotic will be ignored.
+
+        Parameters
+        ----------
+
+        data_str: str
+            A JSON object string, representing a single dictionary
+
+        Returns
+        -------
+
+        dict
+          A mapping of (key, value) pairs which defines the dictionary of the `data_str`
+          object. All `key` values will be in Python string format: values will be as
+          defined in the `data_str` object.
+        &#34;&#34;&#34;
+
+        return_dictionary = {}
+        parse_stack = []
+        object_start = False
+
+        token_start = False
+        token_sep = False
+
+        token_type = &#34;ERROR&#34;
+        token_str = &#34;&#34;
+
+        for char in data_str.decode(&#34;ascii&#34;):
+
+            # Look for the first object
+            if char in [&#34;{&#34;]:
+                object_start = True
+
+            # If we are inside an object, attempt to assemble the
+            # tokens
+            if object_start:
+
+                # If a &#39;&#34;&#39; is found...
+                if char in [&#39;&#34;&#39;]:
+
+                    # ... and if we are building a token, this should be the
+                    # end of a string, so push it to the stack ...
+                    if token_start:
+                        if token_type == &#34;STR&#34;:
+                            parse_stack.append(token_str)
+
+                            token_start = False
+                        else:
+                            raise RESTParseError(&#34;Invalid string termination&#34;)
+
+                        token_end = True
+
+                    # ... Otherwise if we are not building a token, set the
+                    # type marker, and start building a new string
+                    else:
+                        token_type = &#34;STR&#34;
+                        token_start = True
+                        token_str = &#34;&#34;
+
+                # Look for the separator between a &#39;key&#39; and a &#39;value&#39;
+                if char in [&#34;:&#34;]:
+                    token_sep = True
+
+                # Look for the end of a token
+                if char in [&#34;,&#34;, &#34;}&#34;]:
+
+                    # Add the key/value to the return dictionary if
+                    # it appears to be valid
+                    if token_sep:
+                        value = parse_stack.pop()
+                        key = parse_stack.pop()
+
+                        if token_type == &#34;STR&#34;:
+                            return_dictionary[key] = str(value)
+
+                        if token_type == &#34;INT&#34;:
+                            return_dictionary[key] = int(value)
+
+                    # If this is the end of the object, then return ...
+                    if char in [&#34;}&#34;]:
+                        return return_dictionary
+
+                    # .. otherwise, cleanup and continue
+                    else:
+                        token_type = &#34;ERROR&#34;
+                        token_sep = False
+                        token_start = False
+
+                # If this isn&#39;t anything interesting, assume it is part of a token
+                if object_start and ((char in ASCII_UPPERCASE) or (char in DIGITS)):
+                    token_str = token_str + char
+
+        return return_dictionary
+
+    def register_noun(self, noun, handler):
+        &#34;&#34;&#34;
+        Register a new object handler for the noun passed by the client.
+
+        Parameters
+        ----------
+
+        noun: str
+            String representing the noun to use in the API
+
+        handler: `urest.api.base.APIBase`
+            Object handling the request from the client
+        &#34;&#34;&#34;
+
+        old_handler = None
+        print(&#34;Register!&#34;)
+
+        try:
+
+            if noun in self._nouns:
+                old_handler = self._nouns[noun]
+
+            if isinstance(noun, str) and isinstance(handler, APIBase):
+                self._nouns[noun.lower()] = handler
+
+        except:
+            if old_handler is not None:
+                self._nouns[noun] = old_handler
 
     async def dispatch_noun(self, reader, writer):
         &#34;&#34;&#34;
@@ -225,11 +392,12 @@ class RESTServer:
         of the server. Most of the work is done elsewhere, by the API handlers:
         this is mostly a sanity check and a routing engine.
 
-        **NOTE:** This routine _must_ handle arbitrary network traffic, and so
-                **must** be as defensive as possible to avoid security issues in
-                the API layer which results from arbitrary input stuffing and
-                alike. Assume that anything from the `reader` is potentially
-                dangerous to the health of the API layer: unless shown otherwise...
+        .. Warning::
+          This routine _must_ handle arbitrary network traffic, and so
+          **must** be as defensive as possible to avoid security issues in
+          the API layer which results from arbitrary input stuffing and
+          alike. Assume that anything from the `reader` is potentially
+          dangerous to the health of the API layer: unless shown otherwise...
 
 
 
@@ -257,35 +425,99 @@ class RESTServer:
         try:
 
             # Get the raw network request and decode into UTF-8
-            request_line = await asyncio.wait_for(reader.readline(), self.read_timeout)
-            request_line = request_line.decode(&#34;utf8&#34;)
+            request_uri = await asyncio.wait_for(reader.readline(), self.read_timeout)
+            request_uri = request_uri.decode(&#34;utf8&#34;)
 
             # Check for empty requests, and if found terminate the connection
-            if request_line in [b&#34;&#34;, b&#34;\r\n&#34;]:
+            if request_uri in [b&#34;&#34;, b&#34;\r\n&#34;]:
                 print(
                     f&#34;CLIENT: [{writer.get_extra_info(&#39;peername&#39;)[0]}] Empty request line&#34;
                 )
                 return
 
             # DEBUG
-            print(f&#34;CLIENT: [{writer.get_extra_info(&#39;peername&#39;)[0]}] {request_line}&#34;)
+            print(
+                f&#34;CLIENT URI : [{writer.get_extra_info(&#39;peername&#39;)[0]}] {request_uri}&#34;
+            )
+
+            # Get the header of the request, if it is available, decoded into UTF-8
+            request_header = {}
+            request_line = None
+
+            while not request_line in [b&#34;&#34;, b&#34;\r\n&#34;]:
+                request_line = await asyncio.wait_for(
+                    reader.readline(), self.read_timeout
+                )
+                print(request_line)
+
+                if request_line.find(b&#34;:&#34;) != -1:
+                    name, value = request_line.split(b&#34;:&#34;, 1)
+                    request_header[name.decode(&#34;utf-8&#34;).lower()] = value.decode(
+                        &#34;utf-8&#34;
+                    ).strip()
+
+            # DEBUG
+            print(
+                f&#34;CLIENT HEAD: [{writer.get_extra_info(&#39;peername&#39;)[0]}] {request_header}&#34;
+            )
+
+            # Check if there is a body to follow the header ...
+            request_body = {}
+
+            if &#34;content-length&#34; in request_header:
+                # ... if so, get the rest of the body of the request, decoded into UTF-8
+
+                try:
+                    print(&#34;body_found&#34;)
+                    request_length = int(request_header[&#34;content-length&#34;])
+                    request_data = await asyncio.wait_for(
+                        reader.read(request_length), self.read_timeout
+                    )
+                    print(request_data)
+                    request_body = self.parse_data(request_data)
+                except Exception as e:
+                    print(e)
+                    request_body = {}
+
+            # DEBUG
+            print(
+                f&#34;CLIENT BODY: [{writer.get_extra_info(&#39;peername&#39;)[0]}] {request_body}&#34;
+            )
+
+            ## NOTE: Below is a somewhat long-winded approach to working out
+            ##       the verb is based on the longest assumed verb:
+            ##       &#39;`DELETE`&#39;. To avoid later parsing errors, and to
+            ##       filter out the rubbish which might cause security
+            ##       issues, we will search first for a &#39;space&#39; within
+            ##       the first six characters; then take either the first
+            ##       six characters or the string up to the &#39;space&#39;
+            ##       whichever is shorter. These can then be compared
+            ##       for sanity before we run the dispatcher
 
             # Work out the action we need to take ...
-            # NOTE: This somewhat long-winded approach to working out
-            #       the verb is based on the longest assumed verb:
-            #       &#39;`DELETE`&#39;. To avoid later parsing errors, and to
-            #       filter out the rubbish which might cause security
-            #       issues, we will search first for a &#39;space&#39; within
-            #       the first six characters; then take either the first
-            #       six characters or the string up to the &#39;space&#39;
-            #       whichever is shorter. These can then be compared
-            #       for sanity before we run the dispatcher
-            first_space = request_line.find(&#34; &#34;, 0, 6)
+
+            first_space = request_uri.find(&#34; &#34;, 0, 6)
 
             if first_space &gt; 6:
                 first_space = 6
 
-            verb = request_line[0:first_space].upper()
+            verb = request_uri[0:first_space].upper()
+
+            # ... Work out the noun defining the class we need to use to resolve the
+            # action ...
+
+            uri_root = request_uri.find(&#34;/&#34;, first_space)
+
+            noun = &#34;&#34;
+            start_noun = False
+
+            for char in request_uri[uri_root:]:
+                if char.isalpha():
+                    start_noun = True
+                    noun = noun + char
+                else:
+                    if start_noun:
+                        break
 
             # ... and then call the appropriate handler
             response = HTTPResponse()
@@ -294,7 +526,9 @@ class RESTServer:
                 response.body = &#34;&#34;
 
             elif verb == &#34;GET&#34;:
-                response.body = &#34;&lt;http&gt;&lt;body&gt;&lt;p&gt;Test Request&lt;/p&gt;&lt;/body&gt;&lt;/http&gt;&#34;
+                response.body = (
+                    f&#34;{noun.lower()}: {self._nouns[noun.lower()].get_state()}&#34;
+                )
 
             elif verb == &#34;POST&#34;:
                 response.body = &#34;&#34;
@@ -323,6 +557,9 @@ class RESTServer:
                 pass
             else:
                 raise e
+        except:
+            response.body = &#34;&lt;http&gt;&lt;body&gt;&lt;p&gt;Invalid Request&lt;/p&gt;&lt;/body&gt;&lt;/http&gt;&#34;
+            response.status = &#34;NOT_OK&#34;
 
         # In principle the response should have been sent back to the client by now.
         # But we will give it one last try, and then also try to close the connection
@@ -390,6 +627,25 @@ class RESTServer:
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
+<dt id="urest.http.server.RESTParseError"><code class="flex name class">
+<span>class <span class="ident">RESTParseError</span></span>
+<span>(</span><span>*args, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Common base class for all non-exit exceptions.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class RESTParseError(Exception):
+    pass</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>builtins.Exception</li>
+<li>builtins.BaseException</li>
+</ul>
+</dd>
 <dt id="urest.http.server.RESTServer"><code class="flex name class">
 <span>class <span class="ident">RESTServer</span></span>
 <span>(</span><span>host='0.0.0.0', port=80, backlog=5, read_timeout=30, write_timeout=5)</span>
@@ -423,10 +679,13 @@ loop</a>, as above;
 with the tasks being handled by the <code><a title="urest.http.server.RESTServer.dispatch_noun" href="#urest.http.server.RESTServer.dispatch_noun">RESTServer.dispatch_noun()</a></code>
 method. If the event loop is required to be closed, or destroyed, the tasks
 can be removed using the <code><a title="urest.http.server.RESTServer.stop" href="#urest.http.server.RESTServer.stop">RESTServer.stop()</a></code> method.</p>
-<p><strong>NOTE:</strong> The code in this class assumes the <code>asyncio</code> library with an interface
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The code in this class assumes the <code>asyncio</code> library with an interface
 roughly equivalent to Python 3.4: although the MicroPython module supports <em>some</em>
 later extensions. Given the code churn in the <code>asyncio</code> module between Python 3.4
 and Python 3.10, careful testing is required to ensure implementation compatibility.</p>
+</div>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>host</code></strong> :&ensp;<code>string</code></dt>
@@ -516,10 +775,11 @@ client, before declaring failure.</p>
         method. If the event loop is required to be closed, or destroyed, the tasks
         can be removed using the `urest.http.server.RESTServer.stop` method.
 
-        **NOTE:** The code in this class assumes the `asyncio` library with an interface
-        roughly equivalent to Python 3.4: although the MicroPython module supports _some_
-        later extensions. Given the code churn in the `asyncio` module between Python 3.4
-        and Python 3.10, careful testing is required to ensure implementation compatibility.
+        .. Note::
+          The code in this class assumes the `asyncio` library with an interface
+          roughly equivalent to Python 3.4: although the MicroPython module supports _some_
+          later extensions. Given the code churn in the `asyncio` module between Python 3.4
+          and Python 3.10, careful testing is required to ensure implementation compatibility.
 
         Parameters
         ----------
@@ -573,6 +833,148 @@ client, before declaring failure.</p>
         self.read_timeout = read_timeout
         self.write_timeout = write_timeout
         self._server = None
+        self._nouns = {}
+
+    def parse_data(self, data_str):
+        &#34;&#34;&#34;
+        Attempt to parse a string containing JSON-like formatting into a single dictionary.
+
+        This function is **very** far from a full JSON parser: quite deliberately it will
+        only accept a single object of name/value pairs. Any arrays are **not** accepted.
+        In addition, this parser will coerce the &#39;name&#39; side of the dictionary into a
+        string; or if this cannot be done will raise a &#39;RESTParseError&#39;. The &#39;value&#39; of a
+        name/value pair will like-wise be coerced into its JSON type; or a &#39;RESTParseError&#39;
+        raised if this cannot be done.
+
+        The parsing is done via a very simple stack-based parser, assuming no backtracking.
+        This will cope with valid JSON: but will quickly abort if the JSON is malformed,
+        raising a &#39;RESTParseError&#39;. This is quite deliberate as we will only accept valid
+        JSON from the client: if we can&#39;t parse the result that is the clients problem...
+
+        The parser will also finish after the first found JSON object. We are expecting
+        only a single dictionary from the client, and so attempts to add something more
+        exotic will be ignored.
+
+        Parameters
+        ----------
+
+        data_str: str
+            A JSON object string, representing a single dictionary
+
+        Returns
+        -------
+
+        dict
+          A mapping of (key, value) pairs which defines the dictionary of the `data_str`
+          object. All `key` values will be in Python string format: values will be as
+          defined in the `data_str` object.
+        &#34;&#34;&#34;
+
+        return_dictionary = {}
+        parse_stack = []
+        object_start = False
+
+        token_start = False
+        token_sep = False
+
+        token_type = &#34;ERROR&#34;
+        token_str = &#34;&#34;
+
+        for char in data_str.decode(&#34;ascii&#34;):
+
+            # Look for the first object
+            if char in [&#34;{&#34;]:
+                object_start = True
+
+            # If we are inside an object, attempt to assemble the
+            # tokens
+            if object_start:
+
+                # If a &#39;&#34;&#39; is found...
+                if char in [&#39;&#34;&#39;]:
+
+                    # ... and if we are building a token, this should be the
+                    # end of a string, so push it to the stack ...
+                    if token_start:
+                        if token_type == &#34;STR&#34;:
+                            parse_stack.append(token_str)
+
+                            token_start = False
+                        else:
+                            raise RESTParseError(&#34;Invalid string termination&#34;)
+
+                        token_end = True
+
+                    # ... Otherwise if we are not building a token, set the
+                    # type marker, and start building a new string
+                    else:
+                        token_type = &#34;STR&#34;
+                        token_start = True
+                        token_str = &#34;&#34;
+
+                # Look for the separator between a &#39;key&#39; and a &#39;value&#39;
+                if char in [&#34;:&#34;]:
+                    token_sep = True
+
+                # Look for the end of a token
+                if char in [&#34;,&#34;, &#34;}&#34;]:
+
+                    # Add the key/value to the return dictionary if
+                    # it appears to be valid
+                    if token_sep:
+                        value = parse_stack.pop()
+                        key = parse_stack.pop()
+
+                        if token_type == &#34;STR&#34;:
+                            return_dictionary[key] = str(value)
+
+                        if token_type == &#34;INT&#34;:
+                            return_dictionary[key] = int(value)
+
+                    # If this is the end of the object, then return ...
+                    if char in [&#34;}&#34;]:
+                        return return_dictionary
+
+                    # .. otherwise, cleanup and continue
+                    else:
+                        token_type = &#34;ERROR&#34;
+                        token_sep = False
+                        token_start = False
+
+                # If this isn&#39;t anything interesting, assume it is part of a token
+                if object_start and ((char in ASCII_UPPERCASE) or (char in DIGITS)):
+                    token_str = token_str + char
+
+        return return_dictionary
+
+    def register_noun(self, noun, handler):
+        &#34;&#34;&#34;
+        Register a new object handler for the noun passed by the client.
+
+        Parameters
+        ----------
+
+        noun: str
+            String representing the noun to use in the API
+
+        handler: `urest.api.base.APIBase`
+            Object handling the request from the client
+        &#34;&#34;&#34;
+
+        old_handler = None
+        print(&#34;Register!&#34;)
+
+        try:
+
+            if noun in self._nouns:
+                old_handler = self._nouns[noun]
+
+            if isinstance(noun, str) and isinstance(handler, APIBase):
+                self._nouns[noun.lower()] = handler
+
+        except:
+            if old_handler is not None:
+                self._nouns[noun] = old_handler
 
     async def dispatch_noun(self, reader, writer):
         &#34;&#34;&#34;
@@ -581,11 +983,12 @@ client, before declaring failure.</p>
         of the server. Most of the work is done elsewhere, by the API handlers:
         this is mostly a sanity check and a routing engine.
 
-        **NOTE:** This routine _must_ handle arbitrary network traffic, and so
-                **must** be as defensive as possible to avoid security issues in
-                the API layer which results from arbitrary input stuffing and
-                alike. Assume that anything from the `reader` is potentially
-                dangerous to the health of the API layer: unless shown otherwise...
+        .. Warning::
+          This routine _must_ handle arbitrary network traffic, and so
+          **must** be as defensive as possible to avoid security issues in
+          the API layer which results from arbitrary input stuffing and
+          alike. Assume that anything from the `reader` is potentially
+          dangerous to the health of the API layer: unless shown otherwise...
 
 
 
@@ -613,35 +1016,99 @@ client, before declaring failure.</p>
         try:
 
             # Get the raw network request and decode into UTF-8
-            request_line = await asyncio.wait_for(reader.readline(), self.read_timeout)
-            request_line = request_line.decode(&#34;utf8&#34;)
+            request_uri = await asyncio.wait_for(reader.readline(), self.read_timeout)
+            request_uri = request_uri.decode(&#34;utf8&#34;)
 
             # Check for empty requests, and if found terminate the connection
-            if request_line in [b&#34;&#34;, b&#34;\r\n&#34;]:
+            if request_uri in [b&#34;&#34;, b&#34;\r\n&#34;]:
                 print(
                     f&#34;CLIENT: [{writer.get_extra_info(&#39;peername&#39;)[0]}] Empty request line&#34;
                 )
                 return
 
             # DEBUG
-            print(f&#34;CLIENT: [{writer.get_extra_info(&#39;peername&#39;)[0]}] {request_line}&#34;)
+            print(
+                f&#34;CLIENT URI : [{writer.get_extra_info(&#39;peername&#39;)[0]}] {request_uri}&#34;
+            )
+
+            # Get the header of the request, if it is available, decoded into UTF-8
+            request_header = {}
+            request_line = None
+
+            while not request_line in [b&#34;&#34;, b&#34;\r\n&#34;]:
+                request_line = await asyncio.wait_for(
+                    reader.readline(), self.read_timeout
+                )
+                print(request_line)
+
+                if request_line.find(b&#34;:&#34;) != -1:
+                    name, value = request_line.split(b&#34;:&#34;, 1)
+                    request_header[name.decode(&#34;utf-8&#34;).lower()] = value.decode(
+                        &#34;utf-8&#34;
+                    ).strip()
+
+            # DEBUG
+            print(
+                f&#34;CLIENT HEAD: [{writer.get_extra_info(&#39;peername&#39;)[0]}] {request_header}&#34;
+            )
+
+            # Check if there is a body to follow the header ...
+            request_body = {}
+
+            if &#34;content-length&#34; in request_header:
+                # ... if so, get the rest of the body of the request, decoded into UTF-8
+
+                try:
+                    print(&#34;body_found&#34;)
+                    request_length = int(request_header[&#34;content-length&#34;])
+                    request_data = await asyncio.wait_for(
+                        reader.read(request_length), self.read_timeout
+                    )
+                    print(request_data)
+                    request_body = self.parse_data(request_data)
+                except Exception as e:
+                    print(e)
+                    request_body = {}
+
+            # DEBUG
+            print(
+                f&#34;CLIENT BODY: [{writer.get_extra_info(&#39;peername&#39;)[0]}] {request_body}&#34;
+            )
+
+            ## NOTE: Below is a somewhat long-winded approach to working out
+            ##       the verb is based on the longest assumed verb:
+            ##       &#39;`DELETE`&#39;. To avoid later parsing errors, and to
+            ##       filter out the rubbish which might cause security
+            ##       issues, we will search first for a &#39;space&#39; within
+            ##       the first six characters; then take either the first
+            ##       six characters or the string up to the &#39;space&#39;
+            ##       whichever is shorter. These can then be compared
+            ##       for sanity before we run the dispatcher
 
             # Work out the action we need to take ...
-            # NOTE: This somewhat long-winded approach to working out
-            #       the verb is based on the longest assumed verb:
-            #       &#39;`DELETE`&#39;. To avoid later parsing errors, and to
-            #       filter out the rubbish which might cause security
-            #       issues, we will search first for a &#39;space&#39; within
-            #       the first six characters; then take either the first
-            #       six characters or the string up to the &#39;space&#39;
-            #       whichever is shorter. These can then be compared
-            #       for sanity before we run the dispatcher
-            first_space = request_line.find(&#34; &#34;, 0, 6)
+
+            first_space = request_uri.find(&#34; &#34;, 0, 6)
 
             if first_space &gt; 6:
                 first_space = 6
 
-            verb = request_line[0:first_space].upper()
+            verb = request_uri[0:first_space].upper()
+
+            # ... Work out the noun defining the class we need to use to resolve the
+            # action ...
+
+            uri_root = request_uri.find(&#34;/&#34;, first_space)
+
+            noun = &#34;&#34;
+            start_noun = False
+
+            for char in request_uri[uri_root:]:
+                if char.isalpha():
+                    start_noun = True
+                    noun = noun + char
+                else:
+                    if start_noun:
+                        break
 
             # ... and then call the appropriate handler
             response = HTTPResponse()
@@ -650,7 +1117,9 @@ client, before declaring failure.</p>
                 response.body = &#34;&#34;
 
             elif verb == &#34;GET&#34;:
-                response.body = &#34;&lt;http&gt;&lt;body&gt;&lt;p&gt;Test Request&lt;/p&gt;&lt;/body&gt;&lt;/http&gt;&#34;
+                response.body = (
+                    f&#34;{noun.lower()}: {self._nouns[noun.lower()].get_state()}&#34;
+                )
 
             elif verb == &#34;POST&#34;:
                 response.body = &#34;&#34;
@@ -679,6 +1148,9 @@ client, before declaring failure.</p>
                 pass
             else:
                 raise e
+        except:
+            response.body = &#34;&lt;http&gt;&lt;body&gt;&lt;p&gt;Invalid Request&lt;/p&gt;&lt;/body&gt;&lt;/http&gt;&#34;
+            response.status = &#34;NOT_OK&#34;
 
         # In principle the response should have been sent back to the client by now.
         # But we will give it one last try, and then also try to close the connection
@@ -746,11 +1218,14 @@ client, before declaring failure.</p>
 streams from the IO library to the API requests detailed by the rest
 of the server. Most of the work is done elsewhere, by the API handlers:
 this is mostly a sanity check and a routing engine.</p>
-<p><strong>NOTE:</strong> This routine <em>must</em> handle arbitrary network traffic, and so
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This routine <em>must</em> handle arbitrary network traffic, and so
 <strong>must</strong> be as defensive as possible to avoid security issues in
 the API layer which results from arbitrary input stuffing and
 alike. Assume that anything from the <code>reader</code> is potentially
 dangerous to the health of the API layer: unless shown otherwise&hellip;</p>
+</div>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>reader</code></strong> :&ensp;<code>asyncio.StreamReader</code></dt>
@@ -777,11 +1252,12 @@ streamwriter">asyncio.StreamWriter</a>.</dd>
     of the server. Most of the work is done elsewhere, by the API handlers:
     this is mostly a sanity check and a routing engine.
 
-    **NOTE:** This routine _must_ handle arbitrary network traffic, and so
-            **must** be as defensive as possible to avoid security issues in
-            the API layer which results from arbitrary input stuffing and
-            alike. Assume that anything from the `reader` is potentially
-            dangerous to the health of the API layer: unless shown otherwise...
+    .. Warning::
+      This routine _must_ handle arbitrary network traffic, and so
+      **must** be as defensive as possible to avoid security issues in
+      the API layer which results from arbitrary input stuffing and
+      alike. Assume that anything from the `reader` is potentially
+      dangerous to the health of the API layer: unless shown otherwise...
 
 
 
@@ -809,35 +1285,99 @@ streamwriter">asyncio.StreamWriter</a>.</dd>
     try:
 
         # Get the raw network request and decode into UTF-8
-        request_line = await asyncio.wait_for(reader.readline(), self.read_timeout)
-        request_line = request_line.decode(&#34;utf8&#34;)
+        request_uri = await asyncio.wait_for(reader.readline(), self.read_timeout)
+        request_uri = request_uri.decode(&#34;utf8&#34;)
 
         # Check for empty requests, and if found terminate the connection
-        if request_line in [b&#34;&#34;, b&#34;\r\n&#34;]:
+        if request_uri in [b&#34;&#34;, b&#34;\r\n&#34;]:
             print(
                 f&#34;CLIENT: [{writer.get_extra_info(&#39;peername&#39;)[0]}] Empty request line&#34;
             )
             return
 
         # DEBUG
-        print(f&#34;CLIENT: [{writer.get_extra_info(&#39;peername&#39;)[0]}] {request_line}&#34;)
+        print(
+            f&#34;CLIENT URI : [{writer.get_extra_info(&#39;peername&#39;)[0]}] {request_uri}&#34;
+        )
+
+        # Get the header of the request, if it is available, decoded into UTF-8
+        request_header = {}
+        request_line = None
+
+        while not request_line in [b&#34;&#34;, b&#34;\r\n&#34;]:
+            request_line = await asyncio.wait_for(
+                reader.readline(), self.read_timeout
+            )
+            print(request_line)
+
+            if request_line.find(b&#34;:&#34;) != -1:
+                name, value = request_line.split(b&#34;:&#34;, 1)
+                request_header[name.decode(&#34;utf-8&#34;).lower()] = value.decode(
+                    &#34;utf-8&#34;
+                ).strip()
+
+        # DEBUG
+        print(
+            f&#34;CLIENT HEAD: [{writer.get_extra_info(&#39;peername&#39;)[0]}] {request_header}&#34;
+        )
+
+        # Check if there is a body to follow the header ...
+        request_body = {}
+
+        if &#34;content-length&#34; in request_header:
+            # ... if so, get the rest of the body of the request, decoded into UTF-8
+
+            try:
+                print(&#34;body_found&#34;)
+                request_length = int(request_header[&#34;content-length&#34;])
+                request_data = await asyncio.wait_for(
+                    reader.read(request_length), self.read_timeout
+                )
+                print(request_data)
+                request_body = self.parse_data(request_data)
+            except Exception as e:
+                print(e)
+                request_body = {}
+
+        # DEBUG
+        print(
+            f&#34;CLIENT BODY: [{writer.get_extra_info(&#39;peername&#39;)[0]}] {request_body}&#34;
+        )
+
+        ## NOTE: Below is a somewhat long-winded approach to working out
+        ##       the verb is based on the longest assumed verb:
+        ##       &#39;`DELETE`&#39;. To avoid later parsing errors, and to
+        ##       filter out the rubbish which might cause security
+        ##       issues, we will search first for a &#39;space&#39; within
+        ##       the first six characters; then take either the first
+        ##       six characters or the string up to the &#39;space&#39;
+        ##       whichever is shorter. These can then be compared
+        ##       for sanity before we run the dispatcher
 
         # Work out the action we need to take ...
-        # NOTE: This somewhat long-winded approach to working out
-        #       the verb is based on the longest assumed verb:
-        #       &#39;`DELETE`&#39;. To avoid later parsing errors, and to
-        #       filter out the rubbish which might cause security
-        #       issues, we will search first for a &#39;space&#39; within
-        #       the first six characters; then take either the first
-        #       six characters or the string up to the &#39;space&#39;
-        #       whichever is shorter. These can then be compared
-        #       for sanity before we run the dispatcher
-        first_space = request_line.find(&#34; &#34;, 0, 6)
+
+        first_space = request_uri.find(&#34; &#34;, 0, 6)
 
         if first_space &gt; 6:
             first_space = 6
 
-        verb = request_line[0:first_space].upper()
+        verb = request_uri[0:first_space].upper()
+
+        # ... Work out the noun defining the class we need to use to resolve the
+        # action ...
+
+        uri_root = request_uri.find(&#34;/&#34;, first_space)
+
+        noun = &#34;&#34;
+        start_noun = False
+
+        for char in request_uri[uri_root:]:
+            if char.isalpha():
+                start_noun = True
+                noun = noun + char
+            else:
+                if start_noun:
+                    break
 
         # ... and then call the appropriate handler
         response = HTTPResponse()
@@ -846,7 +1386,9 @@ streamwriter">asyncio.StreamWriter</a>.</dd>
             response.body = &#34;&#34;
 
         elif verb == &#34;GET&#34;:
-            response.body = &#34;&lt;http&gt;&lt;body&gt;&lt;p&gt;Test Request&lt;/p&gt;&lt;/body&gt;&lt;/http&gt;&#34;
+            response.body = (
+                f&#34;{noun.lower()}: {self._nouns[noun.lower()].get_state()}&#34;
+            )
 
         elif verb == &#34;POST&#34;:
             response.body = &#34;&#34;
@@ -875,6 +1417,9 @@ streamwriter">asyncio.StreamWriter</a>.</dd>
             pass
         else:
             raise e
+    except:
+        response.body = &#34;&lt;http&gt;&lt;body&gt;&lt;p&gt;Invalid Request&lt;/p&gt;&lt;/body&gt;&lt;/http&gt;&#34;
+        response.status = &#34;NOT_OK&#34;
 
     # In principle the response should have been sent back to the client by now.
     # But we will give it one last try, and then also try to close the connection
@@ -890,6 +1435,200 @@ streamwriter">asyncio.StreamWriter</a>.</dd>
         # for `write_timeout` seconds and then force the close
         await asyncio.sleep(self.write_timeout)
         await writer.wait_closed()</code></pre>
+</details>
+</dd>
+<dt id="urest.http.server.RESTServer.parse_data"><code class="name flex">
+<span>def <span class="ident">parse_data</span></span>(<span>self, data_str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Attempt to parse a string containing JSON-like formatting into a single dictionary.</p>
+<p>This function is <strong>very</strong> far from a full JSON parser: quite deliberately it will
+only accept a single object of name/value pairs. Any arrays are <strong>not</strong> accepted.
+In addition, this parser will coerce the 'name' side of the dictionary into a
+string; or if this cannot be done will raise a 'RESTParseError'. The 'value' of a
+name/value pair will like-wise be coerced into its JSON type; or a 'RESTParseError'
+raised if this cannot be done.</p>
+<p>The parsing is done via a very simple stack-based parser, assuming no backtracking.
+This will cope with valid JSON: but will quickly abort if the JSON is malformed,
+raising a 'RESTParseError'. This is quite deliberate as we will only accept valid
+JSON from the client: if we can't parse the result that is the clients problem&hellip;</p>
+<p>The parser will also finish after the first found JSON object. We are expecting
+only a single dictionary from the client, and so attempts to add something more
+exotic will be ignored.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>data_str</code></strong> :&ensp;<code>str</code></dt>
+<dd>A JSON object string, representing a single dictionary</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>dict</code></dt>
+<dd>&nbsp;</dd>
+</dl>
+<p>A mapping of (key, value) pairs which defines the dictionary of the <code>data_str</code>
+object. All <code>key</code> values will be in Python string format: values will be as
+defined in the <code>data_str</code> object.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def parse_data(self, data_str):
+    &#34;&#34;&#34;
+    Attempt to parse a string containing JSON-like formatting into a single dictionary.
+
+    This function is **very** far from a full JSON parser: quite deliberately it will
+    only accept a single object of name/value pairs. Any arrays are **not** accepted.
+    In addition, this parser will coerce the &#39;name&#39; side of the dictionary into a
+    string; or if this cannot be done will raise a &#39;RESTParseError&#39;. The &#39;value&#39; of a
+    name/value pair will like-wise be coerced into its JSON type; or a &#39;RESTParseError&#39;
+    raised if this cannot be done.
+
+    The parsing is done via a very simple stack-based parser, assuming no backtracking.
+    This will cope with valid JSON: but will quickly abort if the JSON is malformed,
+    raising a &#39;RESTParseError&#39;. This is quite deliberate as we will only accept valid
+    JSON from the client: if we can&#39;t parse the result that is the clients problem...
+
+    The parser will also finish after the first found JSON object. We are expecting
+    only a single dictionary from the client, and so attempts to add something more
+    exotic will be ignored.
+
+    Parameters
+    ----------
+
+    data_str: str
+        A JSON object string, representing a single dictionary
+
+    Returns
+    -------
+
+    dict
+      A mapping of (key, value) pairs which defines the dictionary of the `data_str`
+      object. All `key` values will be in Python string format: values will be as
+      defined in the `data_str` object.
+    &#34;&#34;&#34;
+
+    return_dictionary = {}
+    parse_stack = []
+    object_start = False
+
+    token_start = False
+    token_sep = False
+
+    token_type = &#34;ERROR&#34;
+    token_str = &#34;&#34;
+
+    for char in data_str.decode(&#34;ascii&#34;):
+
+        # Look for the first object
+        if char in [&#34;{&#34;]:
+            object_start = True
+
+        # If we are inside an object, attempt to assemble the
+        # tokens
+        if object_start:
+
+            # If a &#39;&#34;&#39; is found...
+            if char in [&#39;&#34;&#39;]:
+
+                # ... and if we are building a token, this should be the
+                # end of a string, so push it to the stack ...
+                if token_start:
+                    if token_type == &#34;STR&#34;:
+                        parse_stack.append(token_str)
+
+                        token_start = False
+                    else:
+                        raise RESTParseError(&#34;Invalid string termination&#34;)
+
+                    token_end = True
+
+                # ... Otherwise if we are not building a token, set the
+                # type marker, and start building a new string
+                else:
+                    token_type = &#34;STR&#34;
+                    token_start = True
+                    token_str = &#34;&#34;
+
+            # Look for the separator between a &#39;key&#39; and a &#39;value&#39;
+            if char in [&#34;:&#34;]:
+                token_sep = True
+
+            # Look for the end of a token
+            if char in [&#34;,&#34;, &#34;}&#34;]:
+
+                # Add the key/value to the return dictionary if
+                # it appears to be valid
+                if token_sep:
+                    value = parse_stack.pop()
+                    key = parse_stack.pop()
+
+                    if token_type == &#34;STR&#34;:
+                        return_dictionary[key] = str(value)
+
+                    if token_type == &#34;INT&#34;:
+                        return_dictionary[key] = int(value)
+
+                # If this is the end of the object, then return ...
+                if char in [&#34;}&#34;]:
+                    return return_dictionary
+
+                # .. otherwise, cleanup and continue
+                else:
+                    token_type = &#34;ERROR&#34;
+                    token_sep = False
+                    token_start = False
+
+            # If this isn&#39;t anything interesting, assume it is part of a token
+            if object_start and ((char in ASCII_UPPERCASE) or (char in DIGITS)):
+                token_str = token_str + char
+
+    return return_dictionary</code></pre>
+</details>
+</dd>
+<dt id="urest.http.server.RESTServer.register_noun"><code class="name flex">
+<span>def <span class="ident">register_noun</span></span>(<span>self, noun, handler)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Register a new object handler for the noun passed by the client.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>noun</code></strong> :&ensp;<code>str</code></dt>
+<dd>String representing the noun to use in the API</dd>
+<dt><strong><code>handler</code></strong> :&ensp;<code><a title="urest.api.base.APIBase" href="../api/base.html#urest.api.base.APIBase">APIBase</a></code></dt>
+<dd>Object handling the request from the client</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def register_noun(self, noun, handler):
+    &#34;&#34;&#34;
+    Register a new object handler for the noun passed by the client.
+
+    Parameters
+    ----------
+
+    noun: str
+        String representing the noun to use in the API
+
+    handler: `urest.api.base.APIBase`
+        Object handling the request from the client
+    &#34;&#34;&#34;
+
+    old_handler = None
+    print(&#34;Register!&#34;)
+
+    try:
+
+        if noun in self._nouns:
+            old_handler = self._nouns[noun]
+
+        if isinstance(noun, str) and isinstance(handler, APIBase):
+            self._nouns[noun.lower()] = handler
+
+    except:
+        if old_handler is not None:
+            self._nouns[noun] = old_handler</code></pre>
 </details>
 </dd>
 <dt id="urest.http.server.RESTServer.start"><code class="name flex">
@@ -1011,9 +1750,14 @@ method</a> of <code>asyncio.BaseTransport</code>.</p></div>
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
 <li>
+<h4><code><a title="urest.http.server.RESTParseError" href="#urest.http.server.RESTParseError">RESTParseError</a></code></h4>
+</li>
+<li>
 <h4><code><a title="urest.http.server.RESTServer" href="#urest.http.server.RESTServer">RESTServer</a></code></h4>
 <ul class="">
 <li><code><a title="urest.http.server.RESTServer.dispatch_noun" href="#urest.http.server.RESTServer.dispatch_noun">dispatch_noun</a></code></li>
+<li><code><a title="urest.http.server.RESTServer.parse_data" href="#urest.http.server.RESTServer.parse_data">parse_data</a></code></li>
+<li><code><a title="urest.http.server.RESTServer.register_noun" href="#urest.http.server.RESTServer.register_noun">register_noun</a></code></li>
 <li><code><a title="urest.http.server.RESTServer.start" href="#urest.http.server.RESTServer.start">start</a></code></li>
 <li><code><a title="urest.http.server.RESTServer.stop" href="#urest.http.server.RESTServer.stop">stop</a></code></li>
 </ul>

@@ -1,18 +1,21 @@
 """
-Micro HTTP server dedicated to REST-style API Requests. Inspired by the
-[MicroPython HTTP Server](https://github.com/erikdelange/MicroPython-HTTP-Server)
-by Erik de Lange, as a simple consumer of the Python 3 `asyncio` library for the
-low-level socket handling and use of co-routines to simplify request handling.
-
-This version is written for MicroPython 3.4, and has been tested on:
-
-  * Raspberry Pi Pico W
+Implements the 'Abstract' Base Class for all the nouns used by the
+`urest.http.server.RESTServer` class in defining resources.
 
 
-Standards
----------
+.. Note::
+  MicroPython does not implement the
+  [`abc` module](https://docs.python.org/3.10/library/abc.html) which provides
+  language-level support for abstract base classes. Therefore the
+  `urest.http.server.RESTServer` class checks the ancestors of the class
+  passed as a resource for the API to ensure they derive from `urest.api.base.APIBase`.
+  Any class which _does not_ have `urest.api.base.APIBase` as an ancestor will
+  therefore **not** work as a valid resource.
 
-  * For HTTP/1.1 specification see: https://www.ietf.org/rfc/rfc2616.txt
+  This also means that `urest.api.base.APIBase` is not a pure virtual ABC, and so
+  implements a minimum set of methods which hold and manipulate resource state.
+  However both `urest.api.base.APIBase.get_state` and `urest.api.base.APIBase.set_state`
+  are expected to be overridden in working implementations.
 
 Licence
 -------
@@ -20,7 +23,7 @@ Licence
 This module, and all included code, is made available under the terms of the MIT
 Licence
 
-> Copyright 2022 (c) Erik de Lange, Copyright (c) 2022-2023 David Love
+> Copyright (c) 2022-2023 David Love
 
 > Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal in
@@ -40,11 +43,8 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
-# Import the Metaclass for Abstract Base Classes
-from abc import ABC, abstractmethod
 
-
-class APIBase(ABC):
+class APIBase:
 
     ##
     ## Constructor
@@ -59,15 +59,14 @@ class APIBase(ABC):
         of this base class, and the methods which act upon those resources.
         """
 
-        _state_attributes = []
+        self._state_attributes = []
         """ Holds the current state and attributes of the resource """
 
     ##
     ## State Manipulation Methods
     ##
 
-    @abstractmethod
-    def get_state(selector=[]):
+    def get_state(self, selector=[]):
         """Returns the state of the resource, optionally confined to the context stated
         by the `selector`.
 
@@ -75,6 +74,12 @@ class APIBase(ABC):
         this method will return the contents of the private `state_attributes` dictionary
         to the client; assuming that dictionary has been appropriately completed
         in the processing of the resource.
+
+        .. Warning:: Data will be returned to the client 'as is'
+          No further checking on the validity (or otherwise) of the content of
+          the dictionary will be undertaken past this point. Anything that appear to be in
+          a valid dictionary will be returned to the client. It is the module consumers
+          responsibility to ensure the returned data follows the form expected by those clients.
 
         Parameters
         ----------
@@ -92,16 +97,11 @@ class APIBase(ABC):
           line in the HTTP body: with the value converted to a string using the normal Python
           coercion methods.
 
-          .. Warning:: Data will be returned to the client 'as is'
-            No further checking on the validity (or otherwise) of the content of
-            the dictionary will be undertaken past this point. Anything that appear to be in
-            a valid dictionary will be returned to the client. It is the module consumers
-            responsibility to ensure the returned data follows the form expected by those clients.
+
         """
 
         return self._state_attributes
 
-    @abstractmethod
     def set_state(self, state_attributes, selector=[]):
         """Updates the state of the resource, optionally only updating the sub-state(s)
         set by the `selector`.
