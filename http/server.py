@@ -12,7 +12,8 @@ This version is written for MicroPython 3.4, and has been tested on:
 Standards
 ---------
 
-  * For HTTP/1.1 specification see: https://www.ietf.org/rfc/rfc2616.txt
+  * For the HTTP/1.1 specification see: https://www.ietf.org/rfc/rfc2616.txt
+  * For the JSON specification see: https://www.ecma-international.org/publications-and-standards/standards/ecma-404
 
 Licence
 -------
