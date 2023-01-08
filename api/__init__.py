@@ -38,9 +38,9 @@ Example
 
 ### Getting the Noun State
 
-See `urest.example.simpleled.SimpleLED` class a minimal implementation of a noun
+See `urest.examples.simpleled.SimpleLED` class a minimal implementation of a noun
 controlling on GPIO pin, using the MicroPython `Pin` library. For the
-`urest.example.simpleled.SimpleLED` class, the exact pin being controlled is set
+`urest.examples.simpleled.SimpleLED` class, the exact pin being controlled is set
 during the object instantiation, via the class constructor.
 
 Assuming the `urest.http.server.RESTServer` has been created as

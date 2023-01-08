@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
-<title>urest.http API documentation</title>
-<meta name="description" content="Network interface and helper classes for abstracting the underlying HTTP stream …" />
+<title>urest.examples.led_control API documentation</title>
+<meta name="description" content="An example of a small application which control a single GPIO pin …" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -19,69 +19,38 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>urest.http</code></h1>
+<h1 class="title">Module <code>urest.examples.led_control</code></h1>
 </header>
 <section id="section-intro">
-<p>Network interface and helper classes for abstracting the underlying HTTP stream</p>
+<p>An example of a small application which control a single GPIO pin.</p>
 <h2 id="overview">Overview</h2>
-<p>This module provides the abstraction of the underlying socket handling code,
-using in marshaling requests from clients and building the response. All the
-socket handling is built around the Python 3 <code>asyncio</code> library for the low-level
-network interface, and for the use of co-routines to simplify request handling.</p>
-<p>In most cases, consumers of this module only need to provide an <code>asynio</code> event
-loop: see "Creating the Network Server" in the Section <em>Using the Module</em> below.
-By default the module will also bind to the <em>network</em> address of the host on the
-standard port 80 used by HTTP requests. This can be changed in the instantiation
-of the
-<code><a title="urest.http.server.RESTServer" href="server.html#urest.http.server.RESTServer">RESTServer</a></code> class.</p>
-<h2 id="implementation">Implementation</h2>
-<p>During the instantiation of the <code><a title="urest.http.server.RESTServer" href="server.html#urest.http.server.RESTServer">RESTServer</a></code> class, the resulting
-object creates a socket bound to the specified address and port (or the host network
-address and port 80 by default). This binding is undertaken as part of the <code>asyncio</code></p>
-<h2 id="using-the-module">Using The Module</h2>
-<h3 id="creating-the-network-server">Creating the Network Server</h3>
-<p>All network clients are assumed to be handled by an instance of the
-<code><a title="urest.http.server.RESTServer" href="server.html#urest.http.server.RESTServer">RESTServer</a></code> class from the <code><a title="urest.http.server" href="server.html">urest.http.server</a></code> module. The
-<code><a title="urest.http.server.RESTServer" href="server.html#urest.http.server.RESTServer">RESTServer</a></code> class provides both an event loop for the
-<code>asyncio</code> library, and also takes care of the lower-level networking interface
-for the clients. Unless working with multiple instances (e.g. via a thread
-library), most model consumers are assumed have a single instance of the
-<code><a title="urest.http.server.RESTServer" href="server.html#urest.http.server.RESTServer">RESTServer</a></code> &mdash; <strong>but the module will not check this</strong>.</p>
-<p>In most cases, something similar to the following will suffice</p>
-<pre><code class="language-python">  # Import the Asynchronous IO Library
-  try:
-    import uasyncio as asyncio
-  except ImportError:
-    import asyncio
-
-  from urest.http import RESTServer
-
-  app = RESTServer()
-
-  if __name__ == &quot;__main__&quot;:
-    loop = asyncio.get_event_loop()
-    loop.create_task(app.start())
-    loop.run_forever()
-</code></pre>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>There is no guarantee of thread-safety in this module, and all
-'concurrency' is assumed to be via co-routines provided by the <code>asyncio</code>
-library. For an overview of how multiple clients can be handled using
-co-routines, <a href="https://realpython.com/async-io-python">Async IO in Python</a> is
-highly recommended reading.</p>
+<p>This examples export a single noun, <code>led</code>, which is used to set, test and otherwise control a single GPIO pin. It can be used an example of a the way in which this API class can be used, along with the definition of the
+<code><a title="urest.examples.simpleled.SimpleLED" href="simpleled.html#urest.examples.simpleled.SimpleLED">SimpleLED</a></code> class.</p>
+<p>To use this example, the variables <code>SSID</code> and <code>PASSWORD</code> must also be defined, and set to suitable values for the local network. Space for these variables has been provided at the start of the '<code>main</code>' loop. The code will then attempt to create an API server on the <em>network</em> side of the machines local interfaces, bound to port 80.</p>
+<div class="admonition note">
+<p class="admonition-title">Note:&ensp;MicroPython Includes</p>
+<p>This module as presented has a number of <code>try..finally</code> blocks which exist to
+catch uses of this code where the standard MicroPython libraries are not
+available. If <em>known</em> to be running under MicroPython, or suitably adapted,
+these can be removed.</p>
 </div>
-<h3 id="creating-the-api-responses">Creating the API Responses</h3>
-<p>Most module consumers will not use the <code><a title="urest.http.response" href="response.html">urest.http.response</a></code> module directly:
-but will instead sub-class <code><a title="urest.api.base.APIBase" href="../api/base.html#urest.api.base.APIBase">APIBase</a></code> to provide the core of the
-response to the network clients. For details of how the <code><a title="urest.http.server.RESTServer" href="server.html#urest.http.server.RESTServer">RESTServer</a></code> and <code><a title="urest.api.base.APIBase" href="../api/base.html#urest.api.base.APIBase">APIBase</a></code> classes interact, the module documentation for <code><a title="urest.api" href="../api/index.html">urest.api</a></code> should be consulted. In addition, the documentation for the <code><a title="urest.examples.simpleled.SimpleLED" href="../examples/simpleled.html#urest.examples.simpleled.SimpleLED">SimpleLED</a></code> class might prove useful as an example of a simple implementation of the API.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning:&ensp;Exposed Network Ports</p>
+<p>This code <em>does not</em> attempt to take any defensive stances with respect
+to the network environment, beyond the normal measures in the API code.
+As is normal for MicroPython implementations, it also assumes the SSID
+and the network password are embedded in the code, and therefore exposed.
+Careful review of the application code, and the network environment, should
+be undertaken before this code is used in anything other than a benign
+environment under <em>total</em> control of the developer.</p>
+</div>
 <h2 id="tested-implementations">Tested Implementations</h2>
 <p>This version is written for MicroPython 3.4, and has been tested on:</p>
 <ul>
 <li>Raspberry Pi Pico W</li>
 </ul>
 <h2 id="licence">Licence</h2>
-<p>This module, and all included code, is made available under the terms of the MIT Licence</p>
+<p>This code, and all included code, is made available under the terms of the MIT Licence</p>
 <blockquote>
 <p>Copyright 2021&ndash;2022 (c) Erik de Lange, Copyright (c) 2022&ndash;2023 David Love</p>
 <p>Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -104,76 +73,31 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">&#34;&#34;&#34;
-Network interface and helper classes for abstracting the underlying HTTP stream
+An example of a small application which control a single GPIO pin.
 
 Overview
 --------
 
-This module provides the abstraction of the underlying socket handling code,
-using in marshaling requests from clients and building the response. All the
-socket handling is built around the Python 3 `asyncio` library for the low-level
-network interface, and for the use of co-routines to simplify request handling.
+This examples export a single noun, `led`, which is used to set, test and otherwise control a single GPIO pin. It can be used an example of a the way in which this API class can be used, along with the definition of the  `urest.examples.simpleled.SimpleLED` class.
 
-In most cases, consumers of this module only need to provide an `asynio` event
-loop: see &#34;Creating the Network Server&#34; in the Section _Using the Module_ below.
-By default the module will also bind to the _network_ address of the host on the
-standard port 80 used by HTTP requests. This can be changed in the instantiation
-of the  `urest.http.server.RESTServer` class.
+To use this example, the variables `SSID` and `PASSWORD` must also be defined, and set to suitable values for the local network. Space for these variables has been provided at the start of the &#39;`main`&#39; loop. The code will then attempt to create an API server on the _network_ side of the machines local interfaces, bound to port 80.
 
-Implementation
---------------
+.. Note:: MicroPython Includes
 
-During the instantiation of the `urest.http.server.RESTServer` class, the resulting
-object creates a socket bound to the specified address and port (or the host network
-address and port 80 by default). This binding is undertaken as part of the `asyncio`
+    This module as presented has a number of `try..finally` blocks which exist to
+    catch uses of this code where the standard MicroPython libraries are not
+    available. If _known_ to be running under MicroPython, or suitably adapted,
+    these can be removed.
 
+.. Warning:: Exposed Network Ports
 
-Using the Module
-----------------
-
-### Creating the Network Server
-
-All network clients are assumed to be handled by an instance of the
-`urest.http.server.RESTServer` class from the `urest.http.server` module. The
-`urest.http.server.RESTServer` class provides both an event loop for the
-`asyncio` library, and also takes care of the lower-level networking interface
-for the clients. Unless working with multiple instances (e.g. via a thread
-library), most model consumers are assumed have a single instance of the
-`urest.http.server.RESTServer` --- **but the module will not check this**.
-
-In most cases, something similar to the following will suffice
-
-```python
-  # Import the Asynchronous IO Library
-  try:
-    import uasyncio as asyncio
-  except ImportError:
-    import asyncio
-
-  from urest.http import RESTServer
-
-  app = RESTServer()
-
-  if __name__ == &#34;__main__&#34;:
-    loop = asyncio.get_event_loop()
-    loop.create_task(app.start())
-    loop.run_forever()
-```
-
-.. Warning::
-
-  There is no guarantee of thread-safety in this module, and all
-  &#39;concurrency&#39; is assumed to be via co-routines provided by the `asyncio`
-  library. For an overview of how multiple clients can be handled using
-  co-routines, [Async IO in Python](https://realpython.com/async-io-python) is
-  highly recommended reading.
-
-### Creating the API Responses
-
-Most module consumers will not use the `urest.http.response` module directly:
-but will instead sub-class `urest.api.base.APIBase` to provide the core of the
-response to the network clients. For details of how the `urest.http.server.RESTServer` and `urest.api.base.APIBase` classes interact, the module documentation for `urest.api` should be consulted. In addition, the documentation for the `urest.examples.simpleled.SimpleLED` class might prove useful as an example of a simple implementation of the API.
-
+    This code _does not_ attempt to take any defensive stances with respect
+    to the network environment, beyond the normal measures in the API code.
+    As is normal for MicroPython implementations, it also assumes the SSID
+    and the network password are embedded in the code, and therefore exposed.
+    Careful review of the application code, and the network environment, should
+    be undertaken before this code is used in anything other than a benign
+    environment under _total_ control of the developer.
 
 Tested Implementations
 ----------------------
@@ -185,7 +109,7 @@ This version is written for MicroPython 3.4, and has been tested on:
 Licence
 -------
 
-This module, and all included code, is made available under the terms of the MIT Licence
+This code, and all included code, is made available under the terms of the MIT Licence
 
 &gt; Copyright 2021--2022 (c) Erik de Lange, Copyright (c) 2022--2023 David Love
 
@@ -207,25 +131,90 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 &#34;&#34;&#34;
 
-### Expose the `http` module interface
-from .server import RESTServer
-from .response import HTTPResponse</code></pre>
+import time
+
+try:
+    from machine import Pin
+    from micropython import const
+
+    import network
+    import uasyncio as asyncio
+except ImportError:
+    print(&#34;Ignoring MicroPython includes&#34;)
+
+from urest.http import RESTServer
+from urest.api import APIBase
+from urest.examples.simpleled import SimpleLED
+
+###
+### Main Loop
+###
+
+# Set the SSID of the wireless network
+SSID = &#34;SSID&#34;
+# Set the password of the wireless network
+PASSWORD = &#34;PASSWORD&#34;
+
+# Set-up the link status LED
+try:
+    link_status = Pin(&#34;WL_GPIO0&#34;, Pin.OUT)
+except NameError:
+    print(&#34;Cannot find the MicroPython PIN library&#34;)
+
+try:
+    # Set-up the Wireless Driver
+    wlan = network.WLAN(network.STA_IF)
+    wlan.active(True)
+    wlan.connect(SSID, PASSWORD)
+
+    # Number of connection attempts
+    # before a hard fail
+    max_wait = 10
+
+    while max_wait &gt; 0:
+        if wlan.status() &lt; 0 or wlan.status() &gt;= 3:
+            print(&#34;Already connected!&#34;)
+            print(&#34;IP:  &#34; + wlan.ifconfig()[0])
+            break
+
+        max_wait -= 1
+        print(&#34;waiting for connection...&#34;)
+        time.sleep(1)
+
+        print(wlan.status())
+
+        # Handle connection error
+        if wlan.status() != 3:
+            raise RuntimeError(&#34;network connection failed&#34;)
+        else:
+            print(&#34;Connected&#34;)
+            print(&#34;IP: &#34; + wlan.ifconfig()[0])
+
+    # Display the link light if connected
+    if wlan.status() == 3:
+        link_status.on()
+    else:
+        link_status.off()
+
+except NameError:
+    print(&#34;Cannot find the MicroPython network library&#34;)
+
+# Create the server ...
+app = RESTServer()
+
+# ... and register the nouns
+try:
+    app.register_noun(&#34;led&#34;, SimpleLED(0))
+except NameError:
+    print(&#34;Cannot find the MicroPython PIN library&#34;)
+
+if __name__ == &#34;__main__&#34;:
+    loop = asyncio.get_event_loop()
+    loop.create_task(app.start())
+    loop.run_forever()</code></pre>
 </details>
 </section>
 <section>
-<h2 class="section-title" id="header-submodules">Sub-modules</h2>
-<dl>
-<dt><code class="name"><a title="urest.http.response" href="response.html">urest.http.response</a></code></dt>
-<dd>
-<div class="desc"><p>Formats a basic HTTP/1.1 response. The actual body of the response is largely
-determined by the callers API layer: <code><a title="urest.http.response.HTTPResponse" href="response.html#urest.http.response.HTTPResponse">HTTPResponse</a></code> …</p></div>
-</dd>
-<dt><code class="name"><a title="urest.http.server" href="server.html">urest.http.server</a></code></dt>
-<dd>
-<div class="desc"><p>Micro HTTP server dedicated to REST-style API Requests. Inspired by the
-[MicroPython HTTP …</p></div>
-</dd>
-</dl>
 </section>
 <section>
 </section>
@@ -239,12 +228,6 @@ determined by the callers API layer: <code><a title="urest.http.response.HTTPRes
 <div class="toc">
 <ul>
 <li><a href="#overview">Overview</a></li>
-<li><a href="#implementation">Implementation</a></li>
-<li><a href="#using-the-module">Using the Module</a><ul>
-<li><a href="#creating-the-network-server">Creating the Network Server</a></li>
-<li><a href="#creating-the-api-responses">Creating the API Responses</a></li>
-</ul>
-</li>
 <li><a href="#tested-implementations">Tested Implementations</a></li>
 <li><a href="#licence">Licence</a></li>
 </ul>
@@ -252,13 +235,7 @@ determined by the callers API layer: <code><a title="urest.http.response.HTTPRes
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="urest" href="../index.html">urest</a></code></li>
-</ul>
-</li>
-<li><h3><a href="#header-submodules">Sub-modules</a></h3>
-<ul>
-<li><code><a title="urest.http.response" href="response.html">urest.http.response</a></code></li>
-<li><code><a title="urest.http.server" href="server.html">urest.http.server</a></code></li>
+<li><code><a title="urest.examples" href="index.html">urest.examples</a></code></li>
 </ul>
 </li>
 </ul>
