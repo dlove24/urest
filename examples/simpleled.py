@@ -59,13 +59,13 @@ class SimpleLED(APIBase):
         self._gpio = Pin(pin, Pin.OUT)
         self._gpio.off()
 
-        self._state_attributes = dict(gpio=0)
+        self._state_attributes = dict(led=0)
 
-    def set_state(self, state_attributes, selector=[]):
+    def set_state(self, state_attributes: dict):
         try:
-            _state_attributes["gpio"] = state_attributes["gpio"]
+            self._state_attributes["led"] = state_attributes["led"]
 
-            if _state_attributes["gpio"]:
+            if self._state_attributes["led"] == 0:
                 self._gpio.off()
             else:
                 self._gpio.on()
@@ -74,7 +74,19 @@ class SimpleLED(APIBase):
             # On exception try to return to a known good
             # state
             self._gpio.off()
-            self._state_attributes["gpio"] = 0
+            self._state_attributes["led"] = 0
 
-    def get_state(self, selector=[]):
+    def get_state(self) -> dict:
         return self._gpio.value()
+
+    def delete_state(self):
+        self._gpio.off()
+        self._state_attributes["led"] = 0
+
+    def update_state(self, state_attributes: dict):
+        if self._state_attributes["led"] == 0:
+            self._gpio.on()
+            self._state_attributes["led"] = 1
+        else:
+            self._gpio.off()
+            self._state_attributes["led"] = 0

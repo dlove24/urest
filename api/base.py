@@ -154,31 +154,13 @@ class APIBase:
         else:
             self._state_attributes = []
 
-    def delete_state(self, state_attributes: dict):
+    def delete_state(self):
         """Removes the internal state of the resource, essentially 'resetting' or
         re-initialising the object.
 
-        The exact mechanism for updating the internal state of the resource represented
-        by sub-classes is implementation defined. An implementation may By default this expects to update
-        only part of the state through the use of the partial state defined in
-        `state_attributes`. This defines a `Dictionary` of (key, value) pairs which
-        can be interpreted by sub-classes to update the true internal state as needed.
-
-        Parameters
-        ----------
-
-        state_attributes: Dictionary
-            A list of (key, value) pairs representing the _partial_ state of the
-            resource. The exact mechanism for merging this partial state if left
-            to the implementation of the sub-classes.
-
+        The exact mechanism for returning the state to the defaults are left to
+        the implementation. However it is expected that once this call completes
+        the internal state will be _identical_ to that of the default constructor.
         """
 
-        if state_attributes is not None and isinstance(state_attributes, dict):
-            for key in state_attributes:
-                try:
-                    self._state_attributes[key] = state_attributes[key]
-                except:
-                    self._state_attributes[key] = None
-        else:
-            self._state_attributes = []
+        self._state_attributes = []

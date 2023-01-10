@@ -45,9 +45,9 @@ try:
 except ImportError:
     import asyncio
 
-# Import the enumerations library. Unfortunately not in MicroPython yet
+# Import the enumerations library.
 # from enum import Enum
-
+# Unfortunately not in MicroPython yet, so we can't enforce the type
 HTTPStatus = {"OK", "NOT_OK", "NOT_FOUND"}
 """
     Define the HTTP response codes in use. See the Mozilla [HTTP response status

@@ -62,8 +62,16 @@ from ..api.base import APIBase
 ##
 
 ASCII_UPPERCASE = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
-DIGITS = set("0123456789")
-JSON_TYPE = {"STR", "INT", "ERROR"}
+""" Constant for the set of ASCII letters """
+ASCII_DIGITS = set("0123456789")
+""" Constant for the set of ASCII digits """
+
+JSON_TYPE_INT = 0
+""" Constant for JSON token type of Integer """
+JSON_TYPE_STR = 1
+""" Constant for JSON token type of String """
+JSON_TYPE_ERROR = 1
+""" Constant for JSON token type of error/unknown """
 
 ##
 ## Exceptions
@@ -231,7 +239,7 @@ class RESTServer:
         token_start = False
         token_sep = False
 
-        token_type = "ERROR"
+        token_type = JSON_TYPE_INT
         token_str = ""
 
         for char in data_str.decode("ascii"):
@@ -250,19 +258,22 @@ class RESTServer:
                     # ... and if we are building a token, this should be the
                     # end of a string, so push it to the stack ...
                     if token_start:
-                        if token_type == "STR":
+                        if token_type == JSON_TYPE_STR:
                             parse_stack.append(token_str)
 
                             token_start = False
                         else:
                             raise RESTParseError("Invalid string termination")
 
-                        token_end = True
+                        token_type = JSON_TYPE_INT
+                        token_sep = False
+                        token_start = False
+                        token_str = ""
 
                     # ... Otherwise if we are not building a token, set the
                     # type marker, and start building a new string
                     else:
-                        token_type = "STR"
+                        token_type = JSON_TYPE_STR
                         token_start = True
                         token_str = ""
 
@@ -276,13 +287,23 @@ class RESTServer:
                     # Add the key/value to the return dictionary if
                     # it appears to be valid
                     if token_sep:
+
+                        if token_type == JSON_TYPE_INT:
+                            # The token won't have been terminated
+                            # so still should be in `token_str`
+                            #
+                            # NOTE: Technically an unterminated String
+                            #       is an error, so will parsing will
+                            #       break here (and we won't care)
+                            parse_stack.append(token_str)
+
                         value = parse_stack.pop()
                         key = parse_stack.pop()
 
-                        if token_type == "STR":
+                        if token_type == JSON_TYPE_STR:
                             return_dictionary[key] = str(value)
 
-                        if token_type == "INT":
+                        if token_type == JSON_TYPE_INT:
                             return_dictionary[key] = int(value)
 
                     # If this is the end of the object, then return ...
@@ -291,12 +312,14 @@ class RESTServer:
 
                     # .. otherwise, cleanup and continue
                     else:
-                        token_type = "ERROR"
+                        token_type = JSON_TYPE_ERROR
                         token_sep = False
                         token_start = False
 
                 # If this isn't anything interesting, assume it is part of a token
-                if object_start and ((char in ASCII_UPPERCASE) or (char in DIGITS)):
+                if object_start and (
+                    (char in ASCII_UPPERCASE) or (char in ASCII_DIGITS)
+                ):
                     token_str = token_str + char
 
         return return_dictionary
@@ -377,6 +400,7 @@ class RESTServer:
 
             # Check for empty requests, and if found terminate the connection
             if request_uri in [b"", b"\r\n"]:
+                # DEBUG
                 print(
                     f"CLIENT: [{writer.get_extra_info('peername')[0]}] Empty request line"
                 )
@@ -395,7 +419,6 @@ class RESTServer:
                 request_line = await asyncio.wait_for(
                     reader.readline(), self.read_timeout
                 )
-                print(request_line)
 
                 if request_line.find(b":") != -1:
                     name, value = request_line.split(b":", 1)
@@ -412,24 +435,33 @@ class RESTServer:
             request_body = {}
 
             if "content-length" in request_header:
-                # ... if so, get the rest of the body of the request, decoded into UTF-8
+                request_length = int(request_header["content-length"])
+                print(f"content_length: {request_length}")
 
-                try:
-                    print("body_found")
-                    request_length = int(request_header["content-length"])
-                    request_data = await asyncio.wait_for(
-                        reader.read(request_length), self.read_timeout
-                    )
-                    print(request_data)
-                    request_body = self.parse_data(request_data)
-                except Exception as e:
-                    print(e)
-                    request_body = {}
+                # ... check if there is _really a body to follow ...
+                if request_length > 0:
 
-            # DEBUG
-            print(
-                f"CLIENT BODY: [{writer.get_extra_info('peername')[0]}] {request_body}"
-            )
+                    # ... if so, get the rest of the body of the request, decoded into UTF-8
+
+                    try:
+                        request_length = int(request_header["content-length"])
+                        request_data = await asyncio.wait_for(
+                            reader.read(request_length), self.read_timeout
+                        )
+                        print(request_data)
+                        request_body = self.parse_data(request_data)
+                    except Exception as e:
+                        print(e)
+                        request_body = {}
+
+                # DEBUG
+                print(
+                    f"CLIENT BODY: [{writer.get_extra_info('peername')[0]}] {request_body}"
+                )
+
+            else:
+                # DEBUG
+                print("CLIENT BODY: NONE")
 
             ## NOTE: Below is a somewhat long-winded approach to working out
             ##       the verb is based on the longest assumed verb:
@@ -443,12 +475,13 @@ class RESTServer:
 
             # Work out the action we need to take ...
 
-            first_space = request_uri.find(" ", 0, 6)
+            first_space = request_uri.find(" ", 0, 7)
 
-            if first_space > 6:
-                first_space = 6
+            if first_space > 7:
+                first_space = 7
 
             verb = request_uri[0:first_space].upper()
+            print(verb)
 
             # ... Work out the noun defining the class we need to use to resolve the
             # action ...
@@ -470,17 +503,22 @@ class RESTServer:
             response = HTTPResponse()
 
             if verb == "DELETE":
+                self._nouns[noun.lower()].delete_state()
                 response.body = ""
 
             elif verb == "GET":
-                response.body = (
-                    f"{noun.lower()}: {self._nouns[noun.lower()].get_state()}"
-                )
+                state = self._nouns[noun.lower()].get_state()
+                if type(state) == int:
+                    response.body = f'{{"{noun.lower()}": {state}}}'
+                else:
+                    response.body = f'{{"{noun.lower()}": "{state}"}}'
 
             elif verb == "POST":
+                self._nouns[noun.lower()].set_state(request_body)
                 response.body = ""
 
             elif verb == "PUT":
+                self._nouns[noun.lower()].set_state(request_body)
                 response.body = ""
 
             else:
