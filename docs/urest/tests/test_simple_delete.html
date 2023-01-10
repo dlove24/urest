@@ -66,7 +66,7 @@ def test_requests_delete_check():
       * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun(&#39;led&#39;, SimpleLED(28))` has been made
 
     &#34;&#34;&#34;
-    r = requests.get(f&#34;http://{ IP_ADDRESS }/green_led&#34;)
+    r = requests.get(f&#34;http://{ IP_ADDRESS }/green_led0&#34;)
     assert True
 
 
@@ -90,7 +90,7 @@ def test_requests_init_delete():
 
     &#34;&#34;&#34;
     state = {&#34;led&#34;: 1}
-    r = requests.put(f&#34;http://{ IP_ADDRESS }/green_led&#34;, json=state)
+    r = requests.put(f&#34;http://{ IP_ADDRESS }/green_led0&#34;, json=state)
     assert r.status_code == requests.codes.ok
 
 
@@ -112,10 +112,10 @@ def test_requests_try_delete():
     ----------
 
       * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun(&#39;led&#39;, SimpleLED(28))` has been made
-      * Check that the call to `test_requests_init_delete` was successful
+      * Check that the call to `test_requests_init_delete()` was successful
 
     &#34;&#34;&#34;
-    r = requests.delete(f&#34;http://{ IP_ADDRESS }/green_led&#34;)
+    r = requests.delete(f&#34;http://{ IP_ADDRESS }/green_led0&#34;)
     assert r.status_code == requests.codes.ok
 
 
@@ -135,10 +135,10 @@ def test_requests_check_delete():
     ----------
 
       * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun(&#39;led&#39;, SimpleLED(28))` has been made
-      * Check the results of the `urest.tests.test_requests_try_delete` method, to ensure the noun was initialised correctly
+      * Check the results of the `test_requests_init_delete()` method, to ensure the noun was initialised correctly
 
     &#34;&#34;&#34;
-    r = requests.get(f&#34;http://{ IP_ADDRESS }/green_led&#34;)
+    r = requests.get(f&#34;http://{ IP_ADDRESS }/green_led0&#34;)
     assert r.content == b&#39;{&#34;led&#34;: 0}&#39;</code></pre>
 </details>
 </section>
@@ -160,7 +160,7 @@ def test_requests_check_delete():
 <h2 id="on-failure">On-Failure</h2>
 <ul>
 <li>Check that a call to <code><a title="urest.http.server.RESTServer.register_noun" href="../http/server.html#urest.http.server.RESTServer.register_noun">RESTServer.register_noun()</a></code>, e.g. <code>app.register_noun('led', SimpleLED(28))</code> has been made</li>
-<li>Check the results of the <code>urest.tests.test_requests_try_delete</code> method, to ensure the noun was initialised correctly</li>
+<li>Check the results of the <code><a title="urest.tests.test_simple_delete.test_requests_init_delete" href="#urest.tests.test_simple_delete.test_requests_init_delete">test_requests_init_delete()</a></code> method, to ensure the noun was initialised correctly</li>
 </ul></div>
 <details class="source">
 <summary>
@@ -182,10 +182,10 @@ def test_requests_check_delete():
     ----------
 
       * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun(&#39;led&#39;, SimpleLED(28))` has been made
-      * Check the results of the `urest.tests.test_requests_try_delete` method, to ensure the noun was initialised correctly
+      * Check the results of the `test_requests_init_delete()` method, to ensure the noun was initialised correctly
 
     &#34;&#34;&#34;
-    r = requests.get(f&#34;http://{ IP_ADDRESS }/green_led&#34;)
+    r = requests.get(f&#34;http://{ IP_ADDRESS }/green_led0&#34;)
     assert r.content == b&#39;{&#34;led&#34;: 0}&#39;</code></pre>
 </details>
 </dd>
@@ -243,7 +243,7 @@ test preconditions if this test fails and before investigating further.</p>
       * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun(&#39;led&#39;, SimpleLED(28))` has been made
 
     &#34;&#34;&#34;
-    r = requests.get(f&#34;http://{ IP_ADDRESS }/green_led&#34;)
+    r = requests.get(f&#34;http://{ IP_ADDRESS }/green_led0&#34;)
     assert True</code></pre>
 </details>
 </dd>
@@ -284,7 +284,7 @@ test preconditions if this test fails and before investigating further.</p>
 
     &#34;&#34;&#34;
     state = {&#34;led&#34;: 1}
-    r = requests.put(f&#34;http://{ IP_ADDRESS }/green_led&#34;, json=state)
+    r = requests.put(f&#34;http://{ IP_ADDRESS }/green_led0&#34;, json=state)
     assert r.status_code == requests.codes.ok</code></pre>
 </details>
 </dd>
@@ -325,10 +325,10 @@ achieved by sending an HTTP <code>DELETE</code> method request to the server to 
     ----------
 
       * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun(&#39;led&#39;, SimpleLED(28))` has been made
-      * Check that the call to `test_requests_init_delete` was successful
+      * Check that the call to `test_requests_init_delete()` was successful
 
     &#34;&#34;&#34;
-    r = requests.delete(f&#34;http://{ IP_ADDRESS }/green_led&#34;)
+    r = requests.delete(f&#34;http://{ IP_ADDRESS }/green_led0&#34;)
     assert r.status_code == requests.codes.ok</code></pre>
 </details>
 </dd>

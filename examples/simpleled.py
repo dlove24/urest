@@ -77,7 +77,7 @@ class SimpleLED(APIBase):
             self._state_attributes["led"] = 0
 
     def get_state(self) -> dict:
-        return self._gpio.value()
+        return dict(led=self._gpio.value())
 
     def delete_state(self):
         self._gpio.off()

@@ -36,7 +36,7 @@ def test_requests_delete_check():
       * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun('led', SimpleLED(28))` has been made
 
     """
-    r = requests.get(f"http://{ IP_ADDRESS }/green_led")
+    r = requests.get(f"http://{ IP_ADDRESS }/green_led0")
     assert True
 
 
@@ -60,7 +60,7 @@ def test_requests_init_delete():
 
     """
     state = {"led": 1}
-    r = requests.put(f"http://{ IP_ADDRESS }/green_led", json=state)
+    r = requests.put(f"http://{ IP_ADDRESS }/green_led0", json=state)
     assert r.status_code == requests.codes.ok
 
 
@@ -82,10 +82,10 @@ def test_requests_try_delete():
     ----------
 
       * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun('led', SimpleLED(28))` has been made
-      * Check that the call to `test_requests_init_delete` was successful
+      * Check that the call to `test_requests_init_delete()` was successful
 
     """
-    r = requests.delete(f"http://{ IP_ADDRESS }/green_led")
+    r = requests.delete(f"http://{ IP_ADDRESS }/green_led0")
     assert r.status_code == requests.codes.ok
 
 
@@ -105,8 +105,8 @@ def test_requests_check_delete():
     ----------
 
       * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun('led', SimpleLED(28))` has been made
-      * Check the results of the `urest.tests.test_requests_try_delete` method, to ensure the noun was initialised correctly
+      * Check the results of the `test_requests_init_delete()` method, to ensure the noun was initialised correctly
 
     """
-    r = requests.get(f"http://{ IP_ADDRESS }/green_led")
+    r = requests.get(f"http://{ IP_ADDRESS }/green_led0")
     assert r.content == b'{"led": 0}'

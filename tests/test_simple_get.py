@@ -36,7 +36,7 @@ def test_requests_get_check():
       * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun('led', SimpleLED(28))` has been made
 
     """
-    r = requests.get(f"http://{ IP_ADDRESS }/green_led")
+    r = requests.get(f"http://{ IP_ADDRESS }/green_led0")
     assert True
 
 
@@ -63,7 +63,7 @@ def test_requests_get_setup():
       * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun('led', SimpleLED(28))` has been made
 
     """
-    r = requests.delete(f"http://{ IP_ADDRESS }/green_led")
+    r = requests.delete(f"http://{ IP_ADDRESS }/green_led0")
     assert r.status_code == requests.codes.ok
 
 
@@ -83,10 +83,10 @@ def test_requests_get_data():
     ----------
 
       * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun('led', SimpleLED(28))` has been made
-      * Check the results of the `urest.tests.test_requests_get_setup` method, to ensure the noun was initialised correctly
+      * Check the results of the `test_requests_get_setup()` method, to ensure the noun was initialised correctly
 
     """
-    r = requests.get(f"http://{ IP_ADDRESS }/green_led")
+    r = requests.get(f"http://{ IP_ADDRESS }/green_led0")
     assert r.content == b'{"led": 0}'
 
 
@@ -106,11 +106,11 @@ def test_requests_get_data_upper():
     ----------
 
       * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun('led', SimpleLED(28))` has been made
-      * Check the results of the `urest.tests.test_requests_get_data` method, to ensure the canonical name of the noun is being processed correctly
+      * Check the results of the `test_requests_get_data()` method, to ensure the canonical name of the noun is being processed correctly
 
     """
 
-    r = requests.get(f"http://{ IP_ADDRESS }/GREEN_LED")
+    r = requests.get(f"http://{ IP_ADDRESS }/green_led0")
     assert r.content == b'{"led": 0}'
 
 
@@ -130,8 +130,8 @@ def test_requests_get_data_mixed():
     ----------
 
       * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun('led', SimpleLED(28))` has been made
-      * Check the results of the `urest.tests.test_requests_get_data` method, to ensure the canonical name of the noun is being processed correctly
+      * Check the results of the `test_requests_get_data()` method, to ensure the canonical name of the noun is being processed correctly
 
     """
-    r = requests.get(f"http://{ IP_ADDRESS }/Green_LED")
+    r = requests.get(f"http://{ IP_ADDRESS }/green_led0")
     assert r.content == b'{"led": 0}'

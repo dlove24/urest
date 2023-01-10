@@ -130,7 +130,7 @@ app = RESTServer()
 
 # ... and register the nouns
 try:
-    app.register_noun("led", SimpleLED(0))
+    app.register_noun("green_led0", SimpleLED(1))
 except NameError:
     print("Cannot find the MicroPython PIN library")
 

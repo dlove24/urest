@@ -136,7 +136,7 @@ class SimpleLED(APIBase):
             self._state_attributes[&#34;led&#34;] = 0
 
     def get_state(self) -&gt; dict:
-        return self._gpio.value()
+        return dict(led=self._gpio.value())
 
     def delete_state(self):
         self._gpio.off()
@@ -214,7 +214,7 @@ responsibility to ensure the returned data follows the form expected by those cl
             self._state_attributes[&#34;led&#34;] = 0
 
     def get_state(self) -&gt; dict:
-        return self._gpio.value()
+        return dict(led=self._gpio.value())
 
     def delete_state(self):
         self._gpio.off()

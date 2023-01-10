@@ -36,7 +36,7 @@ def test_requests_set_check():
       * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun('led', SimpleLED(28))` has been made
 
     """
-    r = requests.get(f"http://{ IP_ADDRESS }/green_led")
+    r = requests.get(f"http://{ IP_ADDRESS }/green_led0")
     assert True
 
 
@@ -59,7 +59,7 @@ def test_requests_set_on():
 
     """
     state = {"led": 1}
-    r = requests.put(f"http://{ IP_ADDRESS }/green_led", json=state)
+    r = requests.put(f"http://{ IP_ADDRESS }/green_led0", json=state)
     assert r.status_code == requests.codes.ok
 
 
@@ -73,16 +73,16 @@ def test_requests_set_on_check():
     Expectation
     -----------
 
-    **Pass**: The noun `led` has the value `1`, the previous `test_requests_set_on` method succeeded
+    **Pass**: The noun `led` has the value `1`, the previous `test_requests_set_on()` method succeeded
 
     On-Failure
     ----------
 
       * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun('led', SimpleLED(28))` has been made
-      * Check the results of the `urest.tests.test_requests_set_on` method, to ensure the noun was initialised correctly
+      * Check the results of the `test_requests_set_on()` method, to ensure the noun was initialised correctly
 
     """
-    r = requests.get(f"http://{ IP_ADDRESS }/green_led")
+    r = requests.get(f"http://{ IP_ADDRESS }/green_led0")
     assert r.content == b'{"led": 1}'
 
 
@@ -105,7 +105,7 @@ def test_requests_set_off():
 
     """
     state = {"led": 0}
-    r = requests.put(f"http://{ IP_ADDRESS }/green_led", json=state)
+    r = requests.put(f"http://{ IP_ADDRESS }/green_led0", json=state)
     assert r.status_code == requests.codes.ok
 
 
@@ -119,14 +119,14 @@ def test_requests_set_off_check():
     Expectation
     -----------
 
-    **Pass**: The noun `led` has the value `0`, the previous `test_requests_set_off` method succeeded
+    **Pass**: The noun `led` has the value `0`, the previous `test_requests_set_off()` method succeeded
 
     On-Failure
     ----------
 
       * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun('led', SimpleLED(28))` has been made
-      * Check the results of the `urest.tests.test_requests_set_off` method, to ensure the noun was initialised correctly
+      * Check the results of the `test_requests_set_off()` method, to ensure the noun was initialised correctly
 
     """
-    r = requests.get(f"http://{ IP_ADDRESS }/green_led")
+    r = requests.get(f"http://{ IP_ADDRESS }/green_led0")
     assert r.content == b'{"led": 0}'
