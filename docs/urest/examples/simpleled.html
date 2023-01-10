@@ -118,13 +118,13 @@ class SimpleLED(APIBase):
         self._gpio = Pin(pin, Pin.OUT)
         self._gpio.off()
 
-        self._state_attributes = dict(gpio=0)
+        self._state_attributes = dict(led=0)
 
-    def set_state(self, state_attributes, selector=[]):
+    def set_state(self, state_attributes: dict):
         try:
-            _state_attributes[&#34;gpio&#34;] = state_attributes[&#34;gpio&#34;]
+            self._state_attributes[&#34;led&#34;] = state_attributes[&#34;led&#34;]
 
-            if _state_attributes[&#34;gpio&#34;]:
+            if self._state_attributes[&#34;led&#34;] == 0:
                 self._gpio.off()
             else:
                 self._gpio.on()
@@ -133,10 +133,22 @@ class SimpleLED(APIBase):
             # On exception try to return to a known good
             # state
             self._gpio.off()
-            self._state_attributes[&#34;gpio&#34;] = 0
+            self._state_attributes[&#34;led&#34;] = 0
 
-    def get_state(self, selector=[]):
-        return self._gpio.value()</code></pre>
+    def get_state(self) -&gt; dict:
+        return self._gpio.value()
+
+    def delete_state(self):
+        self._gpio.off()
+        self._state_attributes[&#34;led&#34;] = 0
+
+    def update_state(self, state_attributes: dict):
+        if self._state_attributes[&#34;led&#34;] == 0:
+            self._gpio.on()
+            self._state_attributes[&#34;led&#34;] = 1
+        else:
+            self._gpio.off()
+            self._state_attributes[&#34;led&#34;] = 0</code></pre>
 </details>
 </section>
 <section>
@@ -184,13 +196,13 @@ responsibility to ensure the returned data follows the form expected by those cl
         self._gpio = Pin(pin, Pin.OUT)
         self._gpio.off()
 
-        self._state_attributes = dict(gpio=0)
+        self._state_attributes = dict(led=0)
 
-    def set_state(self, state_attributes, selector=[]):
+    def set_state(self, state_attributes: dict):
         try:
-            _state_attributes[&#34;gpio&#34;] = state_attributes[&#34;gpio&#34;]
+            self._state_attributes[&#34;led&#34;] = state_attributes[&#34;led&#34;]
 
-            if _state_attributes[&#34;gpio&#34;]:
+            if self._state_attributes[&#34;led&#34;] == 0:
                 self._gpio.off()
             else:
                 self._gpio.on()
@@ -199,10 +211,22 @@ responsibility to ensure the returned data follows the form expected by those cl
             # On exception try to return to a known good
             # state
             self._gpio.off()
-            self._state_attributes[&#34;gpio&#34;] = 0
+            self._state_attributes[&#34;led&#34;] = 0
 
-    def get_state(self, selector=[]):
-        return self._gpio.value()</code></pre>
+    def get_state(self) -&gt; dict:
+        return self._gpio.value()
+
+    def delete_state(self):
+        self._gpio.off()
+        self._state_attributes[&#34;led&#34;] = 0
+
+    def update_state(self, state_attributes: dict):
+        if self._state_attributes[&#34;led&#34;] == 0:
+            self._gpio.on()
+            self._state_attributes[&#34;led&#34;] = 1
+        else:
+            self._gpio.off()
+            self._state_attributes[&#34;led&#34;] = 0</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">

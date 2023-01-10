@@ -65,6 +65,8 @@ ASCII_UPPERCASE = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 """ Constant for the set of ASCII letters """
 ASCII_DIGITS = set("0123456789")
 """ Constant for the set of ASCII digits """
+ASCII_EXTRA = set("_")
+""" Constant for the extra ASCII characters allowed in the URI """
 
 JSON_TYPE_INT = 0
 """ Constant for JSON token type of Integer """
@@ -481,7 +483,6 @@ class RESTServer:
                 first_space = 7
 
             verb = request_uri[0:first_space].upper()
-            print(verb)
 
             # ... Work out the noun defining the class we need to use to resolve the
             # action ...
@@ -492,7 +493,11 @@ class RESTServer:
             start_noun = False
 
             for char in request_uri[uri_root:]:
-                if char.isalpha():
+                if (
+                    (char in ASCII_UPPERCASE)
+                    or (char in ASCII_DIGITS)
+                    or (char in ASCII_EXTRA)
+                ):
                     start_noun = True
                     noun = noun + char
                 else:
@@ -507,11 +512,25 @@ class RESTServer:
                 response.body = ""
 
             elif verb == "GET":
-                state = self._nouns[noun.lower()].get_state()
-                if type(state) == int:
-                    response.body = f'{{"{noun.lower()}": {state}}}'
-                else:
-                    response.body = f'{{"{noun.lower()}": "{state}"}}'
+                return_state = self._nouns[noun.lower()].get_state()
+                response_str = "{"
+
+                try:
+                    for key in return_state:
+                        if isinstance(return_state[key], int):
+                            response_str = (
+                                response_str + f'"{key.lower()}": {return_state[key]},'
+                            )
+                        else:
+                            response_str = (
+                                response_str
+                                + f'"{key.lower()}": "{return_state[key]}",'
+                            )
+                finally:
+                    # Properly terminate the body
+                    response_str = response_str[:-1] + "}"
+
+                response.body = response_str
 
             elif verb == "POST":
                 self._nouns[noun.lower()].set_state(request_body)
@@ -542,7 +561,9 @@ class RESTServer:
                 pass
             else:
                 raise e
-        except:
+
+            print(f"!EXCEPTION!: {e}")
+
             response.body = "<http><body><p>Invalid Request</p></body></http>"
             response.status = "NOT_OK"
 

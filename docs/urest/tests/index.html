@@ -24,12 +24,25 @@
 <section id="section-intro">
 <p>Test scripts for checking the library functionality.</p>
 <h2 id="overview">Overview</h2>
-<p>This module describes a number of tests, designed to be run under the <a href="https://docs.pytest.org/en/7.2.x/contents.html">PyTest</a> harness. Given that nearly all of the tests require network access, it is also strongly recommended to install the <a href="https://pypi.org/project/pytest-curl-report/"><code>pytest-curl-report</code></a> plugin to make diagnosis of the failure easier: and to rung specific tests outside the test scripts.</p>
+<p>This module describes a number of tests, designed to be run under the
+<a href="https://docs.pytest.org/en/7.2.x/contents.html">PyTest</a> harness. Nearly all
+tests also require the <a href="https://requests.readthedocs.io/en/latest">requests</a>
+library to be installed, and will also require network access.</p>
+<p>To enable simple repeat testing of specific failures, the
+<a href="https://pypi.org/project/pytest-curl-report/"><code>pytest-curl-report</code></a> plugin is
+also strongly recommended. This also makes it easier run specific tests outside
+the test scripts.</p>
+<p>All tests in this folder should be follow the standard PyTest rules for test
+discovery so that running</p>
+<pre><code>$ py.test
+</code></pre>
+<p>will run all tests.</p>
 <p>Each test is standalone, so that running</p>
 <pre><code>$ py.test simple_get.py
 </code></pre>
 <p>inside the <code>tests</code> folder should run the desired tests. Specific tests can also
-be run programmaticaly through this module. Consult the PyTest documentation for details.</p>
+be run programmaticaly through this module. Consult the PyTest documentation for
+details.</p>
 <h2 id="running-the-tests">Running The Tests</h2>
 <p>These tests depend on the server described in
 <code><a title="urest.examples.simpleled.SimpleLED" href="../examples/simpleled.html#urest.examples.simpleled.SimpleLED">SimpleLED</a></code> being run on the MicroPython board. That
@@ -80,7 +93,24 @@ Test scripts for checking the library functionality.
 Overview
 --------
 
-This module describes a number of tests, designed to be run under the [PyTest](https://docs.pytest.org/en/7.2.x/contents.html) harness. Given that nearly all of the tests require network access, it is also strongly recommended to install the [`pytest-curl-report`](https://pypi.org/project/pytest-curl-report/) plugin to make diagnosis of the failure easier: and to rung specific tests outside the test scripts.
+This module describes a number of tests, designed to be run under the
+[PyTest](https://docs.pytest.org/en/7.2.x/contents.html) harness. Nearly all
+tests also require the [requests](https://requests.readthedocs.io/en/latest)
+library to be installed, and will also require network access.
+
+To enable simple repeat testing of specific failures, the
+[`pytest-curl-report`](https://pypi.org/project/pytest-curl-report/) plugin is
+also strongly recommended. This also makes it easier run specific tests outside
+the test scripts.
+
+All tests in this folder should be follow the standard PyTest rules for test
+discovery so that running
+
+```
+$ py.test
+```
+
+will run all tests.
 
 Each test is standalone, so that running
 
@@ -89,7 +119,8 @@ $ py.test simple_get.py
 ```
 
 inside the `tests` folder should run the desired tests. Specific tests can also
-be run programmaticaly through this module. Consult the PyTest documentation for details.
+be run programmaticaly through this module. Consult the PyTest documentation for
+details.
 
 Running the Tests
 -----------------
@@ -147,9 +178,21 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 <section>
 <h2 class="section-title" id="header-submodules">Sub-modules</h2>
 <dl>
-<dt><code class="name"><a title="urest.tests.simple_get" href="simple_get.html">urest.tests.simple_get</a></code></dt>
+<dt><code class="name"><a title="urest.tests.test_simple_delete" href="test_simple_delete.html">urest.tests.test_simple_delete</a></code></dt>
 <dd>
-<div class="desc"><p>Tests of the HTTP GET method, using the simple server <code><a title="urest.examples.simpleled.SimpleLED" href="../examples/simpleled.html#urest.examples.simpleled.SimpleLED">SimpleLED</a></code> …</p></div>
+<div class="desc"><p>Tests of the <code>delete</code> verb (HTTP DELETE method), using the simple server <code><a title="urest.examples.simpleled.SimpleLED" href="../examples/simpleled.html#urest.examples.simpleled.SimpleLED">SimpleLED</a></code> …</p></div>
+</dd>
+<dt><code class="name"><a title="urest.tests.test_simple_get" href="test_simple_get.html">urest.tests.test_simple_get</a></code></dt>
+<dd>
+<div class="desc"><p>Tests of the <code>get</code> verb (HTTP GET method), using the simple server <code><a title="urest.examples.simpleled.SimpleLED" href="../examples/simpleled.html#urest.examples.simpleled.SimpleLED">SimpleLED</a></code> …</p></div>
+</dd>
+<dt><code class="name"><a title="urest.tests.test_simple_set" href="test_simple_set.html">urest.tests.test_simple_set</a></code></dt>
+<dd>
+<div class="desc"><p>Tests of the <code>set</code> verb (HTTP PUT method), using the simple server <code><a title="urest.examples.simpleled.SimpleLED" href="../examples/simpleled.html#urest.examples.simpleled.SimpleLED">SimpleLED</a></code> …</p></div>
+</dd>
+<dt><code class="name"><a title="urest.tests.test_simple_update" href="test_simple_update.html">urest.tests.test_simple_update</a></code></dt>
+<dd>
+<div class="desc"><p>Tests of the <code>update</code> verb (HTTP POST method), using the simple server <code><a title="urest.examples.simpleled.SimpleLED" href="../examples/simpleled.html#urest.examples.simpleled.SimpleLED">SimpleLED</a></code> …</p></div>
 </dd>
 </dl>
 </section>
@@ -178,7 +221,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 </li>
 <li><h3><a href="#header-submodules">Sub-modules</a></h3>
 <ul>
-<li><code><a title="urest.tests.simple_get" href="simple_get.html">urest.tests.simple_get</a></code></li>
+<li><code><a title="urest.tests.test_simple_delete" href="test_simple_delete.html">urest.tests.test_simple_delete</a></code></li>
+<li><code><a title="urest.tests.test_simple_get" href="test_simple_get.html">urest.tests.test_simple_get</a></code></li>
+<li><code><a title="urest.tests.test_simple_set" href="test_simple_set.html">urest.tests.test_simple_set</a></code></li>
+<li><code><a title="urest.tests.test_simple_update" href="test_simple_update.html">urest.tests.test_simple_update</a></code></li>
 </ul>
 </li>
 </ul>

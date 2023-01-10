@@ -220,34 +220,16 @@ class APIBase:
         else:
             self._state_attributes = []
 
-    def delete_state(self, state_attributes: dict):
+    def delete_state(self):
         &#34;&#34;&#34;Removes the internal state of the resource, essentially &#39;resetting&#39; or
         re-initialising the object.
 
-        The exact mechanism for updating the internal state of the resource represented
-        by sub-classes is implementation defined. An implementation may By default this expects to update
-        only part of the state through the use of the partial state defined in
-        `state_attributes`. This defines a `Dictionary` of (key, value) pairs which
-        can be interpreted by sub-classes to update the true internal state as needed.
-
-        Parameters
-        ----------
-
-        state_attributes: Dictionary
-            A list of (key, value) pairs representing the _partial_ state of the
-            resource. The exact mechanism for merging this partial state if left
-            to the implementation of the sub-classes.
-
+        The exact mechanism for returning the state to the defaults are left to
+        the implementation. However it is expected that once this call completes
+        the internal state will be _identical_ to that of the default constructor.
         &#34;&#34;&#34;
 
-        if state_attributes is not None and isinstance(state_attributes, dict):
-            for key in state_attributes:
-                try:
-                    self._state_attributes[key] = state_attributes[key]
-                except:
-                    self._state_attributes[key] = None
-        else:
-            self._state_attributes = []</code></pre>
+        self._state_attributes = []</code></pre>
 </details>
 </section>
 <section>
@@ -398,34 +380,16 @@ responsibility to ensure the returned data follows the form expected by those cl
         else:
             self._state_attributes = []
 
-    def delete_state(self, state_attributes: dict):
+    def delete_state(self):
         &#34;&#34;&#34;Removes the internal state of the resource, essentially &#39;resetting&#39; or
         re-initialising the object.
 
-        The exact mechanism for updating the internal state of the resource represented
-        by sub-classes is implementation defined. An implementation may By default this expects to update
-        only part of the state through the use of the partial state defined in
-        `state_attributes`. This defines a `Dictionary` of (key, value) pairs which
-        can be interpreted by sub-classes to update the true internal state as needed.
-
-        Parameters
-        ----------
-
-        state_attributes: Dictionary
-            A list of (key, value) pairs representing the _partial_ state of the
-            resource. The exact mechanism for merging this partial state if left
-            to the implementation of the sub-classes.
-
+        The exact mechanism for returning the state to the defaults are left to
+        the implementation. However it is expected that once this call completes
+        the internal state will be _identical_ to that of the default constructor.
         &#34;&#34;&#34;
 
-        if state_attributes is not None and isinstance(state_attributes, dict):
-            for key in state_attributes:
-                try:
-                    self._state_attributes[key] = state_attributes[key]
-                except:
-                    self._state_attributes[key] = None
-        else:
-            self._state_attributes = []</code></pre>
+        self._state_attributes = []</code></pre>
 </details>
 <h3>Subclasses</h3>
 <ul class="hlist">
@@ -434,55 +398,28 @@ responsibility to ensure the returned data follows the form expected by those cl
 <h3>Methods</h3>
 <dl>
 <dt id="urest.api.base.APIBase.delete_state"><code class="name flex">
-<span>def <span class="ident">delete_state</span></span>(<span>self, state_attributes: dict)</span>
+<span>def <span class="ident">delete_state</span></span>(<span>self)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Removes the internal state of the resource, essentially 'resetting' or
 re-initialising the object.</p>
-<p>The exact mechanism for updating the internal state of the resource represented
-by sub-classes is implementation defined. An implementation may By default this expects to update
-only part of the state through the use of the partial state defined in
-<code>state_attributes</code>. This defines a <code>Dictionary</code> of (key, value) pairs which
-can be interpreted by sub-classes to update the true internal state as needed.</p>
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt><strong><code>state_attributes</code></strong> :&ensp;<code>Dictionary</code></dt>
-<dd>A list of (key, value) pairs representing the <em>partial</em> state of the
-resource. The exact mechanism for merging this partial state if left
-to the implementation of the sub-classes.</dd>
-</dl></div>
+<p>The exact mechanism for returning the state to the defaults are left to
+the implementation. However it is expected that once this call completes
+the internal state will be <em>identical</em> to that of the default constructor.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def delete_state(self, state_attributes: dict):
+<pre><code class="python">def delete_state(self):
     &#34;&#34;&#34;Removes the internal state of the resource, essentially &#39;resetting&#39; or
     re-initialising the object.
 
-    The exact mechanism for updating the internal state of the resource represented
-    by sub-classes is implementation defined. An implementation may By default this expects to update
-    only part of the state through the use of the partial state defined in
-    `state_attributes`. This defines a `Dictionary` of (key, value) pairs which
-    can be interpreted by sub-classes to update the true internal state as needed.
-
-    Parameters
-    ----------
-
-    state_attributes: Dictionary
-        A list of (key, value) pairs representing the _partial_ state of the
-        resource. The exact mechanism for merging this partial state if left
-        to the implementation of the sub-classes.
-
+    The exact mechanism for returning the state to the defaults are left to
+    the implementation. However it is expected that once this call completes
+    the internal state will be _identical_ to that of the default constructor.
     &#34;&#34;&#34;
 
-    if state_attributes is not None and isinstance(state_attributes, dict):
-        for key in state_attributes:
-            try:
-                self._state_attributes[key] = state_attributes[key]
-            except:
-                self._state_attributes[key] = None
-    else:
-        self._state_attributes = []</code></pre>
+    self._state_attributes = []</code></pre>
 </details>
 </dd>
 <dt id="urest.api.base.APIBase.get_state"><code class="name flex">

@@ -36,7 +36,7 @@ def test_requests_set_check():
       * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun('led', SimpleLED(28))` has been made
 
     """
-    r = requests.get(f"http://{ IP_ADDRESS }/led")
+    r = requests.get(f"http://{ IP_ADDRESS }/green_led")
     assert True
 
 
@@ -58,9 +58,10 @@ def test_requests_set_on():
       * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun('led', SimpleLED(28))` has been made
 
     """
-    state = {"led" : 1}
-    r = requests.put(f"http://{ IP_ADDRESS }/led", json=state)
+    state = {"led": 1}
+    r = requests.put(f"http://{ IP_ADDRESS }/green_led", json=state)
     assert r.status_code == requests.codes.ok
+
 
 def test_requests_set_on_check():
     """
@@ -81,7 +82,7 @@ def test_requests_set_on_check():
       * Check the results of the `urest.tests.test_requests_set_on` method, to ensure the noun was initialised correctly
 
     """
-    r = requests.get(f"http://{ IP_ADDRESS }/led")
+    r = requests.get(f"http://{ IP_ADDRESS }/green_led")
     assert r.content == b'{"led": 1}'
 
 
@@ -103,8 +104,8 @@ def test_requests_set_off():
       * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun('led', SimpleLED(28))` has been made
 
     """
-    state = {"led" : 0}
-    r = requests.put(f"http://{ IP_ADDRESS }/led", json=state)
+    state = {"led": 0}
+    r = requests.put(f"http://{ IP_ADDRESS }/green_led", json=state)
     assert r.status_code == requests.codes.ok
 
 
@@ -127,5 +128,5 @@ def test_requests_set_off_check():
       * Check the results of the `urest.tests.test_requests_set_off` method, to ensure the noun was initialised correctly
 
     """
-    r = requests.get(f"http://{ IP_ADDRESS }/led")
+    r = requests.get(f"http://{ IP_ADDRESS }/green_led")
     assert r.content == b'{"led": 0}'

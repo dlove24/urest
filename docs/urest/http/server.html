@@ -124,8 +124,18 @@ from ..api.base import APIBase
 ##
 
 ASCII_UPPERCASE = set(&#34;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&#34;)
-DIGITS = set(&#34;0123456789&#34;)
-JSON_TYPE = {&#34;STR&#34;, &#34;INT&#34;, &#34;ERROR&#34;}
+&#34;&#34;&#34; Constant for the set of ASCII letters &#34;&#34;&#34;
+ASCII_DIGITS = set(&#34;0123456789&#34;)
+&#34;&#34;&#34; Constant for the set of ASCII digits &#34;&#34;&#34;
+ASCII_EXTRA = set(&#34;_&#34;)
+&#34;&#34;&#34; Constant for the extra ASCII characters allowed in the URI &#34;&#34;&#34;
+
+JSON_TYPE_INT = 0
+&#34;&#34;&#34; Constant for JSON token type of Integer &#34;&#34;&#34;
+JSON_TYPE_STR = 1
+&#34;&#34;&#34; Constant for JSON token type of String &#34;&#34;&#34;
+JSON_TYPE_ERROR = 1
+&#34;&#34;&#34; Constant for JSON token type of error/unknown &#34;&#34;&#34;
 
 ##
 ## Exceptions
@@ -293,7 +303,7 @@ class RESTServer:
         token_start = False
         token_sep = False
 
-        token_type = &#34;ERROR&#34;
+        token_type = JSON_TYPE_INT
         token_str = &#34;&#34;
 
         for char in data_str.decode(&#34;ascii&#34;):
@@ -312,19 +322,22 @@ class RESTServer:
                     # ... and if we are building a token, this should be the
                     # end of a string, so push it to the stack ...
                     if token_start:
-                        if token_type == &#34;STR&#34;:
+                        if token_type == JSON_TYPE_STR:
                             parse_stack.append(token_str)
 
                             token_start = False
                         else:
                             raise RESTParseError(&#34;Invalid string termination&#34;)
 
-                        token_end = True
+                        token_type = JSON_TYPE_INT
+                        token_sep = False
+                        token_start = False
+                        token_str = &#34;&#34;
 
                     # ... Otherwise if we are not building a token, set the
                     # type marker, and start building a new string
                     else:
-                        token_type = &#34;STR&#34;
+                        token_type = JSON_TYPE_STR
                         token_start = True
                         token_str = &#34;&#34;
 
@@ -338,13 +351,23 @@ class RESTServer:
                     # Add the key/value to the return dictionary if
                     # it appears to be valid
                     if token_sep:
+
+                        if token_type == JSON_TYPE_INT:
+                            # The token won&#39;t have been terminated
+                            # so still should be in `token_str`
+                            #
+                            # NOTE: Technically an unterminated String
+                            #       is an error, so will parsing will
+                            #       break here (and we won&#39;t care)
+                            parse_stack.append(token_str)
+
                         value = parse_stack.pop()
                         key = parse_stack.pop()
 
-                        if token_type == &#34;STR&#34;:
+                        if token_type == JSON_TYPE_STR:
                             return_dictionary[key] = str(value)
 
-                        if token_type == &#34;INT&#34;:
+                        if token_type == JSON_TYPE_INT:
                             return_dictionary[key] = int(value)
 
                     # If this is the end of the object, then return ...
@@ -353,12 +376,14 @@ class RESTServer:
 
                     # .. otherwise, cleanup and continue
                     else:
-                        token_type = &#34;ERROR&#34;
+                        token_type = JSON_TYPE_ERROR
                         token_sep = False
                         token_start = False
 
                 # If this isn&#39;t anything interesting, assume it is part of a token
-                if object_start and ((char in ASCII_UPPERCASE) or (char in DIGITS)):
+                if object_start and (
+                    (char in ASCII_UPPERCASE) or (char in ASCII_DIGITS)
+                ):
                     token_str = token_str + char
 
         return return_dictionary
@@ -439,6 +464,7 @@ class RESTServer:
 
             # Check for empty requests, and if found terminate the connection
             if request_uri in [b&#34;&#34;, b&#34;\r\n&#34;]:
+                # DEBUG
                 print(
                     f&#34;CLIENT: [{writer.get_extra_info(&#39;peername&#39;)[0]}] Empty request line&#34;
                 )
@@ -457,7 +483,6 @@ class RESTServer:
                 request_line = await asyncio.wait_for(
                     reader.readline(), self.read_timeout
                 )
-                print(request_line)
 
                 if request_line.find(b&#34;:&#34;) != -1:
                     name, value = request_line.split(b&#34;:&#34;, 1)
@@ -474,24 +499,33 @@ class RESTServer:
             request_body = {}
 
             if &#34;content-length&#34; in request_header:
-                # ... if so, get the rest of the body of the request, decoded into UTF-8
+                request_length = int(request_header[&#34;content-length&#34;])
+                print(f&#34;content_length: {request_length}&#34;)
 
-                try:
-                    print(&#34;body_found&#34;)
-                    request_length = int(request_header[&#34;content-length&#34;])
-                    request_data = await asyncio.wait_for(
-                        reader.read(request_length), self.read_timeout
-                    )
-                    print(request_data)
-                    request_body = self.parse_data(request_data)
-                except Exception as e:
-                    print(e)
-                    request_body = {}
+                # ... check if there is _really a body to follow ...
+                if request_length &gt; 0:
 
-            # DEBUG
-            print(
-                f&#34;CLIENT BODY: [{writer.get_extra_info(&#39;peername&#39;)[0]}] {request_body}&#34;
-            )
+                    # ... if so, get the rest of the body of the request, decoded into UTF-8
+
+                    try:
+                        request_length = int(request_header[&#34;content-length&#34;])
+                        request_data = await asyncio.wait_for(
+                            reader.read(request_length), self.read_timeout
+                        )
+                        print(request_data)
+                        request_body = self.parse_data(request_data)
+                    except Exception as e:
+                        print(e)
+                        request_body = {}
+
+                # DEBUG
+                print(
+                    f&#34;CLIENT BODY: [{writer.get_extra_info(&#39;peername&#39;)[0]}] {request_body}&#34;
+                )
+
+            else:
+                # DEBUG
+                print(&#34;CLIENT BODY: NONE&#34;)
 
             ## NOTE: Below is a somewhat long-winded approach to working out
             ##       the verb is based on the longest assumed verb:
@@ -505,10 +539,10 @@ class RESTServer:
 
             # Work out the action we need to take ...
 
-            first_space = request_uri.find(&#34; &#34;, 0, 6)
+            first_space = request_uri.find(&#34; &#34;, 0, 7)
 
-            if first_space &gt; 6:
-                first_space = 6
+            if first_space &gt; 7:
+                first_space = 7
 
             verb = request_uri[0:first_space].upper()
 
@@ -521,7 +555,11 @@ class RESTServer:
             start_noun = False
 
             for char in request_uri[uri_root:]:
-                if char.isalpha():
+                if (
+                    (char in ASCII_UPPERCASE)
+                    or (char in ASCII_DIGITS)
+                    or (char in ASCII_EXTRA)
+                ):
                     start_noun = True
                     noun = noun + char
                 else:
@@ -532,17 +570,36 @@ class RESTServer:
             response = HTTPResponse()
 
             if verb == &#34;DELETE&#34;:
+                self._nouns[noun.lower()].delete_state()
                 response.body = &#34;&#34;
 
             elif verb == &#34;GET&#34;:
-                response.body = (
-                    f&#34;{noun.lower()}: {self._nouns[noun.lower()].get_state()}&#34;
-                )
+                return_state = self._nouns[noun.lower()].get_state()
+                response_str = &#34;{&#34;
+
+                try:
+                    for key in return_state:
+                        if isinstance(return_state[key], int):
+                            response_str = (
+                                response_str + f&#39;&#34;{key.lower()}&#34;: {return_state[key]},&#39;
+                            )
+                        else:
+                            response_str = (
+                                response_str
+                                + f&#39;&#34;{key.lower()}&#34;: &#34;{return_state[key]}&#34;,&#39;
+                            )
+                finally:
+                    # Properly terminate the body
+                    response_str = response_str[:-1] + &#34;}&#34;
+
+                response.body = response_str
 
             elif verb == &#34;POST&#34;:
+                self._nouns[noun.lower()].set_state(request_body)
                 response.body = &#34;&#34;
 
             elif verb == &#34;PUT&#34;:
+                self._nouns[noun.lower()].set_state(request_body)
                 response.body = &#34;&#34;
 
             else:
@@ -566,7 +623,9 @@ class RESTServer:
                 pass
             else:
                 raise e
-        except:
+
+            print(f&#34;!EXCEPTION!: {e}&#34;)
+
             response.body = &#34;&lt;http&gt;&lt;body&gt;&lt;p&gt;Invalid Request&lt;/p&gt;&lt;/body&gt;&lt;/http&gt;&#34;
             response.status = &#34;NOT_OK&#34;
 
@@ -630,6 +689,33 @@ class RESTServer:
 <section>
 </section>
 <section>
+<h2 class="section-title" id="header-variables">Global variables</h2>
+<dl>
+<dt id="urest.http.server.ASCII_DIGITS"><code class="name">var <span class="ident">ASCII_DIGITS</span></code></dt>
+<dd>
+<div class="desc"><p>Constant for the set of ASCII digits</p></div>
+</dd>
+<dt id="urest.http.server.ASCII_EXTRA"><code class="name">var <span class="ident">ASCII_EXTRA</span></code></dt>
+<dd>
+<div class="desc"><p>Constant for the extra ASCII characters allowed in the URI</p></div>
+</dd>
+<dt id="urest.http.server.ASCII_UPPERCASE"><code class="name">var <span class="ident">ASCII_UPPERCASE</span></code></dt>
+<dd>
+<div class="desc"><p>Constant for the set of ASCII letters</p></div>
+</dd>
+<dt id="urest.http.server.JSON_TYPE_ERROR"><code class="name">var <span class="ident">JSON_TYPE_ERROR</span></code></dt>
+<dd>
+<div class="desc"><p>Constant for JSON token type of error/unknown</p></div>
+</dd>
+<dt id="urest.http.server.JSON_TYPE_INT"><code class="name">var <span class="ident">JSON_TYPE_INT</span></code></dt>
+<dd>
+<div class="desc"><p>Constant for JSON token type of Integer</p></div>
+</dd>
+<dt id="urest.http.server.JSON_TYPE_STR"><code class="name">var <span class="ident">JSON_TYPE_STR</span></code></dt>
+<dd>
+<div class="desc"><p>Constant for JSON token type of String</p></div>
+</dd>
+</dl>
 </section>
 <section>
 </section>
@@ -891,7 +977,7 @@ client, before declaring failure.</p>
         token_start = False
         token_sep = False
 
-        token_type = &#34;ERROR&#34;
+        token_type = JSON_TYPE_INT
         token_str = &#34;&#34;
 
         for char in data_str.decode(&#34;ascii&#34;):
@@ -910,19 +996,22 @@ client, before declaring failure.</p>
                     # ... and if we are building a token, this should be the
                     # end of a string, so push it to the stack ...
                     if token_start:
-                        if token_type == &#34;STR&#34;:
+                        if token_type == JSON_TYPE_STR:
                             parse_stack.append(token_str)
 
                             token_start = False
                         else:
                             raise RESTParseError(&#34;Invalid string termination&#34;)
 
-                        token_end = True
+                        token_type = JSON_TYPE_INT
+                        token_sep = False
+                        token_start = False
+                        token_str = &#34;&#34;
 
                     # ... Otherwise if we are not building a token, set the
                     # type marker, and start building a new string
                     else:
-                        token_type = &#34;STR&#34;
+                        token_type = JSON_TYPE_STR
                         token_start = True
                         token_str = &#34;&#34;
 
@@ -936,13 +1025,23 @@ client, before declaring failure.</p>
                     # Add the key/value to the return dictionary if
                     # it appears to be valid
                     if token_sep:
+
+                        if token_type == JSON_TYPE_INT:
+                            # The token won&#39;t have been terminated
+                            # so still should be in `token_str`
+                            #
+                            # NOTE: Technically an unterminated String
+                            #       is an error, so will parsing will
+                            #       break here (and we won&#39;t care)
+                            parse_stack.append(token_str)
+
                         value = parse_stack.pop()
                         key = parse_stack.pop()
 
-                        if token_type == &#34;STR&#34;:
+                        if token_type == JSON_TYPE_STR:
                             return_dictionary[key] = str(value)
 
-                        if token_type == &#34;INT&#34;:
+                        if token_type == JSON_TYPE_INT:
                             return_dictionary[key] = int(value)
 
                     # If this is the end of the object, then return ...
@@ -951,12 +1050,14 @@ client, before declaring failure.</p>
 
                     # .. otherwise, cleanup and continue
                     else:
-                        token_type = &#34;ERROR&#34;
+                        token_type = JSON_TYPE_ERROR
                         token_sep = False
                         token_start = False
 
                 # If this isn&#39;t anything interesting, assume it is part of a token
-                if object_start and ((char in ASCII_UPPERCASE) or (char in DIGITS)):
+                if object_start and (
+                    (char in ASCII_UPPERCASE) or (char in ASCII_DIGITS)
+                ):
                     token_str = token_str + char
 
         return return_dictionary
@@ -1037,6 +1138,7 @@ client, before declaring failure.</p>
 
             # Check for empty requests, and if found terminate the connection
             if request_uri in [b&#34;&#34;, b&#34;\r\n&#34;]:
+                # DEBUG
                 print(
                     f&#34;CLIENT: [{writer.get_extra_info(&#39;peername&#39;)[0]}] Empty request line&#34;
                 )
@@ -1055,7 +1157,6 @@ client, before declaring failure.</p>
                 request_line = await asyncio.wait_for(
                     reader.readline(), self.read_timeout
                 )
-                print(request_line)
 
                 if request_line.find(b&#34;:&#34;) != -1:
                     name, value = request_line.split(b&#34;:&#34;, 1)
@@ -1072,24 +1173,33 @@ client, before declaring failure.</p>
             request_body = {}
 
             if &#34;content-length&#34; in request_header:
-                # ... if so, get the rest of the body of the request, decoded into UTF-8
+                request_length = int(request_header[&#34;content-length&#34;])
+                print(f&#34;content_length: {request_length}&#34;)
 
-                try:
-                    print(&#34;body_found&#34;)
-                    request_length = int(request_header[&#34;content-length&#34;])
-                    request_data = await asyncio.wait_for(
-                        reader.read(request_length), self.read_timeout
-                    )
-                    print(request_data)
-                    request_body = self.parse_data(request_data)
-                except Exception as e:
-                    print(e)
-                    request_body = {}
+                # ... check if there is _really a body to follow ...
+                if request_length &gt; 0:
 
-            # DEBUG
-            print(
-                f&#34;CLIENT BODY: [{writer.get_extra_info(&#39;peername&#39;)[0]}] {request_body}&#34;
-            )
+                    # ... if so, get the rest of the body of the request, decoded into UTF-8
+
+                    try:
+                        request_length = int(request_header[&#34;content-length&#34;])
+                        request_data = await asyncio.wait_for(
+                            reader.read(request_length), self.read_timeout
+                        )
+                        print(request_data)
+                        request_body = self.parse_data(request_data)
+                    except Exception as e:
+                        print(e)
+                        request_body = {}
+
+                # DEBUG
+                print(
+                    f&#34;CLIENT BODY: [{writer.get_extra_info(&#39;peername&#39;)[0]}] {request_body}&#34;
+                )
+
+            else:
+                # DEBUG
+                print(&#34;CLIENT BODY: NONE&#34;)
 
             ## NOTE: Below is a somewhat long-winded approach to working out
             ##       the verb is based on the longest assumed verb:
@@ -1103,10 +1213,10 @@ client, before declaring failure.</p>
 
             # Work out the action we need to take ...
 
-            first_space = request_uri.find(&#34; &#34;, 0, 6)
+            first_space = request_uri.find(&#34; &#34;, 0, 7)
 
-            if first_space &gt; 6:
-                first_space = 6
+            if first_space &gt; 7:
+                first_space = 7
 
             verb = request_uri[0:first_space].upper()
 
@@ -1119,7 +1229,11 @@ client, before declaring failure.</p>
             start_noun = False
 
             for char in request_uri[uri_root:]:
-                if char.isalpha():
+                if (
+                    (char in ASCII_UPPERCASE)
+                    or (char in ASCII_DIGITS)
+                    or (char in ASCII_EXTRA)
+                ):
                     start_noun = True
                     noun = noun + char
                 else:
@@ -1130,17 +1244,36 @@ client, before declaring failure.</p>
             response = HTTPResponse()
 
             if verb == &#34;DELETE&#34;:
+                self._nouns[noun.lower()].delete_state()
                 response.body = &#34;&#34;
 
             elif verb == &#34;GET&#34;:
-                response.body = (
-                    f&#34;{noun.lower()}: {self._nouns[noun.lower()].get_state()}&#34;
-                )
+                return_state = self._nouns[noun.lower()].get_state()
+                response_str = &#34;{&#34;
+
+                try:
+                    for key in return_state:
+                        if isinstance(return_state[key], int):
+                            response_str = (
+                                response_str + f&#39;&#34;{key.lower()}&#34;: {return_state[key]},&#39;
+                            )
+                        else:
+                            response_str = (
+                                response_str
+                                + f&#39;&#34;{key.lower()}&#34;: &#34;{return_state[key]}&#34;,&#39;
+                            )
+                finally:
+                    # Properly terminate the body
+                    response_str = response_str[:-1] + &#34;}&#34;
+
+                response.body = response_str
 
             elif verb == &#34;POST&#34;:
+                self._nouns[noun.lower()].set_state(request_body)
                 response.body = &#34;&#34;
 
             elif verb == &#34;PUT&#34;:
+                self._nouns[noun.lower()].set_state(request_body)
                 response.body = &#34;&#34;
 
             else:
@@ -1164,7 +1297,9 @@ client, before declaring failure.</p>
                 pass
             else:
                 raise e
-        except:
+
+            print(f&#34;!EXCEPTION!: {e}&#34;)
+
             response.body = &#34;&lt;http&gt;&lt;body&gt;&lt;p&gt;Invalid Request&lt;/p&gt;&lt;/body&gt;&lt;/http&gt;&#34;
             response.status = &#34;NOT_OK&#34;
 
@@ -1308,6 +1443,7 @@ streamwriter">asyncio.StreamWriter</a>.</dd>
 
         # Check for empty requests, and if found terminate the connection
         if request_uri in [b&#34;&#34;, b&#34;\r\n&#34;]:
+            # DEBUG
             print(
                 f&#34;CLIENT: [{writer.get_extra_info(&#39;peername&#39;)[0]}] Empty request line&#34;
             )
@@ -1326,7 +1462,6 @@ streamwriter">asyncio.StreamWriter</a>.</dd>
             request_line = await asyncio.wait_for(
                 reader.readline(), self.read_timeout
             )
-            print(request_line)
 
             if request_line.find(b&#34;:&#34;) != -1:
                 name, value = request_line.split(b&#34;:&#34;, 1)
@@ -1343,24 +1478,33 @@ streamwriter">asyncio.StreamWriter</a>.</dd>
         request_body = {}
 
         if &#34;content-length&#34; in request_header:
-            # ... if so, get the rest of the body of the request, decoded into UTF-8
+            request_length = int(request_header[&#34;content-length&#34;])
+            print(f&#34;content_length: {request_length}&#34;)
 
-            try:
-                print(&#34;body_found&#34;)
-                request_length = int(request_header[&#34;content-length&#34;])
-                request_data = await asyncio.wait_for(
-                    reader.read(request_length), self.read_timeout
-                )
-                print(request_data)
-                request_body = self.parse_data(request_data)
-            except Exception as e:
-                print(e)
-                request_body = {}
+            # ... check if there is _really a body to follow ...
+            if request_length &gt; 0:
 
-        # DEBUG
-        print(
-            f&#34;CLIENT BODY: [{writer.get_extra_info(&#39;peername&#39;)[0]}] {request_body}&#34;
-        )
+                # ... if so, get the rest of the body of the request, decoded into UTF-8
+
+                try:
+                    request_length = int(request_header[&#34;content-length&#34;])
+                    request_data = await asyncio.wait_for(
+                        reader.read(request_length), self.read_timeout
+                    )
+                    print(request_data)
+                    request_body = self.parse_data(request_data)
+                except Exception as e:
+                    print(e)
+                    request_body = {}
+
+            # DEBUG
+            print(
+                f&#34;CLIENT BODY: [{writer.get_extra_info(&#39;peername&#39;)[0]}] {request_body}&#34;
+            )
+
+        else:
+            # DEBUG
+            print(&#34;CLIENT BODY: NONE&#34;)
 
         ## NOTE: Below is a somewhat long-winded approach to working out
         ##       the verb is based on the longest assumed verb:
@@ -1374,10 +1518,10 @@ streamwriter">asyncio.StreamWriter</a>.</dd>
 
         # Work out the action we need to take ...
 
-        first_space = request_uri.find(&#34; &#34;, 0, 6)
+        first_space = request_uri.find(&#34; &#34;, 0, 7)
 
-        if first_space &gt; 6:
-            first_space = 6
+        if first_space &gt; 7:
+            first_space = 7
 
         verb = request_uri[0:first_space].upper()
 
@@ -1390,7 +1534,11 @@ streamwriter">asyncio.StreamWriter</a>.</dd>
         start_noun = False
 
         for char in request_uri[uri_root:]:
-            if char.isalpha():
+            if (
+                (char in ASCII_UPPERCASE)
+                or (char in ASCII_DIGITS)
+                or (char in ASCII_EXTRA)
+            ):
                 start_noun = True
                 noun = noun + char
             else:
@@ -1401,17 +1549,36 @@ streamwriter">asyncio.StreamWriter</a>.</dd>
         response = HTTPResponse()
 
         if verb == &#34;DELETE&#34;:
+            self._nouns[noun.lower()].delete_state()
             response.body = &#34;&#34;
 
         elif verb == &#34;GET&#34;:
-            response.body = (
-                f&#34;{noun.lower()}: {self._nouns[noun.lower()].get_state()}&#34;
-            )
+            return_state = self._nouns[noun.lower()].get_state()
+            response_str = &#34;{&#34;
+
+            try:
+                for key in return_state:
+                    if isinstance(return_state[key], int):
+                        response_str = (
+                            response_str + f&#39;&#34;{key.lower()}&#34;: {return_state[key]},&#39;
+                        )
+                    else:
+                        response_str = (
+                            response_str
+                            + f&#39;&#34;{key.lower()}&#34;: &#34;{return_state[key]}&#34;,&#39;
+                        )
+            finally:
+                # Properly terminate the body
+                response_str = response_str[:-1] + &#34;}&#34;
+
+            response.body = response_str
 
         elif verb == &#34;POST&#34;:
+            self._nouns[noun.lower()].set_state(request_body)
             response.body = &#34;&#34;
 
         elif verb == &#34;PUT&#34;:
+            self._nouns[noun.lower()].set_state(request_body)
             response.body = &#34;&#34;
 
         else:
@@ -1435,7 +1602,9 @@ streamwriter">asyncio.StreamWriter</a>.</dd>
             pass
         else:
             raise e
-    except:
+
+        print(f&#34;!EXCEPTION!: {e}&#34;)
+
         response.body = &#34;&lt;http&gt;&lt;body&gt;&lt;p&gt;Invalid Request&lt;/p&gt;&lt;/body&gt;&lt;/http&gt;&#34;
         response.status = &#34;NOT_OK&#34;
 
@@ -1532,7 +1701,7 @@ defined in the <code>data_str</code> object.</p></div>
     token_start = False
     token_sep = False
 
-    token_type = &#34;ERROR&#34;
+    token_type = JSON_TYPE_INT
     token_str = &#34;&#34;
 
     for char in data_str.decode(&#34;ascii&#34;):
@@ -1551,19 +1720,22 @@ defined in the <code>data_str</code> object.</p></div>
                 # ... and if we are building a token, this should be the
                 # end of a string, so push it to the stack ...
                 if token_start:
-                    if token_type == &#34;STR&#34;:
+                    if token_type == JSON_TYPE_STR:
                         parse_stack.append(token_str)
 
                         token_start = False
                     else:
                         raise RESTParseError(&#34;Invalid string termination&#34;)
 
-                    token_end = True
+                    token_type = JSON_TYPE_INT
+                    token_sep = False
+                    token_start = False
+                    token_str = &#34;&#34;
 
                 # ... Otherwise if we are not building a token, set the
                 # type marker, and start building a new string
                 else:
-                    token_type = &#34;STR&#34;
+                    token_type = JSON_TYPE_STR
                     token_start = True
                     token_str = &#34;&#34;
 
@@ -1577,13 +1749,23 @@ defined in the <code>data_str</code> object.</p></div>
                 # Add the key/value to the return dictionary if
                 # it appears to be valid
                 if token_sep:
+
+                    if token_type == JSON_TYPE_INT:
+                        # The token won&#39;t have been terminated
+                        # so still should be in `token_str`
+                        #
+                        # NOTE: Technically an unterminated String
+                        #       is an error, so will parsing will
+                        #       break here (and we won&#39;t care)
+                        parse_stack.append(token_str)
+
                     value = parse_stack.pop()
                     key = parse_stack.pop()
 
-                    if token_type == &#34;STR&#34;:
+                    if token_type == JSON_TYPE_STR:
                         return_dictionary[key] = str(value)
 
-                    if token_type == &#34;INT&#34;:
+                    if token_type == JSON_TYPE_INT:
                         return_dictionary[key] = int(value)
 
                 # If this is the end of the object, then return ...
@@ -1592,12 +1774,14 @@ defined in the <code>data_str</code> object.</p></div>
 
                 # .. otherwise, cleanup and continue
                 else:
-                    token_type = &#34;ERROR&#34;
+                    token_type = JSON_TYPE_ERROR
                     token_sep = False
                     token_start = False
 
             # If this isn&#39;t anything interesting, assume it is part of a token
-            if object_start and ((char in ASCII_UPPERCASE) or (char in DIGITS)):
+            if object_start and (
+                (char in ASCII_UPPERCASE) or (char in ASCII_DIGITS)
+            ):
                 token_str = token_str + char
 
     return return_dictionary</code></pre>
@@ -1763,6 +1947,16 @@ method</a> of <code>asyncio.BaseTransport</code>.</p></div>
 <li><h3>Super-module</h3>
 <ul>
 <li><code><a title="urest.http" href="index.html">urest.http</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-variables">Global variables</a></h3>
+<ul class="two-column">
+<li><code><a title="urest.http.server.ASCII_DIGITS" href="#urest.http.server.ASCII_DIGITS">ASCII_DIGITS</a></code></li>
+<li><code><a title="urest.http.server.ASCII_EXTRA" href="#urest.http.server.ASCII_EXTRA">ASCII_EXTRA</a></code></li>
+<li><code><a title="urest.http.server.ASCII_UPPERCASE" href="#urest.http.server.ASCII_UPPERCASE">ASCII_UPPERCASE</a></code></li>
+<li><code><a title="urest.http.server.JSON_TYPE_ERROR" href="#urest.http.server.JSON_TYPE_ERROR">JSON_TYPE_ERROR</a></code></li>
+<li><code><a title="urest.http.server.JSON_TYPE_INT" href="#urest.http.server.JSON_TYPE_INT">JSON_TYPE_INT</a></code></li>
+<li><code><a title="urest.http.server.JSON_TYPE_STR" href="#urest.http.server.JSON_TYPE_STR">JSON_TYPE_STR</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-classes">Classes</a></h3>
