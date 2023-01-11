@@ -3,3 +3,8 @@
 
 # Python Virtal Environment
 .venv/
+
+# Temporary packaging files
+dist/
+urest.egg-info/
+urest_mp.egg-info/

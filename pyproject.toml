@@ -3,15 +3,14 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "urest"
-version = "0.0.1"
+name = "urest-mp"
+version = "0.1.0"
 authors = [
-  { name="Erik de Lange", email="author@github.com" },
   { name="David Love", email="david.love@leedsbeckett.ac.uk" },
 ]
-description = "An Embedded HTTP Server, Focused on REST-Style Requests"
+description = "An embedded HTTP server, focused on very small REST-style API's"
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3.4"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
@@ -19,6 +18,8 @@ classifiers = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/pypa/sampleproject"
-"Bug Tracker" = "https://github.com/pypa/sampleproject/issues"
+"Homepage" = "https://github.com/dlove24/urest"
+"Documentation" = "https://dlove24.github.io/urest/urest/index.html"
 
+[tool.setuptools]
+packages = ["api", "http", "examples"]
