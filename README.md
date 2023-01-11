@@ -17,6 +17,20 @@ Like the DSKY unit, it is assumed that all the 'objects' representing the states
 
 In all cases the body of the HTTP request is a simple collection of 'key: value' pairs, formatted as a [JSON](https://www.json.org/json-en.html) object. Only a sub-set of the JSON specification is used: in particular multiple objects are not allowed, and nor are arrays (i.e. '`[]`') of any sort. This both simplifies the parsing, and especially the memory required for the parser, and reinforces the intent to support only minimal API's.
 
+Installation
+------------
+
+A package of this library is provided on PyPi as [`urest-mp`](https://pypi.org/project/urest-mp/). This can be installed with the normal Python tools, and should also install to boards runnning MicroPython under [Thonny](https://thonny.org/).
+
+For manual installation, everything under the `urest` directory should be copied to the appropriate directory on the MicroPython board, usually `/lib`. The library can then be imported as normal, e.g.
+
+```python
+from urest.http import RESTServer
+from urest.api import APIBase
+```
+
+See the documentation for the [examples](https://dlove24.github.io/urest/urest/examples/index.html) for more detailed guidance on the use of the library. This code is also available in the `urest/examples` folder, or as the library `urest.examples` when the package is installed.
+
 Design
 ------
 
