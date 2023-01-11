@@ -409,7 +409,7 @@ class RESTServer:
 
             # DEBUG
             print(
-                f"CLIENT URI : [{writer.get_extra_info('peername')[0]}] {request_uri}"
+                f"CLIENT URI : [{writer.get_extra_info('peername')[0]}] {request_uri.strip()}"
             )
 
             # Get the header of the request, if it is available, decoded into UTF-8
@@ -437,7 +437,6 @@ class RESTServer:
 
             if "content-length" in request_header:
                 request_length = int(request_header["content-length"])
-                print(f"content_length: {request_length}")
 
                 # ... check if there is _really a body to follow ...
                 if request_length > 0:
@@ -449,7 +448,6 @@ class RESTServer:
                         request_data = await asyncio.wait_for(
                             reader.read(request_length), self.read_timeout
                         )
-                        print(request_data)
                         request_body = self.parse_data(request_data)
                     except Exception as e:
                         print(e)
