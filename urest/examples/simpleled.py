@@ -70,7 +70,7 @@ class SimpleLED(APIBase):
             else:
                 self._gpio.on()
 
-        except:
+        except KeyError:
             # On exception try to return to a known good
             # state
             self._gpio.off()

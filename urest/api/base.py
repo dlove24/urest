@@ -149,7 +149,7 @@ class APIBase:
             for key in state_attributes:
                 try:
                     self._state_attributes[key] = state_attributes[key]
-                except:
+                except KeyError:
                     self._state_attributes[key] = None
         else:
             self._state_attributes = []

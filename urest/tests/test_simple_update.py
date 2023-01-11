@@ -37,7 +37,7 @@ def test_requests_update_check():
 
     """
     r = requests.get(f"http://{ IP_ADDRESS }/green_led0")
-    assert True
+    assert r.status_code == requests.codes.ok
 
 
 def test_requests_update_init():

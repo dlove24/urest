@@ -207,7 +207,7 @@ class HTTPResponse:
 
         if "OK" in self._status:
             # First tell the client we accepted the request
-            writer.write(f"HTTP/1.1 200 OK\n")
+            writer.write("HTTP/1.1 200 OK\n")
 
             # Then we try to assemble the body
             if self._mimetype is not None:
@@ -216,21 +216,21 @@ class HTTPResponse:
         elif "NOT_OK" in self._status:
             # Tell the client we think we can route it: but the request
             # makes no sense
-            writer.write(f"HTTP/1.1 400 Bad Request\n")
+            writer.write("HTTP/1.1 400 Bad Request\n")
 
         elif "NOT_FOUND" in self._status:
             # Tell the client we can't route their request
-            writer.write(f"HTTP/1.1 404 Not Found\n")
+            writer.write("HTTP/1.1 404 Not Found\n")
 
         else:
             # This _really_ shouldn't be here. Assume an internal error
-            writer.write(f"HTTP/1.1 500 Internal Server Error\n")
+            writer.write("HTTP/1.1 500 Internal Server Error\n")
 
         # Send the body length
         writer.write(f"Content-Length: {len(self._body)}\n")
 
         # Send the body content type
-        writer.write(f"Content-Type: text/html\n")
+        writer.write("Content-Type: text/html\n")
 
         # Send any other header fields
         if len(self._header) > 0:

@@ -341,7 +341,6 @@ class RESTServer:
         """
 
         old_handler = None
-        print("Register!")
 
         try:
 
@@ -351,7 +350,7 @@ class RESTServer:
             if isinstance(noun, str) and isinstance(handler, APIBase):
                 self._nouns[noun.lower()] = handler
 
-        except:
+        except KeyError:
             if old_handler is not None:
                 self._nouns[noun] = old_handler
 
@@ -417,7 +416,7 @@ class RESTServer:
             request_header = {}
             request_line = None
 
-            while not request_line in [b"", b"\r\n"]:
+            while request_line not in [b"", b"\r\n"]:
                 request_line = await asyncio.wait_for(
                     reader.readline(), self.read_timeout
                 )
