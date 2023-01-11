@@ -129,7 +129,7 @@ class SimpleLED(APIBase):
             else:
                 self._gpio.on()
 
-        except:
+        except KeyError:
             # On exception try to return to a known good
             # state
             self._gpio.off()
@@ -207,7 +207,7 @@ responsibility to ensure the returned data follows the form expected by those cl
             else:
                 self._gpio.on()
 
-        except:
+        except KeyError:
             # On exception try to return to a known good
             # state
             self._gpio.off()

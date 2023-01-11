@@ -403,7 +403,6 @@ class RESTServer:
         &#34;&#34;&#34;
 
         old_handler = None
-        print(&#34;Register!&#34;)
 
         try:
 
@@ -413,7 +412,7 @@ class RESTServer:
             if isinstance(noun, str) and isinstance(handler, APIBase):
                 self._nouns[noun.lower()] = handler
 
-        except:
+        except KeyError:
             if old_handler is not None:
                 self._nouns[noun] = old_handler
 
@@ -479,7 +478,7 @@ class RESTServer:
             request_header = {}
             request_line = None
 
-            while not request_line in [b&#34;&#34;, b&#34;\r\n&#34;]:
+            while request_line not in [b&#34;&#34;, b&#34;\r\n&#34;]:
                 request_line = await asyncio.wait_for(
                     reader.readline(), self.read_timeout
                 )
@@ -1077,7 +1076,6 @@ client, before declaring failure.</p>
         &#34;&#34;&#34;
 
         old_handler = None
-        print(&#34;Register!&#34;)
 
         try:
 
@@ -1087,7 +1085,7 @@ client, before declaring failure.</p>
             if isinstance(noun, str) and isinstance(handler, APIBase):
                 self._nouns[noun.lower()] = handler
 
-        except:
+        except KeyError:
             if old_handler is not None:
                 self._nouns[noun] = old_handler
 
@@ -1153,7 +1151,7 @@ client, before declaring failure.</p>
             request_header = {}
             request_line = None
 
-            while not request_line in [b&#34;&#34;, b&#34;\r\n&#34;]:
+            while request_line not in [b&#34;&#34;, b&#34;\r\n&#34;]:
                 request_line = await asyncio.wait_for(
                     reader.readline(), self.read_timeout
                 )
@@ -1458,7 +1456,7 @@ streamwriter">asyncio.StreamWriter</a>.</dd>
         request_header = {}
         request_line = None
 
-        while not request_line in [b&#34;&#34;, b&#34;\r\n&#34;]:
+        while request_line not in [b&#34;&#34;, b&#34;\r\n&#34;]:
             request_line = await asyncio.wait_for(
                 reader.readline(), self.read_timeout
             )
@@ -1818,7 +1816,6 @@ defined in the <code>data_str</code> object.</p></div>
     &#34;&#34;&#34;
 
     old_handler = None
-    print(&#34;Register!&#34;)
 
     try:
 
@@ -1828,7 +1825,7 @@ defined in the <code>data_str</code> object.</p></div>
         if isinstance(noun, str) and isinstance(handler, APIBase):
             self._nouns[noun.lower()] = handler
 
-    except:
+    except KeyError:
         if old_handler is not None:
             self._nouns[noun] = old_handler</code></pre>
 </details>

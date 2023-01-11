@@ -67,7 +67,7 @@ def test_requests_set_check():
 
     &#34;&#34;&#34;
     r = requests.get(f&#34;http://{ IP_ADDRESS }/green_led0&#34;)
-    assert True
+    assert r.status_code == requests.codes.ok
 
 
 def test_requests_set_on():
@@ -224,7 +224,7 @@ test preconditions if this test fails and before investigating further.</p>
 
     &#34;&#34;&#34;
     r = requests.get(f&#34;http://{ IP_ADDRESS }/green_led0&#34;)
-    assert True</code></pre>
+    assert r.status_code == requests.codes.ok</code></pre>
 </details>
 </dd>
 <dt id="urest.tests.test_simple_set.test_requests_set_off"><code class="name flex">

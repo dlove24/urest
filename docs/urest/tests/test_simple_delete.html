@@ -67,7 +67,7 @@ def test_requests_delete_check():
 
     &#34;&#34;&#34;
     r = requests.get(f&#34;http://{ IP_ADDRESS }/green_led0&#34;)
-    assert True
+    assert r.status_code == requests.codes.ok
 
 
 def test_requests_init_delete():
@@ -244,7 +244,7 @@ test preconditions if this test fails and before investigating further.</p>
 
     &#34;&#34;&#34;
     r = requests.get(f&#34;http://{ IP_ADDRESS }/green_led0&#34;)
-    assert True</code></pre>
+    assert r.status_code == requests.codes.ok</code></pre>
 </details>
 </dd>
 <dt id="urest.tests.test_simple_delete.test_requests_init_delete"><code class="name flex">
