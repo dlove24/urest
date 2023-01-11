@@ -73,6 +73,37 @@ sub-set of the JSON specification is used: in particular multiple objects are
 not allowed, and nor are arrays (i.e. '<code>[]</code>') of any sort. This both simplifies
 the parsing, and especially the memory required for the parser, and reinforces
 the intent to support only minimal API's.</p>
+<h2 id="installation">Installation</h2>
+<p>A package of this library is provided on PyPi as
+<a href="https://pypi.org/project/urest-mp/"><code>urest-mp</code></a>. This can be installed with the
+normal Python tools, and should also install to boards runnning MicroPython
+under <a href="https://thonny.org/">Thonny</a>.</p>
+<p>For manual installation, everything under the <code><a title="urest" href="#urest">urest</a></code> directory should be copied
+to the appropriate directory on the MicroPython board, usually <code>/lib</code>. The
+library can then be imported as normal, e.g.</p>
+<p><code>python from urest.http import RESTServer from urest.api import APIBase</code></p>
+<p>See the documentation for the
+<a href="https://dlove24.github.io/urest/urest/examples/index.html">examples</a> for more
+detailed guidance on the use of the library. This code is also available in the
+<code>urest/examples</code> folder, or as the library <code>urest.examples</code> when the package is
+installed.</p>
+<h2 id="debugging">Debugging</h2>
+<p>Console output from the <code>urest.http.server.RESTServer</code> is controlled by the
+standard <code>__debug__</code> flag. By default no output will be sent to the 'console'
+<em>unless</em> the <code>__debug__</code> flag is <code>True</code>.</p>
+<p><strong>Note:</strong> that in the standard Python environments the status of the <code>__debug__</code>
+flag is often controlled by the optimisation level of the interpreter: see the
+standard <a href="https://docs.python.org/3/using/cmdline.html#cmdoption-O">Python
+documentation</a> for
+more details. For MicroPython the status of the <code>__debug__</code> flag is set by
+<a href="https://docs.micropython.org/en/latest/library/micropython.html#
+micropython.opt_level">internal
+constants</a>. However if the <code>__debug__</code> constant is set whilst a
+programming is running the <a href="https://forum.micropython.org/viewtopic.php?t=6839">results may be
+unexpected</a>, due to
+optimisations undertaken by the MicroPython lexer. Instead for MicroPython set
+the status of the <code>__debug__</code> flag in the platform standard <code>boot.py</code> or
+similar: see the documentation for the specific port for more details.</p>
 <h2 id="design">Design</h2>
 <p>The core of the library is a simple HTTP server, specialised to the delivery of
 a REST-like API instead of a general HTTP server. The design, and the use of the
@@ -80,7 +111,7 @@ a REST-like API instead of a general HTTP server. The design, and the use of the
 Server</a> by Erik de
 Lange. This library uses a roughly similar structure for the core of the
 <code>asyncio</code> event loop, and especially in the design of the
-<code><a title="urest.http.server.RESTServer" href="http/server.html#urest.http.server.RESTServer">RESTServer</a></code> class.</p>
+<code>urest.http.server.RESTServer</code> class.</p>
 <p>Key differences include</p>
 <ul>
 <li>
@@ -92,7 +123,7 @@ allowed on the 'nouns' by the API built on-top of this library.</p>
 <p>A more object-oriented design of the call/response handler, made easier this
 library is <em>not</em> a general HTTP server. For instance Python <code>getters</code> and
 <code>setters</code> are used where possible for input validation, and the central API
-response is based on the <code><a title="urest.api.base.APIBase" href="api/base.html#urest.api.base.APIBase">APIBase</a></code> abstract base class</p>
+response is based on the <code>urest.api.base.APIBase</code> abstract base class</p>
 </li>
 <li>
 <p>A more explicit validation of input from the network layer, especially in
@@ -214,6 +245,47 @@ sub-set of the JSON specification is used: in particular multiple objects are
 not allowed, and nor are arrays (i.e. &#39;`[]`&#39;) of any sort. This both simplifies
 the parsing, and especially the memory required for the parser, and reinforces
 the intent to support only minimal API&#39;s.
+
+Installation
+------------
+
+A package of this library is provided on PyPi as
+[`urest-mp`](https://pypi.org/project/urest-mp/). This can be installed with the
+normal Python tools, and should also install to boards runnning MicroPython
+under [Thonny](https://thonny.org/).
+
+For manual installation, everything under the `urest` directory should be copied
+to the appropriate directory on the MicroPython board, usually `/lib`. The
+library can then be imported as normal, e.g.
+
+```python from urest.http import RESTServer from urest.api import APIBase ```
+
+See the documentation for the
+[examples](https://dlove24.github.io/urest/urest/examples/index.html) for more
+detailed guidance on the use of the library. This code is also available in the
+`urest/examples` folder, or as the library `urest.examples` when the package is
+installed.
+
+Debugging
+---------
+
+Console output from the `urest.http.server.RESTServer` is controlled by the
+standard `__debug__` flag. By default no output will be sent to the &#39;console&#39;
+_unless_ the `__debug__` flag is `True`.
+
+**Note:** that in the standard Python environments the status of the `__debug__`
+flag is often controlled by the optimisation level of the interpreter: see the
+standard [Python
+documentation](https://docs.python.org/3/using/cmdline.html#cmdoption-O) for
+more details. For MicroPython the status of the `__debug__` flag is set by
+[internal
+constants](https://docs.micropython.org/en/latest/library/micropython.html#
+micropython.opt_level). However if the `__debug__` constant is set whilst a
+programming is running the [results may be
+unexpected](https://forum.micropython.org/viewtopic.php?t=6839), due to
+optimisations undertaken by the MicroPython lexer. Instead for MicroPython set
+the status of the `__debug__` flag in the platform standard `boot.py` or
+similar: see the documentation for the specific port for more details.
 
 Design
 ------
@@ -375,6 +447,8 @@ for reuse in more complete applications …</p></div>
 <div class="toc">
 <ul>
 <li><a href="#background">Background</a></li>
+<li><a href="#installation">Installation</a></li>
+<li><a href="#debugging">Debugging</a></li>
 <li><a href="#design">Design</a></li>
 <li><a href="#example">Example</a><ul>
 <li><a href="#creating-the-application-main-loop">Creating the Application main loop</a></li>

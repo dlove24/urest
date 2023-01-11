@@ -31,6 +31,47 @@ not allowed, and nor are arrays (i.e. '`[]`') of any sort. This both simplifies
 the parsing, and especially the memory required for the parser, and reinforces
 the intent to support only minimal API's.
 
+Installation
+------------
+
+A package of this library is provided on PyPi as
+[`urest-mp`](https://pypi.org/project/urest-mp/). This can be installed with the
+normal Python tools, and should also install to boards runnning MicroPython
+under [Thonny](https://thonny.org/).
+
+For manual installation, everything under the `urest` directory should be copied
+to the appropriate directory on the MicroPython board, usually `/lib`. The
+library can then be imported as normal, e.g.
+
+```python from urest.http import RESTServer from urest.api import APIBase ```
+
+See the documentation for the
+[examples](https://dlove24.github.io/urest/urest/examples/index.html) for more
+detailed guidance on the use of the library. This code is also available in the
+`urest/examples` folder, or as the library `urest.examples` when the package is
+installed.
+
+Debugging
+---------
+
+Console output from the `urest.http.server.RESTServer` is controlled by the
+standard `__debug__` flag. By default no output will be sent to the 'console'
+_unless_ the `__debug__` flag is `True`.
+
+**Note:** that in the standard Python environments the status of the `__debug__`
+flag is often controlled by the optimisation level of the interpreter: see the
+standard [Python
+documentation](https://docs.python.org/3/using/cmdline.html#cmdoption-O) for
+more details. For MicroPython the status of the `__debug__` flag is set by
+[internal
+constants](https://docs.micropython.org/en/latest/library/micropython.html#
+micropython.opt_level). However if the `__debug__` constant is set whilst a
+programming is running the [results may be
+unexpected](https://forum.micropython.org/viewtopic.php?t=6839), due to
+optimisations undertaken by the MicroPython lexer. Instead for MicroPython set
+the status of the `__debug__` flag in the platform standard `boot.py` or
+similar: see the documentation for the specific port for more details.
+
 Design
 ------
 

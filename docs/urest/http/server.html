@@ -464,15 +464,17 @@ class RESTServer:
             # Check for empty requests, and if found terminate the connection
             if request_uri in [b&#34;&#34;, b&#34;\r\n&#34;]:
                 # DEBUG
-                print(
-                    f&#34;CLIENT: [{writer.get_extra_info(&#39;peername&#39;)[0]}] Empty request line&#34;
-                )
-                return
+                if __debug__:
+                    print(
+                        f&#34;CLIENT: [{writer.get_extra_info(&#39;peername&#39;)[0]}] Empty request line&#34;
+                    )
+                    return
 
             # DEBUG
-            print(
-                f&#34;CLIENT URI : [{writer.get_extra_info(&#39;peername&#39;)[0]}] {request_uri.strip()}&#34;
-            )
+            if __debug__:
+                print(
+                    f&#34;CLIENT URI : [{writer.get_extra_info(&#39;peername&#39;)[0]}] {request_uri.strip()}&#34;
+                )
 
             # Get the header of the request, if it is available, decoded into UTF-8
             request_header = {}
@@ -490,9 +492,10 @@ class RESTServer:
                     ).strip()
 
             # DEBUG
-            print(
-                f&#34;CLIENT HEAD: [{writer.get_extra_info(&#39;peername&#39;)[0]}] {request_header}&#34;
-            )
+            if __debug__:
+                print(
+                    f&#34;CLIENT HEAD: [{writer.get_extra_info(&#39;peername&#39;)[0]}] {request_header}&#34;
+                )
 
             # Check if there is a body to follow the header ...
             request_body = {}
@@ -512,17 +515,21 @@ class RESTServer:
                         )
                         request_body = self.parse_data(request_data)
                     except Exception as e:
-                        print(e)
+                        # DEBUG
+                        if __debug__:
+                            print(f&#34;!EXCEPTION!: {e}&#34;)
                         request_body = {}
 
                 # DEBUG
-                print(
-                    f&#34;CLIENT BODY: [{writer.get_extra_info(&#39;peername&#39;)[0]}] {request_body}&#34;
-                )
+                if __debug__:
+                    print(
+                        f&#34;CLIENT BODY: [{writer.get_extra_info(&#39;peername&#39;)[0]}] {request_body}&#34;
+                    )
 
             else:
                 # DEBUG
-                print(&#34;CLIENT BODY: NONE&#34;)
+                if __debug__:
+                    print(&#34;CLIENT BODY: NONE&#34;)
 
             ## NOTE: Below is a somewhat long-winded approach to working out
             ##       the verb is based on the longest assumed verb:
@@ -621,7 +628,9 @@ class RESTServer:
             else:
                 raise e
 
-            print(f&#34;!EXCEPTION!: {e}&#34;)
+            # DEBUG
+            if __debug__:
+                print(f&#34;!EXCEPTION!: {e}&#34;)
 
             response.body = &#34;&lt;http&gt;&lt;body&gt;&lt;p&gt;Invalid Request&lt;/p&gt;&lt;/body&gt;&lt;/http&gt;&#34;
             response.status = &#34;NOT_OK&#34;
@@ -660,7 +669,10 @@ class RESTServer:
         set the client (downstream) timeout.
         &#34;&#34;&#34;
 
-        print(f&#34;SERVER: Started on {self.host}:{self.port}&#34;)
+        # DEBUG
+        if __debug__:
+            print(f&#34;SERVER: Started on {self.host}:{self.port}&#34;)
+
         self._server = await asyncio.start_server(
             self.dispatch_noun, self.host, self.port, self.backlog
         )
@@ -678,9 +690,14 @@ class RESTServer:
             self._server.close()
             await self._server.wait_closed()
             self._server = None
-            print(&#34;SERVER: Stopped&#34;)
+
+            # DEBUG
+            if __debug__:
+                print(&#34;SERVER: Stopped&#34;)
         else:
-            print(&#34;SERVER: Not started&#34;)</code></pre>
+            # DEBUG
+            if __debug__:
+                print(&#34;SERVER: Not started&#34;)</code></pre>
 </details>
 </section>
 <section>
@@ -1135,15 +1152,17 @@ client, before declaring failure.</p>
             # Check for empty requests, and if found terminate the connection
             if request_uri in [b&#34;&#34;, b&#34;\r\n&#34;]:
                 # DEBUG
-                print(
-                    f&#34;CLIENT: [{writer.get_extra_info(&#39;peername&#39;)[0]}] Empty request line&#34;
-                )
-                return
+                if __debug__:
+                    print(
+                        f&#34;CLIENT: [{writer.get_extra_info(&#39;peername&#39;)[0]}] Empty request line&#34;
+                    )
+                    return
 
             # DEBUG
-            print(
-                f&#34;CLIENT URI : [{writer.get_extra_info(&#39;peername&#39;)[0]}] {request_uri.strip()}&#34;
-            )
+            if __debug__:
+                print(
+                    f&#34;CLIENT URI : [{writer.get_extra_info(&#39;peername&#39;)[0]}] {request_uri.strip()}&#34;
+                )
 
             # Get the header of the request, if it is available, decoded into UTF-8
             request_header = {}
@@ -1161,9 +1180,10 @@ client, before declaring failure.</p>
                     ).strip()
 
             # DEBUG
-            print(
-                f&#34;CLIENT HEAD: [{writer.get_extra_info(&#39;peername&#39;)[0]}] {request_header}&#34;
-            )
+            if __debug__:
+                print(
+                    f&#34;CLIENT HEAD: [{writer.get_extra_info(&#39;peername&#39;)[0]}] {request_header}&#34;
+                )
 
             # Check if there is a body to follow the header ...
             request_body = {}
@@ -1183,17 +1203,21 @@ client, before declaring failure.</p>
                         )
                         request_body = self.parse_data(request_data)
                     except Exception as e:
-                        print(e)
+                        # DEBUG
+                        if __debug__:
+                            print(f&#34;!EXCEPTION!: {e}&#34;)
                         request_body = {}
 
                 # DEBUG
-                print(
-                    f&#34;CLIENT BODY: [{writer.get_extra_info(&#39;peername&#39;)[0]}] {request_body}&#34;
-                )
+                if __debug__:
+                    print(
+                        f&#34;CLIENT BODY: [{writer.get_extra_info(&#39;peername&#39;)[0]}] {request_body}&#34;
+                    )
 
             else:
                 # DEBUG
-                print(&#34;CLIENT BODY: NONE&#34;)
+                if __debug__:
+                    print(&#34;CLIENT BODY: NONE&#34;)
 
             ## NOTE: Below is a somewhat long-winded approach to working out
             ##       the verb is based on the longest assumed verb:
@@ -1292,7 +1316,9 @@ client, before declaring failure.</p>
             else:
                 raise e
 
-            print(f&#34;!EXCEPTION!: {e}&#34;)
+            # DEBUG
+            if __debug__:
+                print(f&#34;!EXCEPTION!: {e}&#34;)
 
             response.body = &#34;&lt;http&gt;&lt;body&gt;&lt;p&gt;Invalid Request&lt;/p&gt;&lt;/body&gt;&lt;/http&gt;&#34;
             response.status = &#34;NOT_OK&#34;
@@ -1331,7 +1357,10 @@ client, before declaring failure.</p>
         set the client (downstream) timeout.
         &#34;&#34;&#34;
 
-        print(f&#34;SERVER: Started on {self.host}:{self.port}&#34;)
+        # DEBUG
+        if __debug__:
+            print(f&#34;SERVER: Started on {self.host}:{self.port}&#34;)
+
         self._server = await asyncio.start_server(
             self.dispatch_noun, self.host, self.port, self.backlog
         )
@@ -1349,9 +1378,14 @@ client, before declaring failure.</p>
             self._server.close()
             await self._server.wait_closed()
             self._server = None
-            print(&#34;SERVER: Stopped&#34;)
+
+            # DEBUG
+            if __debug__:
+                print(&#34;SERVER: Stopped&#34;)
         else:
-            print(&#34;SERVER: Not started&#34;)</code></pre>
+            # DEBUG
+            if __debug__:
+                print(&#34;SERVER: Not started&#34;)</code></pre>
 </details>
 <h3>Methods</h3>
 <dl>
@@ -1438,15 +1472,17 @@ streamwriter">asyncio.StreamWriter</a>.</dd>
         # Check for empty requests, and if found terminate the connection
         if request_uri in [b&#34;&#34;, b&#34;\r\n&#34;]:
             # DEBUG
-            print(
-                f&#34;CLIENT: [{writer.get_extra_info(&#39;peername&#39;)[0]}] Empty request line&#34;
-            )
-            return
+            if __debug__:
+                print(
+                    f&#34;CLIENT: [{writer.get_extra_info(&#39;peername&#39;)[0]}] Empty request line&#34;
+                )
+                return
 
         # DEBUG
-        print(
-            f&#34;CLIENT URI : [{writer.get_extra_info(&#39;peername&#39;)[0]}] {request_uri.strip()}&#34;
-        )
+        if __debug__:
+            print(
+                f&#34;CLIENT URI : [{writer.get_extra_info(&#39;peername&#39;)[0]}] {request_uri.strip()}&#34;
+            )
 
         # Get the header of the request, if it is available, decoded into UTF-8
         request_header = {}
@@ -1464,9 +1500,10 @@ streamwriter">asyncio.StreamWriter</a>.</dd>
                 ).strip()
 
         # DEBUG
-        print(
-            f&#34;CLIENT HEAD: [{writer.get_extra_info(&#39;peername&#39;)[0]}] {request_header}&#34;
-        )
+        if __debug__:
+            print(
+                f&#34;CLIENT HEAD: [{writer.get_extra_info(&#39;peername&#39;)[0]}] {request_header}&#34;
+            )
 
         # Check if there is a body to follow the header ...
         request_body = {}
@@ -1486,17 +1523,21 @@ streamwriter">asyncio.StreamWriter</a>.</dd>
                     )
                     request_body = self.parse_data(request_data)
                 except Exception as e:
-                    print(e)
+                    # DEBUG
+                    if __debug__:
+                        print(f&#34;!EXCEPTION!: {e}&#34;)
                     request_body = {}
 
             # DEBUG
-            print(
-                f&#34;CLIENT BODY: [{writer.get_extra_info(&#39;peername&#39;)[0]}] {request_body}&#34;
-            )
+            if __debug__:
+                print(
+                    f&#34;CLIENT BODY: [{writer.get_extra_info(&#39;peername&#39;)[0]}] {request_body}&#34;
+                )
 
         else:
             # DEBUG
-            print(&#34;CLIENT BODY: NONE&#34;)
+            if __debug__:
+                print(&#34;CLIENT BODY: NONE&#34;)
 
         ## NOTE: Below is a somewhat long-winded approach to working out
         ##       the verb is based on the longest assumed verb:
@@ -1595,7 +1636,9 @@ streamwriter">asyncio.StreamWriter</a>.</dd>
         else:
             raise e
 
-        print(f&#34;!EXCEPTION!: {e}&#34;)
+        # DEBUG
+        if __debug__:
+            print(f&#34;!EXCEPTION!: {e}&#34;)
 
         response.body = &#34;&lt;http&gt;&lt;body&gt;&lt;p&gt;Invalid Request&lt;/p&gt;&lt;/body&gt;&lt;/http&gt;&#34;
         response.status = &#34;NOT_OK&#34;
@@ -1865,7 +1908,10 @@ set the client (downstream) timeout.</p></div>
     set the client (downstream) timeout.
     &#34;&#34;&#34;
 
-    print(f&#34;SERVER: Started on {self.host}:{self.port}&#34;)
+    # DEBUG
+    if __debug__:
+        print(f&#34;SERVER: Started on {self.host}:{self.port}&#34;)
+
     self._server = await asyncio.start_server(
         self.dispatch_noun, self.host, self.port, self.backlog
     )</code></pre>
@@ -1897,9 +1943,14 @@ method</a> of <code>asyncio.BaseTransport</code>.</p></div>
         self._server.close()
         await self._server.wait_closed()
         self._server = None
-        print(&#34;SERVER: Stopped&#34;)
+
+        # DEBUG
+        if __debug__:
+            print(&#34;SERVER: Stopped&#34;)
     else:
-        print(&#34;SERVER: Not started&#34;)</code></pre>
+        # DEBUG
+        if __debug__:
+            print(&#34;SERVER: Not started&#34;)</code></pre>
 </details>
 </dd>
 </dl>
