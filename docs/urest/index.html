@@ -93,15 +93,12 @@ standard <code>__debug__</code> flag. By default no output will be sent to the '
 <em>unless</em> the <code>__debug__</code> flag is <code>True</code>.</p>
 <p><strong>Note:</strong> that in the standard Python environments the status of the <code>__debug__</code>
 flag is often controlled by the optimisation level of the interpreter: see the
-standard <a href="https://docs.python.org/3/using/cmdline.html#cmdoption-O">Python
-documentation</a> for
-more details. For MicroPython the status of the <code>__debug__</code> flag is set by
-<a href="https://docs.micropython.org/en/latest/library/micropython.html#
-micropython.opt_level">internal
-constants</a>. However if the <code>__debug__</code> constant is set whilst a
-programming is running the <a href="https://forum.micropython.org/viewtopic.php?t=6839">results may be
-unexpected</a>, due to
-optimisations undertaken by the MicroPython lexer. Instead for MicroPython set
+standard <a href="https://docs.python.org/3/using/cmdline.html#cmdoption-O">Python documentation</a>
+for more details. For MicroPython the status of the <code>__debug__</code> flag is set by
+<a href="https://docs.micropython.org/en/latest/library/micropython.html#micropython.opt_level">internal constants</a>.
+However if the <code>__debug__</code> constant is set whilst a programming is running the
+<a href="https://forum.micropython.org/viewtopic.php?t=6839">results may be unexpected</a>,
+due to optimisations undertaken by the MicroPython lexer. Instead for MicroPython set
 the status of the <code>__debug__</code> flag in the platform standard <code>boot.py</code> or
 similar: see the documentation for the specific port for more details.</p>
 <h2 id="design">Design</h2>
@@ -275,15 +272,12 @@ _unless_ the `__debug__` flag is `True`.
 
 **Note:** that in the standard Python environments the status of the `__debug__`
 flag is often controlled by the optimisation level of the interpreter: see the
-standard [Python
-documentation](https://docs.python.org/3/using/cmdline.html#cmdoption-O) for
-more details. For MicroPython the status of the `__debug__` flag is set by
-[internal
-constants](https://docs.micropython.org/en/latest/library/micropython.html#
-micropython.opt_level). However if the `__debug__` constant is set whilst a
-programming is running the [results may be
-unexpected](https://forum.micropython.org/viewtopic.php?t=6839), due to
-optimisations undertaken by the MicroPython lexer. Instead for MicroPython set
+standard [Python documentation](https://docs.python.org/3/using/cmdline.html#cmdoption-O)
+for more details. For MicroPython the status of the `__debug__` flag is set by
+[internal constants](https://docs.micropython.org/en/latest/library/micropython.html#micropython.opt_level).
+However if the `__debug__` constant is set whilst a programming is running the
+[results may be unexpected](https://forum.micropython.org/viewtopic.php?t=6839),
+due to optimisations undertaken by the MicroPython lexer. Instead for MicroPython set
 the status of the `__debug__` flag in the platform standard `boot.py` or
 similar: see the documentation for the specific port for more details.
 
