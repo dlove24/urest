@@ -33,7 +33,7 @@ def test_requests_delete_check():
 
       * Check that `IP_ADDRESS` is correct
       * Check the `urest.examples.simpleled.SimpleLED` is running
-      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun('led', SimpleLED(28))` has been made
+      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun("green_led0", SimpleLED(1))` has been made
 
     """
     r = requests.get(f"http://{ IP_ADDRESS }/green_led0")
@@ -45,18 +45,18 @@ def test_requests_init_delete():
     Test
     ----
 
-    Attempt to set the noun 'led' to `1`, to allow checking of the next
+    Attempt to set the noun `green_led0` to `1`, to allow checking of the next
     `DELETE` request
 
     Expectation
     -----------
 
-    **Pass**: The noun `led` has the value `1`
+    **Pass**: The noun `green_led0` processes the request with a HTTP return code of 200, indicating success
 
     On-Failure
     ----------
 
-      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun('led', SimpleLED(28))` has been made
+      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun("green_led0", SimpleLED(1))` has been made
 
     """
     state = {"led": 1}
@@ -71,7 +71,7 @@ def test_requests_try_delete():
 
     Attempt to reset the server back to the known (default) state. This is
     achieved by sending an HTTP `DELETE` method request to the server to return the
-    `led` noun to the default state.
+    `green_led0` noun to the default state.
 
     Expectation
     -----------
@@ -81,7 +81,7 @@ def test_requests_try_delete():
     On-Failure
     ----------
 
-      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun('led', SimpleLED(28))` has been made
+      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun("green_led0", SimpleLED(1))` has been made
       * Check that the call to `test_requests_init_delete()` was successful
 
     """
@@ -99,12 +99,12 @@ def test_requests_check_delete():
     Expectation
     -----------
 
-    **Pass**: The noun `led` has the value `0`, indicating a return to the default state
+    **Pass**: The noun `green_led0` has the value `led: 0`, indicating a return to the default state
 
     On-Failure
     ----------
 
-      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun('led', SimpleLED(28))` has been made
+      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun("green_led0", SimpleLED(1))` has been made
       * Check the results of the `test_requests_init_delete()` method, to ensure the noun was initialised correctly
 
     """

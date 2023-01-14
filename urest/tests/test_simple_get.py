@@ -33,7 +33,7 @@ def test_requests_get_check():
 
       * Check that `IP_ADDRESS` is correct
       * Check the `urest.examples.simpleled.SimpleLED` is running
-      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun('led', SimpleLED(28))` has been made
+      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun("green_led0", SimpleLED(1))` has been made
 
     """
     r = requests.get(f"http://{ IP_ADDRESS }/green_led0")
@@ -46,7 +46,7 @@ def test_requests_get_setup():
     ----
 
     Ensures the test server is in the known (default) state required for further tests. This is achieved by sending an HTTP `DELETE` method request to the
-    server to return the `led` noun to the default state.
+    server to return the `green_led0` noun to the default state.
 
     .. NOTE::
 
@@ -60,7 +60,7 @@ def test_requests_get_setup():
     On-Failure
     ----------
 
-      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun('led', SimpleLED(28))` has been made
+      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun("green_led0", SimpleLED(1))` has been made
 
     """
     r = requests.delete(f"http://{ IP_ADDRESS }/green_led0")
@@ -77,12 +77,12 @@ def test_requests_get_data():
     Expectation
     -----------
 
-    **Pass**: The noun `led` has the value `0`, indicating a return to the default state
+    **Pass**: The noun `green_led0` has the value `led: 0`, indicating a return to the default state
 
     On-Failure
     ----------
 
-      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun('led', SimpleLED(28))` has been made
+      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun("green_led0", SimpleLED(1))` has been made
       * Check the results of the `test_requests_get_setup()` method, to ensure the noun was initialised correctly
 
     """
@@ -95,17 +95,17 @@ def test_requests_get_data_upper():
     Test
     ----
 
-    Check the name `LED` for the name of the noun is identical to `led`: i.e. that the server handles upper case nouns correctly
+    Check the name `LED` for the name of the noun is identical to `green_led0`: i.e. that the server handles upper case nouns correctly
 
     Expectation
     -----------
 
-    **Pass**: The noun has the canonical name `led` with the value `0`, indicating a return to the default state
+    **Pass**: The noun has the canonical name `green_led0` with the value `led: 0`, indicating a return to the default state
 
     On-Failure
     ----------
 
-      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun('led', SimpleLED(28))` has been made
+      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun("green_led0", SimpleLED(1))` has been made
       * Check the results of the `test_requests_get_data()` method, to ensure the canonical name of the noun is being processed correctly
 
     """
@@ -119,17 +119,17 @@ def test_requests_get_data_mixed():
     Test
     ----
 
-    Check the name `LeD` for the name of the noun is identical to `led`: i.e. that the server handles mixed case correctly
+    Check the name `LeD` for the name of the noun is identical to `green_led0`: i.e. that the server handles mixed case correctly
 
     Expectation
     -----------
 
-    **Pass**: The noun has the canonical name `led` with the value `0`, indicating a return to the default state
+    **Pass**: The noun has the canonical name `green_led0` with the value `led: 0`, indicating a return to the default state
 
     On-Failure
     ----------
 
-      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun('led', SimpleLED(28))` has been made
+      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun("green_led0", SimpleLED(1))` has been made
       * Check the results of the `test_requests_get_data()` method, to ensure the canonical name of the noun is being processed correctly
 
     """

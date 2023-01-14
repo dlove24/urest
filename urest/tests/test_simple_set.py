@@ -55,7 +55,7 @@ def test_requests_set_on():
     On-Failure
     ----------
 
-      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun('led', SimpleLED(28))` has been made
+      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun("green_led0", SimpleLED(1))` has been made
 
     """
     state = {"led": 1}
@@ -73,7 +73,7 @@ def test_requests_set_on_check():
     Expectation
     -----------
 
-    **Pass**: The noun `led` has the value `1`, the previous `test_requests_set_on()` method succeeded
+    **Pass**: The noun `green_led0` has the value `led: 1`, the previous `test_requests_set_on()` method succeeded
 
     On-Failure
     ----------
@@ -91,7 +91,7 @@ def test_requests_set_off():
     Test
     ----
 
-    Attempt to set the noun 'led' to `0`
+    Attempt to set the noun `green_led0` to `0`
 
     Expectation
     -----------
@@ -101,7 +101,7 @@ def test_requests_set_off():
     On-Failure
     ----------
 
-      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun('led', SimpleLED(28))` has been made
+      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun("green_led0", SimpleLED(1))` has been made
 
     """
     state = {"led": 0}
@@ -119,12 +119,12 @@ def test_requests_set_off_check():
     Expectation
     -----------
 
-    **Pass**: The noun `led` has the value `0`, the previous `test_requests_set_off()` method succeeded
+    **Pass**: The noun `green_led0` has the value `led: 0`, the previous `test_requests_set_off()` method succeeded
 
     On-Failure
     ----------
 
-      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun('led', SimpleLED(28))` has been made
+      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun("green_led0", SimpleLED(1))` has been made
       * Check the results of the `test_requests_set_off()` method, to ensure the noun was initialised correctly
 
     """

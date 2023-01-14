@@ -63,7 +63,7 @@ def test_requests_update_check():
 
       * Check that `IP_ADDRESS` is correct
       * Check the `urest.examples.simpleled.SimpleLED` is running
-      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun(&#39;led&#39;, SimpleLED(28))` has been made
+      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun(&#34;green_led0&#34;, SimpleLED(1))` has been made
 
     &#34;&#34;&#34;
     r = requests.get(f&#34;http://{ IP_ADDRESS }/green_led0&#34;)
@@ -77,7 +77,7 @@ def test_requests_update_init():
 
     Attempt to reset the server back to the known (default) state. This is
     achieved by sending an HTTP `DELETE` method request to the server to return the
-    `led` noun to the default state.
+    `green_led0` noun to the default state.
 
     Expectation
     -----------
@@ -87,7 +87,7 @@ def test_requests_update_init():
     On-Failure
     ----------
 
-      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun(&#39;led&#39;, SimpleLED(28))` has been made
+      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun(&#34;green_led0&#34;, SimpleLED(1))` has been made
       * Check that the call to `test_requests_init_check()` was successful
 
     &#34;&#34;&#34;
@@ -105,12 +105,12 @@ def test_requests_update_init_check():
     Expectation
     -----------
 
-    **Pass**: The noun `led` has the value `0`, indicating a return to the default state
+    **Pass**: The noun `green_led0` has the value `led: 0`, indicating a return to the default state
 
     On-Failure
     ----------
 
-      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun(&#39;led&#39;, SimpleLED(28))` has been made
+      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun(&#34;green_led0&#34;, SimpleLED(1))` has been made
       * Check the results of the `test_requests_update_setup()` method, to ensure the noun was initialised correctly
 
     &#34;&#34;&#34;
@@ -123,7 +123,7 @@ def test_requests_update_on():
     Test
     ----
 
-    Attempt to toggle the current state, setting the noun &#39;led&#39; to `1`
+    Attempt to toggle the current state, setting the noun `green_led0` to `1`
 
     Expectation
     -----------
@@ -133,7 +133,7 @@ def test_requests_update_on():
     On-Failure
     ----------
 
-      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun(&#39;led&#39;, SimpleLED(28))` has been made
+      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun(&#34;green_led0&#34;, SimpleLED(1))` has been made
 
     &#34;&#34;&#34;
     state = {&#34;led&#34;: 1}
@@ -151,12 +151,12 @@ def test_requests_update_on_check():
     Expectation
     -----------
 
-    **Pass**: The noun `led` has the value `1`, the previous `urest.tests.test_simple_update.test_requests_update_on` method succeeded
+    **Pass**: The noun `green_led0` has the value `led: 1`, the previous `urest.tests.test_simple_update.test_requests_update_on` method succeeded
 
     On-Failure
     ----------
 
-      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun(&#39;led&#39;, SimpleLED(28))` has been made
+      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun(&#34;green_led0&#34;, SimpleLED(1))` has been made
       * Check the results of the `urest.tests.test_simple_update.test_requests_update_on` method, to ensure the noun was initialised correctly
 
     &#34;&#34;&#34;
@@ -169,7 +169,7 @@ def test_requests_update_off():
     Test
     ----
 
-    Attempt to toggle the current state, setting the noun &#39;led&#39; to `0`
+    Attempt to toggle the current state, setting the noun `green_led0` to `0`
 
     Expectation
     -----------
@@ -179,7 +179,7 @@ def test_requests_update_off():
     On-Failure
     ----------
 
-      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun(&#39;led&#39;, SimpleLED(28))` has been made
+      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun(&#34;green_led0&#34;, SimpleLED(1))` has been made
 
     &#34;&#34;&#34;
     state = {&#34;led&#34;: 0}
@@ -197,12 +197,12 @@ def test_requests_update_off_check():
     Expectation
     -----------
 
-    **Pass**: The noun `led` has the value `0`, the previous `urest.tests.test_simple_update.test_requests_update_off` method succeeded
+    **Pass**: The noun `green_led0` has the value `led: 0`, the previous `urest.tests.test_simple_update.test_requests_update_off` method succeeded
 
     On-Failure
     ----------
 
-      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun(&#39;led&#39;, SimpleLED(28))` has been made
+      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun(&#34;green_led0&#34;, SimpleLED(1))` has been made
       * Check the results of the `urest.tests.test_simple_update.test_requests_update_off` method, to ensure the noun was initialised correctly
 
     &#34;&#34;&#34;
@@ -237,7 +237,7 @@ test preconditions if this test fails and before investigating further.</p>
 <ul>
 <li>Check that <code>IP_ADDRESS</code> is correct</li>
 <li>Check the <code><a title="urest.examples.simpleled.SimpleLED" href="../examples/simpleled.html#urest.examples.simpleled.SimpleLED">SimpleLED</a></code> is running</li>
-<li>Check that a call to <code><a title="urest.http.server.RESTServer.register_noun" href="../http/server.html#urest.http.server.RESTServer.register_noun">RESTServer.register_noun()</a></code>, e.g. <code>app.register_noun('led', SimpleLED(28))</code> has been made</li>
+<li>Check that a call to <code><a title="urest.http.server.RESTServer.register_noun" href="../http/server.html#urest.http.server.RESTServer.register_noun">RESTServer.register_noun()</a></code>, e.g. <code>app.register_noun("green_led0", SimpleLED(1))</code> has been made</li>
 </ul></div>
 <details class="source">
 <summary>
@@ -268,7 +268,7 @@ test preconditions if this test fails and before investigating further.</p>
 
       * Check that `IP_ADDRESS` is correct
       * Check the `urest.examples.simpleled.SimpleLED` is running
-      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun(&#39;led&#39;, SimpleLED(28))` has been made
+      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun(&#34;green_led0&#34;, SimpleLED(1))` has been made
 
     &#34;&#34;&#34;
     r = requests.get(f&#34;http://{ IP_ADDRESS }/green_led0&#34;)
@@ -282,12 +282,12 @@ test preconditions if this test fails and before investigating further.</p>
 <div class="desc"><h2 id="test">Test</h2>
 <p>Attempt to reset the server back to the known (default) state. This is
 achieved by sending an HTTP <code>DELETE</code> method request to the server to return the
-<code>led</code> noun to the default state.</p>
+<code>green_led0</code> noun to the default state.</p>
 <h2 id="expectation">Expectation</h2>
 <p><strong>Pass</strong>: HTTP Return code 200, indicating success</p>
 <h2 id="on-failure">On-Failure</h2>
 <ul>
-<li>Check that a call to <code><a title="urest.http.server.RESTServer.register_noun" href="../http/server.html#urest.http.server.RESTServer.register_noun">RESTServer.register_noun()</a></code>, e.g. <code>app.register_noun('led', SimpleLED(28))</code> has been made</li>
+<li>Check that a call to <code><a title="urest.http.server.RESTServer.register_noun" href="../http/server.html#urest.http.server.RESTServer.register_noun">RESTServer.register_noun()</a></code>, e.g. <code>app.register_noun("green_led0", SimpleLED(1))</code> has been made</li>
 <li>Check that the call to <code>test_requests_init_check()</code> was successful</li>
 </ul></div>
 <details class="source">
@@ -301,7 +301,7 @@ achieved by sending an HTTP <code>DELETE</code> method request to the server to 
 
     Attempt to reset the server back to the known (default) state. This is
     achieved by sending an HTTP `DELETE` method request to the server to return the
-    `led` noun to the default state.
+    `green_led0` noun to the default state.
 
     Expectation
     -----------
@@ -311,7 +311,7 @@ achieved by sending an HTTP <code>DELETE</code> method request to the server to 
     On-Failure
     ----------
 
-      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun(&#39;led&#39;, SimpleLED(28))` has been made
+      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun(&#34;green_led0&#34;, SimpleLED(1))` has been made
       * Check that the call to `test_requests_init_check()` was successful
 
     &#34;&#34;&#34;
@@ -326,10 +326,10 @@ achieved by sending an HTTP <code>DELETE</code> method request to the server to 
 <div class="desc"><h2 id="test">Test</h2>
 <p>Check the noun is in the default state of <code>0</code></p>
 <h2 id="expectation">Expectation</h2>
-<p><strong>Pass</strong>: The noun <code>led</code> has the value <code>0</code>, indicating a return to the default state</p>
+<p><strong>Pass</strong>: The noun <code>green_led0</code> has the value <code>led: 0</code>, indicating a return to the default state</p>
 <h2 id="on-failure">On-Failure</h2>
 <ul>
-<li>Check that a call to <code><a title="urest.http.server.RESTServer.register_noun" href="../http/server.html#urest.http.server.RESTServer.register_noun">RESTServer.register_noun()</a></code>, e.g. <code>app.register_noun('led', SimpleLED(28))</code> has been made</li>
+<li>Check that a call to <code><a title="urest.http.server.RESTServer.register_noun" href="../http/server.html#urest.http.server.RESTServer.register_noun">RESTServer.register_noun()</a></code>, e.g. <code>app.register_noun("green_led0", SimpleLED(1))</code> has been made</li>
 <li>Check the results of the <code>test_requests_update_setup()</code> method, to ensure the noun was initialised correctly</li>
 </ul></div>
 <details class="source">
@@ -346,12 +346,12 @@ achieved by sending an HTTP <code>DELETE</code> method request to the server to 
     Expectation
     -----------
 
-    **Pass**: The noun `led` has the value `0`, indicating a return to the default state
+    **Pass**: The noun `green_led0` has the value `led: 0`, indicating a return to the default state
 
     On-Failure
     ----------
 
-      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun(&#39;led&#39;, SimpleLED(28))` has been made
+      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun(&#34;green_led0&#34;, SimpleLED(1))` has been made
       * Check the results of the `test_requests_update_setup()` method, to ensure the noun was initialised correctly
 
     &#34;&#34;&#34;
@@ -364,12 +364,12 @@ achieved by sending an HTTP <code>DELETE</code> method request to the server to 
 </code></dt>
 <dd>
 <div class="desc"><h2 id="test">Test</h2>
-<p>Attempt to toggle the current state, setting the noun 'led' to <code>0</code></p>
+<p>Attempt to toggle the current state, setting the noun <code>green_led0</code> to <code>0</code></p>
 <h2 id="expectation">Expectation</h2>
 <p><strong>Pass</strong>: HTTP Return code 200, indicating success</p>
 <h2 id="on-failure">On-Failure</h2>
 <ul>
-<li>Check that a call to <code><a title="urest.http.server.RESTServer.register_noun" href="../http/server.html#urest.http.server.RESTServer.register_noun">RESTServer.register_noun()</a></code>, e.g. <code>app.register_noun('led', SimpleLED(28))</code> has been made</li>
+<li>Check that a call to <code><a title="urest.http.server.RESTServer.register_noun" href="../http/server.html#urest.http.server.RESTServer.register_noun">RESTServer.register_noun()</a></code>, e.g. <code>app.register_noun("green_led0", SimpleLED(1))</code> has been made</li>
 </ul></div>
 <details class="source">
 <summary>
@@ -380,7 +380,7 @@ achieved by sending an HTTP <code>DELETE</code> method request to the server to 
     Test
     ----
 
-    Attempt to toggle the current state, setting the noun &#39;led&#39; to `0`
+    Attempt to toggle the current state, setting the noun `green_led0` to `0`
 
     Expectation
     -----------
@@ -390,7 +390,7 @@ achieved by sending an HTTP <code>DELETE</code> method request to the server to 
     On-Failure
     ----------
 
-      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun(&#39;led&#39;, SimpleLED(28))` has been made
+      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun(&#34;green_led0&#34;, SimpleLED(1))` has been made
 
     &#34;&#34;&#34;
     state = {&#34;led&#34;: 0}
@@ -405,10 +405,10 @@ achieved by sending an HTTP <code>DELETE</code> method request to the server to 
 <div class="desc"><h2 id="test">Test</h2>
 <p>Check the noun has been set to the state value <code>0</code></p>
 <h2 id="expectation">Expectation</h2>
-<p><strong>Pass</strong>: The noun <code>led</code> has the value <code>0</code>, the previous <code><a title="urest.tests.test_simple_update.test_requests_update_off" href="#urest.tests.test_simple_update.test_requests_update_off">test_requests_update_off()</a></code> method succeeded</p>
+<p><strong>Pass</strong>: The noun <code>green_led0</code> has the value <code>led: 0</code>, the previous <code><a title="urest.tests.test_simple_update.test_requests_update_off" href="#urest.tests.test_simple_update.test_requests_update_off">test_requests_update_off()</a></code> method succeeded</p>
 <h2 id="on-failure">On-Failure</h2>
 <ul>
-<li>Check that a call to <code><a title="urest.http.server.RESTServer.register_noun" href="../http/server.html#urest.http.server.RESTServer.register_noun">RESTServer.register_noun()</a></code>, e.g. <code>app.register_noun('led', SimpleLED(28))</code> has been made</li>
+<li>Check that a call to <code><a title="urest.http.server.RESTServer.register_noun" href="../http/server.html#urest.http.server.RESTServer.register_noun">RESTServer.register_noun()</a></code>, e.g. <code>app.register_noun("green_led0", SimpleLED(1))</code> has been made</li>
 <li>Check the results of the <code><a title="urest.tests.test_simple_update.test_requests_update_off" href="#urest.tests.test_simple_update.test_requests_update_off">test_requests_update_off()</a></code> method, to ensure the noun was initialised correctly</li>
 </ul></div>
 <details class="source">
@@ -425,12 +425,12 @@ achieved by sending an HTTP <code>DELETE</code> method request to the server to 
     Expectation
     -----------
 
-    **Pass**: The noun `led` has the value `0`, the previous `urest.tests.test_simple_update.test_requests_update_off` method succeeded
+    **Pass**: The noun `green_led0` has the value `led: 0`, the previous `urest.tests.test_simple_update.test_requests_update_off` method succeeded
 
     On-Failure
     ----------
 
-      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun(&#39;led&#39;, SimpleLED(28))` has been made
+      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun(&#34;green_led0&#34;, SimpleLED(1))` has been made
       * Check the results of the `urest.tests.test_simple_update.test_requests_update_off` method, to ensure the noun was initialised correctly
 
     &#34;&#34;&#34;
@@ -443,12 +443,12 @@ achieved by sending an HTTP <code>DELETE</code> method request to the server to 
 </code></dt>
 <dd>
 <div class="desc"><h2 id="test">Test</h2>
-<p>Attempt to toggle the current state, setting the noun 'led' to <code>1</code></p>
+<p>Attempt to toggle the current state, setting the noun <code>green_led0</code> to <code>1</code></p>
 <h2 id="expectation">Expectation</h2>
 <p><strong>Pass</strong>: HTTP Return code 200, indicating success</p>
 <h2 id="on-failure">On-Failure</h2>
 <ul>
-<li>Check that a call to <code><a title="urest.http.server.RESTServer.register_noun" href="../http/server.html#urest.http.server.RESTServer.register_noun">RESTServer.register_noun()</a></code>, e.g. <code>app.register_noun('led', SimpleLED(28))</code> has been made</li>
+<li>Check that a call to <code><a title="urest.http.server.RESTServer.register_noun" href="../http/server.html#urest.http.server.RESTServer.register_noun">RESTServer.register_noun()</a></code>, e.g. <code>app.register_noun("green_led0", SimpleLED(1))</code> has been made</li>
 </ul></div>
 <details class="source">
 <summary>
@@ -459,7 +459,7 @@ achieved by sending an HTTP <code>DELETE</code> method request to the server to 
     Test
     ----
 
-    Attempt to toggle the current state, setting the noun &#39;led&#39; to `1`
+    Attempt to toggle the current state, setting the noun `green_led0` to `1`
 
     Expectation
     -----------
@@ -469,7 +469,7 @@ achieved by sending an HTTP <code>DELETE</code> method request to the server to 
     On-Failure
     ----------
 
-      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun(&#39;led&#39;, SimpleLED(28))` has been made
+      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun(&#34;green_led0&#34;, SimpleLED(1))` has been made
 
     &#34;&#34;&#34;
     state = {&#34;led&#34;: 1}
@@ -484,10 +484,10 @@ achieved by sending an HTTP <code>DELETE</code> method request to the server to 
 <div class="desc"><h2 id="test">Test</h2>
 <p>Check the noun has been set to the state value <code>1</code></p>
 <h2 id="expectation">Expectation</h2>
-<p><strong>Pass</strong>: The noun <code>led</code> has the value <code>1</code>, the previous <code><a title="urest.tests.test_simple_update.test_requests_update_on" href="#urest.tests.test_simple_update.test_requests_update_on">test_requests_update_on()</a></code> method succeeded</p>
+<p><strong>Pass</strong>: The noun <code>green_led0</code> has the value <code>led: 1</code>, the previous <code><a title="urest.tests.test_simple_update.test_requests_update_on" href="#urest.tests.test_simple_update.test_requests_update_on">test_requests_update_on()</a></code> method succeeded</p>
 <h2 id="on-failure">On-Failure</h2>
 <ul>
-<li>Check that a call to <code><a title="urest.http.server.RESTServer.register_noun" href="../http/server.html#urest.http.server.RESTServer.register_noun">RESTServer.register_noun()</a></code>, e.g. <code>app.register_noun('led', SimpleLED(28))</code> has been made</li>
+<li>Check that a call to <code><a title="urest.http.server.RESTServer.register_noun" href="../http/server.html#urest.http.server.RESTServer.register_noun">RESTServer.register_noun()</a></code>, e.g. <code>app.register_noun("green_led0", SimpleLED(1))</code> has been made</li>
 <li>Check the results of the <code><a title="urest.tests.test_simple_update.test_requests_update_on" href="#urest.tests.test_simple_update.test_requests_update_on">test_requests_update_on()</a></code> method, to ensure the noun was initialised correctly</li>
 </ul></div>
 <details class="source">
@@ -504,12 +504,12 @@ achieved by sending an HTTP <code>DELETE</code> method request to the server to 
     Expectation
     -----------
 
-    **Pass**: The noun `led` has the value `1`, the previous `urest.tests.test_simple_update.test_requests_update_on` method succeeded
+    **Pass**: The noun `green_led0` has the value `led: 1`, the previous `urest.tests.test_simple_update.test_requests_update_on` method succeeded
 
     On-Failure
     ----------
 
-      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun(&#39;led&#39;, SimpleLED(28))` has been made
+      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun(&#34;green_led0&#34;, SimpleLED(1))` has been made
       * Check the results of the `urest.tests.test_simple_update.test_requests_update_on` method, to ensure the noun was initialised correctly
 
     &#34;&#34;&#34;

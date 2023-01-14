@@ -33,7 +33,7 @@ def test_requests_update_check():
 
       * Check that `IP_ADDRESS` is correct
       * Check the `urest.examples.simpleled.SimpleLED` is running
-      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun('led', SimpleLED(28))` has been made
+      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun("green_led0", SimpleLED(1))` has been made
 
     """
     r = requests.get(f"http://{ IP_ADDRESS }/green_led0")
@@ -47,7 +47,7 @@ def test_requests_update_init():
 
     Attempt to reset the server back to the known (default) state. This is
     achieved by sending an HTTP `DELETE` method request to the server to return the
-    `led` noun to the default state.
+    `green_led0` noun to the default state.
 
     Expectation
     -----------
@@ -57,7 +57,7 @@ def test_requests_update_init():
     On-Failure
     ----------
 
-      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun('led', SimpleLED(28))` has been made
+      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun("green_led0", SimpleLED(1))` has been made
       * Check that the call to `test_requests_init_check()` was successful
 
     """
@@ -75,12 +75,12 @@ def test_requests_update_init_check():
     Expectation
     -----------
 
-    **Pass**: The noun `led` has the value `0`, indicating a return to the default state
+    **Pass**: The noun `green_led0` has the value `led: 0`, indicating a return to the default state
 
     On-Failure
     ----------
 
-      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun('led', SimpleLED(28))` has been made
+      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun("green_led0", SimpleLED(1))` has been made
       * Check the results of the `test_requests_update_setup()` method, to ensure the noun was initialised correctly
 
     """
@@ -93,7 +93,7 @@ def test_requests_update_on():
     Test
     ----
 
-    Attempt to toggle the current state, setting the noun 'led' to `1`
+    Attempt to toggle the current state, setting the noun `green_led0` to `1`
 
     Expectation
     -----------
@@ -103,7 +103,7 @@ def test_requests_update_on():
     On-Failure
     ----------
 
-      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun('led', SimpleLED(28))` has been made
+      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun("green_led0", SimpleLED(1))` has been made
 
     """
     state = {"led": 1}
@@ -121,12 +121,12 @@ def test_requests_update_on_check():
     Expectation
     -----------
 
-    **Pass**: The noun `led` has the value `1`, the previous `urest.tests.test_simple_update.test_requests_update_on` method succeeded
+    **Pass**: The noun `green_led0` has the value `led: 1`, the previous `urest.tests.test_simple_update.test_requests_update_on` method succeeded
 
     On-Failure
     ----------
 
-      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun('led', SimpleLED(28))` has been made
+      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun("green_led0", SimpleLED(1))` has been made
       * Check the results of the `urest.tests.test_simple_update.test_requests_update_on` method, to ensure the noun was initialised correctly
 
     """
@@ -139,7 +139,7 @@ def test_requests_update_off():
     Test
     ----
 
-    Attempt to toggle the current state, setting the noun 'led' to `0`
+    Attempt to toggle the current state, setting the noun `green_led0` to `0`
 
     Expectation
     -----------
@@ -149,7 +149,7 @@ def test_requests_update_off():
     On-Failure
     ----------
 
-      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun('led', SimpleLED(28))` has been made
+      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun("green_led0", SimpleLED(1))` has been made
 
     """
     state = {"led": 0}
@@ -167,12 +167,12 @@ def test_requests_update_off_check():
     Expectation
     -----------
 
-    **Pass**: The noun `led` has the value `0`, the previous `urest.tests.test_simple_update.test_requests_update_off` method succeeded
+    **Pass**: The noun `green_led0` has the value `led: 0`, the previous `urest.tests.test_simple_update.test_requests_update_off` method succeeded
 
     On-Failure
     ----------
 
-      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun('led', SimpleLED(28))` has been made
+      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun("green_led0", SimpleLED(1))` has been made
       * Check the results of the `urest.tests.test_simple_update.test_requests_update_off` method, to ensure the noun was initialised correctly
 
     """

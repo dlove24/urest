@@ -4,8 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
-<title>urest.examples.simpleled API documentation</title>
-<meta name="description" content="An example of a &#39;noun&#39; class, able to serve as the basis for control of an LED attached to a GPIO pin …" />
+<title>urest.examples.pwmled API documentation</title>
+<meta name="description" content="An example of a &#39;noun&#39; class, able to serve as the basis for PWM control of an
+LED attached to a suitable GPIO pin …" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -19,16 +20,66 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>urest.examples.simpleled</code></h1>
+<h1 class="title">Module <code>urest.examples.pwmled</code></h1>
 </header>
 <section id="section-intro">
-<p>An example of a 'noun' class, able to serve as the basis for control of an LED attached to a GPIO pin</p>
+<p>An example of a 'noun' class, able to serve as the basis for PWM control of an
+LED attached to a suitable GPIO pin</p>
 <h2 id="overview">Overview</h2>
 <p>This is a reasonably minimal example of a 'noun' class, which inherits from
 <code><a title="urest.api.base.APIBase" href="../api/base.html#urest.api.base.APIBase">APIBase</a></code>. It also requires the <code>Pin</code> library from MicroPython:
 but should be able to be adapted to other GPIO libraries which provide a similar
 interface.</p>
-<p>For an example of an application which uses this library, see: <code><a title="urest.examples.led_control" href="led_control.html">urest.examples.led_control</a></code></p>
+<p>In contrast to the <code><a title="urest.examples.simpleled.SimpleLED" href="simpleled.html#urest.examples.simpleled.SimpleLED">SimpleLED</a></code> class, the
+<code><a title="urest.examples.pwmled.PWMLED" href="#urest.examples.pwmled.PWMLED">PWMLED</a></code> class shows the use of the <code>ayncio</code>
+<code>create_tasks()</code> hook within a <code><a title="urest.api.base.APIBase" href="../api/base.html#urest.api.base.APIBase">APIBase</a></code> 'noun' to set off slow
+running tasks. This allows the state update to be returned to the network client
+via the API 'immediately' (at least subject to the other tasks outstanding and
+network conditions); without waiting for the <em>actual</em> internal state to
+complete. This is a much more realistic scenario for use in the control of
+external devices: especially devices such as motors which may take seconds (or
+longer) to obtain the correct state.</p>
+<h2 id="api">Api</h2>
+<p>The 'noun' will return two objects in the JSON state, in response to <code>get_state</code>
+requests</p>
+<ul>
+<li><code>actual</code> : The <em>current</em> state of the output, which will be <code>0</code> for fully off
+and <code>1</code> for fully on</li>
+<li><code>desired</code>: The <em>next</em> state, if any, that the output is
+currently transitioning to; either <code>0</code> for fully off and <code>1</code> for fully on</li>
+</ul>
+<p>This gives a full state table as follows</p>
+<table>
+<thead>
+<tr>
+<th>Actual State</th>
+<th>Desired State</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>Output fully <code>off</code></td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>Output commanded <code>on</code>; currently turning from <code>off</code> to <code>on</code></td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>Output commanded <code>off</code>; currently turning from <code>on</code> to <code>off</code></td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>Output fully <code>on</code></td>
+</tr>
+</tbody>
+</table>
 <h2 id="tested-implementations">Tested Implementations</h2>
 <p>This version is written for MicroPython 3.4, and has been tested on:</p>
 <ul>
@@ -58,7 +109,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">&#34;&#34;&#34;
-An example of a &#39;noun&#39; class, able to serve as the basis for control of an LED attached to a GPIO pin
+An example of a &#39;noun&#39; class, able to serve as the basis for PWM control of an
+LED attached to a suitable GPIO pin
 
 Overview
 --------
@@ -68,7 +120,37 @@ This is a reasonably minimal example of a &#39;noun&#39; class, which inherits f
 but should be able to be adapted to other GPIO libraries which provide a similar
 interface.
 
-For an example of an application which uses this library, see: `urest.examples.led_control`
+In contrast to the `urest.examples.simpleled.SimpleLED` class, the
+`urest.examples.pwmled.PWMLED` class shows the use of the `ayncio`
+`create_tasks()` hook within a `urest.api.base.APIBase` &#39;noun&#39; to set off slow
+running tasks. This allows the state update to be returned to the network client
+via the API &#39;immediately&#39; (at least subject to the other tasks outstanding and
+network conditions); without waiting for the _actual_ internal state to
+complete. This is a much more realistic scenario for use in the control of
+external devices: especially devices such as motors which may take seconds (or
+longer) to obtain the correct state.
+
+API
+---
+
+The &#39;noun&#39; will return two objects in the JSON state, in response to `get_state`
+requests
+
+  * `actual` : The _current_ state of the output, which will be `0` for fully off
+and `1` for fully on
+  * `desired`: The _next_ state, if any, that the output is
+currently transitioning to; either `0` for fully off and `1` for fully on
+
+This gives a full state table as follows
+
+| Actual State | Desired State | Description                                                  |
+|--------------|---------------|--------------------------------------------------------------|
+| 0            | 0             | Output fully `off`                                           |
+| 0            | 1             | Output commanded `on`; currently turning from `off` to `on`  |
+| 1            | 0             | Output commanded `off`; currently turning from `on` to `off` |
+| 1            | 1             | Output fully `on`                                            |
+
+
 
 Tested Implementations
 ----------------------
@@ -107,48 +189,61 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 # available
 try:
     from machine import Pin
+    import uasyncio as asyncio
 except ImportError:
     print(&#34;Ignoring MicroPython include: machine&#34;)
 
 from ..api.base import APIBase
 
 
-class SimpleLED(APIBase):
-    def __init__(self, pin):
+class PWMLED(APIBase):
+    def __init__(self, pin: int):
         self._gpio = Pin(pin, Pin.OUT)
         self._gpio.off()
 
-        self._state_attributes = dict(led=0)
+        self._state_attributes = dict(desired=0, current=0)
+
+    async def _slow_on(self):
+        self._gpio.on()
+
+    async def _slow_off(self):
+        self._gpio.off()
 
     def set_state(self, state_attributes: dict):
         try:
-            self._state_attributes[&#34;led&#34;] = state_attributes[&#34;led&#34;]
+            loop = asyncio.get_event_loop()
 
-            if self._state_attributes[&#34;led&#34;] == 0:
-                self._gpio.off()
+            self._state_attributes[&#34;desired&#34;] = state_attributes[&#34;desired&#34;]
+
+            if self._state_attributes[&#34;desired&#34;] == 0:
+                loop.create_task(self._slow_off())
             else:
-                self._gpio.on()
+                loop.create_task(self._slow_on())
 
         except KeyError:
             # On exception try to return to a known good
             # state
             self._gpio.off()
-            self._state_attributes[&#34;led&#34;] = 0
+            self._state_attributes[&#34;desired&#34;] = 0
+            self._state_attributes[&#34;current&#34;] = 0
 
     def get_state(self) -&gt; dict:
-        return dict(led=self._gpio.value())
+        return self._state_attributes
 
     def delete_state(self):
         self._gpio.off()
-        self._state_attributes[&#34;led&#34;] = 0
+        self._state_attributes[&#34;desired&#34;] = 0
+        self._state_attributes[&#34;current&#34;] = 0
 
     def update_state(self, state_attributes: dict):
-        if self._state_attributes[&#34;led&#34;] == 0:
-            self._gpio.on()
-            self._state_attributes[&#34;led&#34;] = 1
+        loop = asyncio.get_event_loop()
+
+        if self._state_attributes[&#34;desired&#34;] == 0:
+            self._state_attributes[&#34;desired&#34;] = 1
+            loop.create_task(self._slow_on())
         else:
-            self._gpio.off()
-            self._state_attributes[&#34;led&#34;] = 0</code></pre>
+            self._state_attributes[&#34;desired&#34;] = 0
+            loop.create_task(self._slow_off())</code></pre>
 </details>
 </section>
 <section>
@@ -160,9 +255,9 @@ class SimpleLED(APIBase):
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt id="urest.examples.simpleled.SimpleLED"><code class="flex name class">
-<span>class <span class="ident">SimpleLED</span></span>
-<span>(</span><span>pin)</span>
+<dt id="urest.examples.pwmled.PWMLED"><code class="flex name class">
+<span>class <span class="ident">PWMLED</span></span>
+<span>(</span><span>pin: int)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>The Abstract Base Class for the nouns, used in the response from the server.</p>
@@ -191,42 +286,54 @@ responsibility to ensure the returned data follows the form expected by those cl
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class SimpleLED(APIBase):
-    def __init__(self, pin):
+<pre><code class="python">class PWMLED(APIBase):
+    def __init__(self, pin: int):
         self._gpio = Pin(pin, Pin.OUT)
         self._gpio.off()
 
-        self._state_attributes = dict(led=0)
+        self._state_attributes = dict(desired=0, current=0)
+
+    async def _slow_on(self):
+        self._gpio.on()
+
+    async def _slow_off(self):
+        self._gpio.off()
 
     def set_state(self, state_attributes: dict):
         try:
-            self._state_attributes[&#34;led&#34;] = state_attributes[&#34;led&#34;]
+            loop = asyncio.get_event_loop()
 
-            if self._state_attributes[&#34;led&#34;] == 0:
-                self._gpio.off()
+            self._state_attributes[&#34;desired&#34;] = state_attributes[&#34;desired&#34;]
+
+            if self._state_attributes[&#34;desired&#34;] == 0:
+                loop.create_task(self._slow_off())
             else:
-                self._gpio.on()
+                loop.create_task(self._slow_on())
 
         except KeyError:
             # On exception try to return to a known good
             # state
             self._gpio.off()
-            self._state_attributes[&#34;led&#34;] = 0
+            self._state_attributes[&#34;desired&#34;] = 0
+            self._state_attributes[&#34;current&#34;] = 0
 
     def get_state(self) -&gt; dict:
-        return dict(led=self._gpio.value())
+        return self._state_attributes
 
     def delete_state(self):
         self._gpio.off()
-        self._state_attributes[&#34;led&#34;] = 0
+        self._state_attributes[&#34;desired&#34;] = 0
+        self._state_attributes[&#34;current&#34;] = 0
 
     def update_state(self, state_attributes: dict):
-        if self._state_attributes[&#34;led&#34;] == 0:
-            self._gpio.on()
-            self._state_attributes[&#34;led&#34;] = 1
+        loop = asyncio.get_event_loop()
+
+        if self._state_attributes[&#34;desired&#34;] == 0:
+            self._state_attributes[&#34;desired&#34;] = 1
+            loop.create_task(self._slow_on())
         else:
-            self._gpio.off()
-            self._state_attributes[&#34;led&#34;] = 0</code></pre>
+            self._state_attributes[&#34;desired&#34;] = 0
+            loop.create_task(self._slow_off())</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -252,6 +359,7 @@ responsibility to ensure the returned data follows the form expected by those cl
 <div class="toc">
 <ul>
 <li><a href="#overview">Overview</a></li>
+<li><a href="#api">API</a></li>
 <li><a href="#tested-implementations">Tested Implementations</a></li>
 <li><a href="#licence">Licence</a></li>
 </ul>
@@ -265,7 +373,7 @@ responsibility to ensure the returned data follows the form expected by those cl
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
 <li>
-<h4><code><a title="urest.examples.simpleled.SimpleLED" href="#urest.examples.simpleled.SimpleLED">SimpleLED</a></code></h4>
+<h4><code><a title="urest.examples.pwmled.PWMLED" href="#urest.examples.pwmled.PWMLED">PWMLED</a></code></h4>
 </li>
 </ul>
 </li>

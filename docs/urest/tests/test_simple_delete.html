@@ -63,7 +63,7 @@ def test_requests_delete_check():
 
       * Check that `IP_ADDRESS` is correct
       * Check the `urest.examples.simpleled.SimpleLED` is running
-      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun(&#39;led&#39;, SimpleLED(28))` has been made
+      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun(&#34;green_led0&#34;, SimpleLED(1))` has been made
 
     &#34;&#34;&#34;
     r = requests.get(f&#34;http://{ IP_ADDRESS }/green_led0&#34;)
@@ -75,18 +75,18 @@ def test_requests_init_delete():
     Test
     ----
 
-    Attempt to set the noun &#39;led&#39; to `1`, to allow checking of the next
+    Attempt to set the noun `green_led0` to `1`, to allow checking of the next
     `DELETE` request
 
     Expectation
     -----------
 
-    **Pass**: The noun `led` has the value `1`
+    **Pass**: The noun `green_led0` processes the request with a HTTP return code of 200, indicating success
 
     On-Failure
     ----------
 
-      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun(&#39;led&#39;, SimpleLED(28))` has been made
+      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun(&#34;green_led0&#34;, SimpleLED(1))` has been made
 
     &#34;&#34;&#34;
     state = {&#34;led&#34;: 1}
@@ -101,7 +101,7 @@ def test_requests_try_delete():
 
     Attempt to reset the server back to the known (default) state. This is
     achieved by sending an HTTP `DELETE` method request to the server to return the
-    `led` noun to the default state.
+    `green_led0` noun to the default state.
 
     Expectation
     -----------
@@ -111,7 +111,7 @@ def test_requests_try_delete():
     On-Failure
     ----------
 
-      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun(&#39;led&#39;, SimpleLED(28))` has been made
+      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun(&#34;green_led0&#34;, SimpleLED(1))` has been made
       * Check that the call to `test_requests_init_delete()` was successful
 
     &#34;&#34;&#34;
@@ -129,12 +129,12 @@ def test_requests_check_delete():
     Expectation
     -----------
 
-    **Pass**: The noun `led` has the value `0`, indicating a return to the default state
+    **Pass**: The noun `green_led0` has the value `led: 0`, indicating a return to the default state
 
     On-Failure
     ----------
 
-      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun(&#39;led&#39;, SimpleLED(28))` has been made
+      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun(&#34;green_led0&#34;, SimpleLED(1))` has been made
       * Check the results of the `test_requests_init_delete()` method, to ensure the noun was initialised correctly
 
     &#34;&#34;&#34;
@@ -156,10 +156,10 @@ def test_requests_check_delete():
 <div class="desc"><h2 id="test">Test</h2>
 <p>Check the noun has been returned to the default state of <code>0</code></p>
 <h2 id="expectation">Expectation</h2>
-<p><strong>Pass</strong>: The noun <code>led</code> has the value <code>0</code>, indicating a return to the default state</p>
+<p><strong>Pass</strong>: The noun <code>green_led0</code> has the value <code>led: 0</code>, indicating a return to the default state</p>
 <h2 id="on-failure">On-Failure</h2>
 <ul>
-<li>Check that a call to <code><a title="urest.http.server.RESTServer.register_noun" href="../http/server.html#urest.http.server.RESTServer.register_noun">RESTServer.register_noun()</a></code>, e.g. <code>app.register_noun('led', SimpleLED(28))</code> has been made</li>
+<li>Check that a call to <code><a title="urest.http.server.RESTServer.register_noun" href="../http/server.html#urest.http.server.RESTServer.register_noun">RESTServer.register_noun()</a></code>, e.g. <code>app.register_noun("green_led0", SimpleLED(1))</code> has been made</li>
 <li>Check the results of the <code><a title="urest.tests.test_simple_delete.test_requests_init_delete" href="#urest.tests.test_simple_delete.test_requests_init_delete">test_requests_init_delete()</a></code> method, to ensure the noun was initialised correctly</li>
 </ul></div>
 <details class="source">
@@ -176,12 +176,12 @@ def test_requests_check_delete():
     Expectation
     -----------
 
-    **Pass**: The noun `led` has the value `0`, indicating a return to the default state
+    **Pass**: The noun `green_led0` has the value `led: 0`, indicating a return to the default state
 
     On-Failure
     ----------
 
-      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun(&#39;led&#39;, SimpleLED(28))` has been made
+      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun(&#34;green_led0&#34;, SimpleLED(1))` has been made
       * Check the results of the `test_requests_init_delete()` method, to ensure the noun was initialised correctly
 
     &#34;&#34;&#34;
@@ -209,7 +209,7 @@ test preconditions if this test fails and before investigating further.</p>
 <ul>
 <li>Check that <code>IP_ADDRESS</code> is correct</li>
 <li>Check the <code><a title="urest.examples.simpleled.SimpleLED" href="../examples/simpleled.html#urest.examples.simpleled.SimpleLED">SimpleLED</a></code> is running</li>
-<li>Check that a call to <code><a title="urest.http.server.RESTServer.register_noun" href="../http/server.html#urest.http.server.RESTServer.register_noun">RESTServer.register_noun()</a></code>, e.g. <code>app.register_noun('led', SimpleLED(28))</code> has been made</li>
+<li>Check that a call to <code><a title="urest.http.server.RESTServer.register_noun" href="../http/server.html#urest.http.server.RESTServer.register_noun">RESTServer.register_noun()</a></code>, e.g. <code>app.register_noun("green_led0", SimpleLED(1))</code> has been made</li>
 </ul></div>
 <details class="source">
 <summary>
@@ -240,7 +240,7 @@ test preconditions if this test fails and before investigating further.</p>
 
       * Check that `IP_ADDRESS` is correct
       * Check the `urest.examples.simpleled.SimpleLED` is running
-      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun(&#39;led&#39;, SimpleLED(28))` has been made
+      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun(&#34;green_led0&#34;, SimpleLED(1))` has been made
 
     &#34;&#34;&#34;
     r = requests.get(f&#34;http://{ IP_ADDRESS }/green_led0&#34;)
@@ -252,13 +252,13 @@ test preconditions if this test fails and before investigating further.</p>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="test">Test</h2>
-<p>Attempt to set the noun 'led' to <code>1</code>, to allow checking of the next
+<p>Attempt to set the noun <code>green_led0</code> to <code>1</code>, to allow checking of the next
 <code>DELETE</code> request</p>
 <h2 id="expectation">Expectation</h2>
-<p><strong>Pass</strong>: The noun <code>led</code> has the value <code>1</code></p>
+<p><strong>Pass</strong>: The noun <code>green_led0</code> processes the request with a HTTP return code of 200, indicating success</p>
 <h2 id="on-failure">On-Failure</h2>
 <ul>
-<li>Check that a call to <code><a title="urest.http.server.RESTServer.register_noun" href="../http/server.html#urest.http.server.RESTServer.register_noun">RESTServer.register_noun()</a></code>, e.g. <code>app.register_noun('led', SimpleLED(28))</code> has been made</li>
+<li>Check that a call to <code><a title="urest.http.server.RESTServer.register_noun" href="../http/server.html#urest.http.server.RESTServer.register_noun">RESTServer.register_noun()</a></code>, e.g. <code>app.register_noun("green_led0", SimpleLED(1))</code> has been made</li>
 </ul></div>
 <details class="source">
 <summary>
@@ -269,18 +269,18 @@ test preconditions if this test fails and before investigating further.</p>
     Test
     ----
 
-    Attempt to set the noun &#39;led&#39; to `1`, to allow checking of the next
+    Attempt to set the noun `green_led0` to `1`, to allow checking of the next
     `DELETE` request
 
     Expectation
     -----------
 
-    **Pass**: The noun `led` has the value `1`
+    **Pass**: The noun `green_led0` processes the request with a HTTP return code of 200, indicating success
 
     On-Failure
     ----------
 
-      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun(&#39;led&#39;, SimpleLED(28))` has been made
+      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun(&#34;green_led0&#34;, SimpleLED(1))` has been made
 
     &#34;&#34;&#34;
     state = {&#34;led&#34;: 1}
@@ -295,12 +295,12 @@ test preconditions if this test fails and before investigating further.</p>
 <div class="desc"><h2 id="test">Test</h2>
 <p>Attempt to reset the server back to the known (default) state. This is
 achieved by sending an HTTP <code>DELETE</code> method request to the server to return the
-<code>led</code> noun to the default state.</p>
+<code>green_led0</code> noun to the default state.</p>
 <h2 id="expectation">Expectation</h2>
 <p><strong>Pass</strong>: HTTP Return code 200, indicating success</p>
 <h2 id="on-failure">On-Failure</h2>
 <ul>
-<li>Check that a call to <code><a title="urest.http.server.RESTServer.register_noun" href="../http/server.html#urest.http.server.RESTServer.register_noun">RESTServer.register_noun()</a></code>, e.g. <code>app.register_noun('led', SimpleLED(28))</code> has been made</li>
+<li>Check that a call to <code><a title="urest.http.server.RESTServer.register_noun" href="../http/server.html#urest.http.server.RESTServer.register_noun">RESTServer.register_noun()</a></code>, e.g. <code>app.register_noun("green_led0", SimpleLED(1))</code> has been made</li>
 <li>Check that the call to <code><a title="urest.tests.test_simple_delete.test_requests_init_delete" href="#urest.tests.test_simple_delete.test_requests_init_delete">test_requests_init_delete()</a></code> was successful</li>
 </ul></div>
 <details class="source">
@@ -314,7 +314,7 @@ achieved by sending an HTTP <code>DELETE</code> method request to the server to 
 
     Attempt to reset the server back to the known (default) state. This is
     achieved by sending an HTTP `DELETE` method request to the server to return the
-    `led` noun to the default state.
+    `green_led0` noun to the default state.
 
     Expectation
     -----------
@@ -324,7 +324,7 @@ achieved by sending an HTTP <code>DELETE</code> method request to the server to 
     On-Failure
     ----------
 
-      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun(&#39;led&#39;, SimpleLED(28))` has been made
+      * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun(&#34;green_led0&#34;, SimpleLED(1))` has been made
       * Check that the call to `test_requests_init_delete()` was successful
 
     &#34;&#34;&#34;
