@@ -54,7 +54,7 @@ Licence
 
 This class, and all included code, is made available under the terms of the MIT Licence
 
-> Copyright (c) 2022--2023 David Love
+> Copyright (c) 2023 David Love
 
 > Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal in
@@ -122,7 +122,7 @@ class PWMLED(APIBase):
 
         # Set the duty cycle to maximum before we leave,
         # and release the GPIO lock
-        self._duty = 2 ** 16
+        self._duty = 2**16
         self._gpio.duty_u16(self._duty)
 
         self._gpio_lock.release()
@@ -136,7 +136,7 @@ class PWMLED(APIBase):
         # allow other co-routines to run whilst we
         # are waiting for the next step to take place
 
-        self._duty = 2 ** 16
+        self._duty = 2**16
 
         while self._duty > 6000:
             print(f"duty off: {self._duty}")

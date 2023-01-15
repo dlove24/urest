@@ -88,7 +88,7 @@ currently transitioning to; either <code>0</code> for fully off and <code>1</cod
 <h2 id="licence">Licence</h2>
 <p>This class, and all included code, is made available under the terms of the MIT Licence</p>
 <blockquote>
-<p>Copyright (c) 2022&ndash;2023 David Love</p>
+<p>Copyright (c) 2023 David Love</p>
 <p>Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal in
 the Software without restriction, including without limitation the rights to
@@ -164,7 +164,7 @@ Licence
 
 This class, and all included code, is made available under the terms of the MIT Licence
 
-&gt; Copyright (c) 2022--2023 David Love
+&gt; Copyright (c) 2023 David Love
 
 &gt; Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the &#34;Software&#34;), to deal in
@@ -184,30 +184,86 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 &#34;&#34;&#34;
 
-
 # Import the Asynchronous IO Library, preferring the MicroPython library if
 # available
 try:
-    from machine import Pin
+    from machine import Pin, PWM
     import uasyncio as asyncio
 except ImportError:
     print(&#34;Ignoring MicroPython include: machine&#34;)
 
 from ..api.base import APIBase
 
+PWM_STEP = 6550
+&#34;&#34;&#34; Determines the increment (or decrement) for each step in the PWM &#39;on&#39; or &#39;off&#39; movement&#34;&#34;&#34;
+
 
 class PWMLED(APIBase):
     def __init__(self, pin: int):
-        self._gpio = Pin(pin, Pin.OUT)
-        self._gpio.off()
+        self._gpio = PWM(Pin(pin))
+        self._gpio.duty_u16(0)
+        self._gpio.freq(100)
+        self._gpio_lock = asyncio.Lock()
+
+        self._duty = 0
 
         self._state_attributes = dict(desired=0, current=0)
 
     async def _slow_on(self):
-        self._gpio.on()
+        # Wait for the GPIO lock if we need to
+        await self._gpio_lock.acquire()
+
+        # Increase the duty cycle from 0 to near the
+        # maximum in steps lasting 1s. We will also
+        # allow other co-routines to run whilst we
+        # are waiting for the next step to take place
+
+        self._duty = 0
+
+        while self._duty &lt; (65000):
+            print(f&#34;duty on: {self._duty}&#34;)
+
+            self._duty += PWM_STEP
+            self._gpio.duty_u16(self._duty)
+
+            await asyncio.sleep_ms(1000)
+        else:
+            self._state_attributes[&#34;current&#34;] = 1
+
+        # Set the duty cycle to maximum before we leave,
+        # and release the GPIO lock
+        self._duty = 2**16
+        self._gpio.duty_u16(self._duty)
+
+        self._gpio_lock.release()
 
     async def _slow_off(self):
-        self._gpio.off()
+        # Wait for the GPIO lock if we need to
+        await self._gpio_lock.acquire()
+
+        # Decrease the duty cycle from the maximum to
+        # near 0 in steps lasting 1s. We will also
+        # allow other co-routines to run whilst we
+        # are waiting for the next step to take place
+
+        self._duty = 2**16
+
+        while self._duty &gt; 6000:
+            print(f&#34;duty off: {self._duty}&#34;)
+
+            self._duty -= PWM_STEP
+            self._gpio.duty_u16(self._duty)
+
+            await asyncio.sleep_ms(1000)
+        else:
+            self._state_attributes[&#34;current&#34;] = 0
+
+        # Set the duty cycle to 0 before we leave,
+        # and release the GPIO lock
+        self._duty = 0
+        self._gpio.duty_u16(self._duty)
+
+        self._gpio_lock.release()
 
     def set_state(self, state_attributes: dict):
         try:
@@ -216,14 +272,20 @@ class PWMLED(APIBase):
             self._state_attributes[&#34;desired&#34;] = state_attributes[&#34;desired&#34;]
 
             if self._state_attributes[&#34;desired&#34;] == 0:
+                self._state_attributes[&#34;current&#34;] = 1
+
                 loop.create_task(self._slow_off())
             else:
+                self._state_attributes[&#34;current&#34;] = 0
+
                 loop.create_task(self._slow_on())
 
         except KeyError:
             # On exception try to return to a known good
             # state
-            self._gpio.off()
+            self._gpio.duty_u16(0)
+            self._duty = 0
+
             self._state_attributes[&#34;desired&#34;] = 0
             self._state_attributes[&#34;current&#34;] = 0
 
@@ -231,7 +293,10 @@ class PWMLED(APIBase):
         return self._state_attributes
 
     def delete_state(self):
-        self._gpio.off()
+        self._gpio.duty_u16(0)
+        self._gpio.freq(100)
+        self._duty = 0
+
         self._state_attributes[&#34;desired&#34;] = 0
         self._state_attributes[&#34;current&#34;] = 0
 
@@ -240,15 +305,26 @@ class PWMLED(APIBase):
 
         if self._state_attributes[&#34;desired&#34;] == 0:
             self._state_attributes[&#34;desired&#34;] = 1
+            self._state_attributes[&#34;current&#34;] = 0
+
             loop.create_task(self._slow_on())
         else:
             self._state_attributes[&#34;desired&#34;] = 0
+            self._state_attributes[&#34;current&#34;] = 1
+
             loop.create_task(self._slow_off())</code></pre>
 </details>
 </section>
 <section>
 </section>
 <section>
+<h2 class="section-title" id="header-variables">Global variables</h2>
+<dl>
+<dt id="urest.examples.pwmled.PWM_STEP"><code class="name">var <span class="ident">PWM_STEP</span></code></dt>
+<dd>
+<div class="desc"><p>Determines the increment (or decrement) for each step in the PWM 'on' or 'off' movement</p></div>
+</dd>
+</dl>
 </section>
 <section>
 </section>
@@ -288,16 +364,70 @@ responsibility to ensure the returned data follows the form expected by those cl
 </summary>
 <pre><code class="python">class PWMLED(APIBase):
     def __init__(self, pin: int):
-        self._gpio = Pin(pin, Pin.OUT)
-        self._gpio.off()
+        self._gpio = PWM(Pin(pin))
+        self._gpio.duty_u16(0)
+        self._gpio.freq(100)
+        self._gpio_lock = asyncio.Lock()
+
+        self._duty = 0
 
         self._state_attributes = dict(desired=0, current=0)
 
     async def _slow_on(self):
-        self._gpio.on()
+        # Wait for the GPIO lock if we need to
+        await self._gpio_lock.acquire()
+
+        # Increase the duty cycle from 0 to near the
+        # maximum in steps lasting 1s. We will also
+        # allow other co-routines to run whilst we
+        # are waiting for the next step to take place
+
+        self._duty = 0
+
+        while self._duty &lt; (65000):
+            print(f&#34;duty on: {self._duty}&#34;)
+
+            self._duty += PWM_STEP
+            self._gpio.duty_u16(self._duty)
+
+            await asyncio.sleep_ms(1000)
+        else:
+            self._state_attributes[&#34;current&#34;] = 1
+
+        # Set the duty cycle to maximum before we leave,
+        # and release the GPIO lock
+        self._duty = 2**16
+        self._gpio.duty_u16(self._duty)
+
+        self._gpio_lock.release()
 
     async def _slow_off(self):
-        self._gpio.off()
+        # Wait for the GPIO lock if we need to
+        await self._gpio_lock.acquire()
+
+        # Decrease the duty cycle from the maximum to
+        # near 0 in steps lasting 1s. We will also
+        # allow other co-routines to run whilst we
+        # are waiting for the next step to take place
+
+        self._duty = 2**16
+
+        while self._duty &gt; 6000:
+            print(f&#34;duty off: {self._duty}&#34;)
+
+            self._duty -= PWM_STEP
+            self._gpio.duty_u16(self._duty)
+
+            await asyncio.sleep_ms(1000)
+        else:
+            self._state_attributes[&#34;current&#34;] = 0
+
+        # Set the duty cycle to 0 before we leave,
+        # and release the GPIO lock
+        self._duty = 0
+        self._gpio.duty_u16(self._duty)
+
+        self._gpio_lock.release()
 
     def set_state(self, state_attributes: dict):
         try:
@@ -306,14 +436,20 @@ responsibility to ensure the returned data follows the form expected by those cl
             self._state_attributes[&#34;desired&#34;] = state_attributes[&#34;desired&#34;]
 
             if self._state_attributes[&#34;desired&#34;] == 0:
+                self._state_attributes[&#34;current&#34;] = 1
+
                 loop.create_task(self._slow_off())
             else:
+                self._state_attributes[&#34;current&#34;] = 0
+
                 loop.create_task(self._slow_on())
 
         except KeyError:
             # On exception try to return to a known good
             # state
-            self._gpio.off()
+            self._gpio.duty_u16(0)
+            self._duty = 0
+
             self._state_attributes[&#34;desired&#34;] = 0
             self._state_attributes[&#34;current&#34;] = 0
 
@@ -321,7 +457,10 @@ responsibility to ensure the returned data follows the form expected by those cl
         return self._state_attributes
 
     def delete_state(self):
-        self._gpio.off()
+        self._gpio.duty_u16(0)
+        self._gpio.freq(100)
+        self._duty = 0
+
         self._state_attributes[&#34;desired&#34;] = 0
         self._state_attributes[&#34;current&#34;] = 0
 
@@ -330,9 +469,13 @@ responsibility to ensure the returned data follows the form expected by those cl
 
         if self._state_attributes[&#34;desired&#34;] == 0:
             self._state_attributes[&#34;desired&#34;] = 1
+            self._state_attributes[&#34;current&#34;] = 0
+
             loop.create_task(self._slow_on())
         else:
             self._state_attributes[&#34;desired&#34;] = 0
+            self._state_attributes[&#34;current&#34;] = 1
+
             loop.create_task(self._slow_off())</code></pre>
 </details>
 <h3>Ancestors</h3>
@@ -368,6 +511,11 @@ responsibility to ensure the returned data follows the form expected by those cl
 <li><h3>Super-module</h3>
 <ul>
 <li><code><a title="urest.examples" href="index.html">urest.examples</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-variables">Global variables</a></h3>
+<ul class="">
+<li><code><a title="urest.examples.pwmled.PWM_STEP" href="#urest.examples.pwmled.PWM_STEP">PWM_STEP</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-classes">Classes</a></h3>
