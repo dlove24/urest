@@ -613,7 +613,7 @@ class RESTServer:
 
             await response.send(writer)
 
-            writer.write(&#34;\n&#34;)
+            writer.write(&#34;\n&#34;.encode())
 
             await writer.drain()
 
@@ -674,7 +674,7 @@ class RESTServer:
             print(f&#34;SERVER: Started on {self.host}:{self.port}&#34;)
 
         self._server = await asyncio.start_server(
-            self.dispatch_noun, self.host, self.port, self.backlog
+            self.dispatch_noun, host=self.host, port=self.port, backlog=self.backlog
         )
 
     async def stop(self):
@@ -1301,7 +1301,7 @@ client, before declaring failure.</p>
 
             await response.send(writer)
 
-            writer.write(&#34;\n&#34;)
+            writer.write(&#34;\n&#34;.encode())
 
             await writer.drain()
 
@@ -1362,7 +1362,7 @@ client, before declaring failure.</p>
             print(f&#34;SERVER: Started on {self.host}:{self.port}&#34;)
 
         self._server = await asyncio.start_server(
-            self.dispatch_noun, self.host, self.port, self.backlog
+            self.dispatch_noun, host=self.host, port=self.port, backlog=self.backlog
         )
 
     async def stop(self):
@@ -1621,7 +1621,7 @@ streamwriter">asyncio.StreamWriter</a>.</dd>
 
         await response.send(writer)
 
-        writer.write(&#34;\n&#34;)
+        writer.write(&#34;\n&#34;.encode())
 
         await writer.drain()
 
@@ -1913,7 +1913,7 @@ set the client (downstream) timeout.</p></div>
         print(f&#34;SERVER: Started on {self.host}:{self.port}&#34;)
 
     self._server = await asyncio.start_server(
-        self.dispatch_noun, self.host, self.port, self.backlog
+        self.dispatch_noun, host=self.host, port=self.port, backlog=self.backlog
     )</code></pre>
 </details>
 </dd>

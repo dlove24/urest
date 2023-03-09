@@ -207,44 +207,44 @@ class HTTPResponse:
 
         if "OK" in self._status:
             # First tell the client we accepted the request
-            writer.write("HTTP/1.1 200 OK\n")
+            writer.write("HTTP/1.1 200 OK\n".encode())
 
             # Then we try to assemble the body
             if self._mimetype is not None:
-                writer.write(f"Content-Type: {self.mimetype}\n")
+                writer.write(f"Content-Type: {self.mimetype}\n".encode())
 
         elif "NOT_OK" in self._status:
             # Tell the client we think we can route it: but the request
             # makes no sense
-            writer.write("HTTP/1.1 400 Bad Request\n")
+            writer.write("HTTP/1.1 400 Bad Request\n".encode())
 
         elif "NOT_FOUND" in self._status:
             # Tell the client we can't route their request
-            writer.write("HTTP/1.1 404 Not Found\n")
+            writer.write("HTTP/1.1 404 Not Found\n".encode())
 
         else:
             # This _really_ shouldn't be here. Assume an internal error
-            writer.write("HTTP/1.1 500 Internal Server Error\n")
+            writer.write("HTTP/1.1 500 Internal Server Error\n".encode())
 
         # Send the body length
-        writer.write(f"Content-Length: {len(self._body)}\n")
+        writer.write(f"Content-Length: {len(self._body)}\n".encode())
 
         # Send the body content type
-        writer.write("Content-Type: text/html\n")
+        writer.write("Content-Type: text/html\n".encode())
 
         # Send any other header fields
         if len(self._header) > 0:
             for key, value in self._header.items():
-                writer.write(f"{key}: {value}\n")
+                writer.write(f"{key}: {value}\n".encode())
 
         # Send the HTTP connection state
         if self._close:
-            writer.write("Connection: close\n")
+            writer.write("Connection: close\n".encode())
         else:
-            writer.write("Connection: keep-alive\n")
+            writer.write("Connection: keep-alive\n".encode())
 
         # Send the body itself...
-        writer.write(f"\n{self._body}\n")
+        writer.write(f"\n{self._body}\n".encode())
 
         # ... and ensure that it gets back to the client
         await writer.drain()

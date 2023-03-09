@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "urest-mp"
-version = "0.2.4"
+version = "0.2.6"
 authors = [
   { name="David Love", email="david.love@leedsbeckett.ac.uk" },
 ]

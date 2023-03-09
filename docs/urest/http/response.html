@@ -267,44 +267,44 @@ class HTTPResponse:
 
         if &#34;OK&#34; in self._status:
             # First tell the client we accepted the request
-            writer.write(&#34;HTTP/1.1 200 OK\n&#34;)
+            writer.write(&#34;HTTP/1.1 200 OK\n&#34;.encode())
 
             # Then we try to assemble the body
             if self._mimetype is not None:
-                writer.write(f&#34;Content-Type: {self.mimetype}\n&#34;)
+                writer.write(f&#34;Content-Type: {self.mimetype}\n&#34;.encode())
 
         elif &#34;NOT_OK&#34; in self._status:
             # Tell the client we think we can route it: but the request
             # makes no sense
-            writer.write(&#34;HTTP/1.1 400 Bad Request\n&#34;)
+            writer.write(&#34;HTTP/1.1 400 Bad Request\n&#34;.encode())
 
         elif &#34;NOT_FOUND&#34; in self._status:
             # Tell the client we can&#39;t route their request
-            writer.write(&#34;HTTP/1.1 404 Not Found\n&#34;)
+            writer.write(&#34;HTTP/1.1 404 Not Found\n&#34;.encode())
 
         else:
             # This _really_ shouldn&#39;t be here. Assume an internal error
-            writer.write(&#34;HTTP/1.1 500 Internal Server Error\n&#34;)
+            writer.write(&#34;HTTP/1.1 500 Internal Server Error\n&#34;.encode())
 
         # Send the body length
-        writer.write(f&#34;Content-Length: {len(self._body)}\n&#34;)
+        writer.write(f&#34;Content-Length: {len(self._body)}\n&#34;.encode())
 
         # Send the body content type
-        writer.write(&#34;Content-Type: text/html\n&#34;)
+        writer.write(&#34;Content-Type: text/html\n&#34;.encode())
 
         # Send any other header fields
         if len(self._header) &gt; 0:
             for key, value in self._header.items():
-                writer.write(f&#34;{key}: {value}\n&#34;)
+                writer.write(f&#34;{key}: {value}\n&#34;.encode())
 
         # Send the HTTP connection state
         if self._close:
-            writer.write(&#34;Connection: close\n&#34;)
+            writer.write(&#34;Connection: close\n&#34;.encode())
         else:
-            writer.write(&#34;Connection: keep-alive\n&#34;)
+            writer.write(&#34;Connection: keep-alive\n&#34;.encode())
 
         # Send the body itself...
-        writer.write(f&#34;\n{self._body}\n&#34;)
+        writer.write(f&#34;\n{self._body}\n&#34;.encode())
 
         # ... and ensure that it gets back to the client
         await writer.drain()</code></pre>
@@ -330,7 +330,7 @@ details</p></div>
 <dl>
 <dt id="urest.http.response.HTTPResponse"><code class="flex name class">
 <span>class <span class="ident">HTTPResponse</span></span>
-<span>(</span><span>body: str = '', status: {'NOT_OK', 'OK', 'NOT_FOUND'} = 'OK', mimetype: str = None, close: bool = True, header: dict = None)</span>
+<span>(</span><span>body: str = '', status: {'NOT_FOUND', 'NOT_OK', 'OK'} = 'OK', mimetype: str = None, close: bool = True, header: dict = None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Create a response object, representing the raw HTTP header returned to the
@@ -522,44 +522,44 @@ setting of arbitrary fields by the caller, without extending/sub-classing
 
         if &#34;OK&#34; in self._status:
             # First tell the client we accepted the request
-            writer.write(&#34;HTTP/1.1 200 OK\n&#34;)
+            writer.write(&#34;HTTP/1.1 200 OK\n&#34;.encode())
 
             # Then we try to assemble the body
             if self._mimetype is not None:
-                writer.write(f&#34;Content-Type: {self.mimetype}\n&#34;)
+                writer.write(f&#34;Content-Type: {self.mimetype}\n&#34;.encode())
 
         elif &#34;NOT_OK&#34; in self._status:
             # Tell the client we think we can route it: but the request
             # makes no sense
-            writer.write(&#34;HTTP/1.1 400 Bad Request\n&#34;)
+            writer.write(&#34;HTTP/1.1 400 Bad Request\n&#34;.encode())
 
         elif &#34;NOT_FOUND&#34; in self._status:
             # Tell the client we can&#39;t route their request
-            writer.write(&#34;HTTP/1.1 404 Not Found\n&#34;)
+            writer.write(&#34;HTTP/1.1 404 Not Found\n&#34;.encode())
 
         else:
             # This _really_ shouldn&#39;t be here. Assume an internal error
-            writer.write(&#34;HTTP/1.1 500 Internal Server Error\n&#34;)
+            writer.write(&#34;HTTP/1.1 500 Internal Server Error\n&#34;.encode())
 
         # Send the body length
-        writer.write(f&#34;Content-Length: {len(self._body)}\n&#34;)
+        writer.write(f&#34;Content-Length: {len(self._body)}\n&#34;.encode())
 
         # Send the body content type
-        writer.write(&#34;Content-Type: text/html\n&#34;)
+        writer.write(&#34;Content-Type: text/html\n&#34;.encode())
 
         # Send any other header fields
         if len(self._header) &gt; 0:
             for key, value in self._header.items():
-                writer.write(f&#34;{key}: {value}\n&#34;)
+                writer.write(f&#34;{key}: {value}\n&#34;.encode())
 
         # Send the HTTP connection state
         if self._close:
-            writer.write(&#34;Connection: close\n&#34;)
+            writer.write(&#34;Connection: close\n&#34;.encode())
         else:
-            writer.write(&#34;Connection: keep-alive\n&#34;)
+            writer.write(&#34;Connection: keep-alive\n&#34;.encode())
 
         # Send the body itself...
-        writer.write(f&#34;\n{self._body}\n&#34;)
+        writer.write(f&#34;\n{self._body}\n&#34;.encode())
 
         # ... and ensure that it gets back to the client
         await writer.drain()</code></pre>
@@ -668,44 +668,44 @@ as a co-routine under the <code>asyncio</code> library.</p></div>
 
     if &#34;OK&#34; in self._status:
         # First tell the client we accepted the request
-        writer.write(&#34;HTTP/1.1 200 OK\n&#34;)
+        writer.write(&#34;HTTP/1.1 200 OK\n&#34;.encode())
 
         # Then we try to assemble the body
         if self._mimetype is not None:
-            writer.write(f&#34;Content-Type: {self.mimetype}\n&#34;)
+            writer.write(f&#34;Content-Type: {self.mimetype}\n&#34;.encode())
 
     elif &#34;NOT_OK&#34; in self._status:
         # Tell the client we think we can route it: but the request
         # makes no sense
-        writer.write(&#34;HTTP/1.1 400 Bad Request\n&#34;)
+        writer.write(&#34;HTTP/1.1 400 Bad Request\n&#34;.encode())
 
     elif &#34;NOT_FOUND&#34; in self._status:
         # Tell the client we can&#39;t route their request
-        writer.write(&#34;HTTP/1.1 404 Not Found\n&#34;)
+        writer.write(&#34;HTTP/1.1 404 Not Found\n&#34;.encode())
 
     else:
         # This _really_ shouldn&#39;t be here. Assume an internal error
-        writer.write(&#34;HTTP/1.1 500 Internal Server Error\n&#34;)
+        writer.write(&#34;HTTP/1.1 500 Internal Server Error\n&#34;.encode())
 
     # Send the body length
-    writer.write(f&#34;Content-Length: {len(self._body)}\n&#34;)
+    writer.write(f&#34;Content-Length: {len(self._body)}\n&#34;.encode())
 
     # Send the body content type
-    writer.write(&#34;Content-Type: text/html\n&#34;)
+    writer.write(&#34;Content-Type: text/html\n&#34;.encode())
 
     # Send any other header fields
     if len(self._header) &gt; 0:
         for key, value in self._header.items():
-            writer.write(f&#34;{key}: {value}\n&#34;)
+            writer.write(f&#34;{key}: {value}\n&#34;.encode())
 
     # Send the HTTP connection state
     if self._close:
-        writer.write(&#34;Connection: close\n&#34;)
+        writer.write(&#34;Connection: close\n&#34;.encode())
     else:
-        writer.write(&#34;Connection: keep-alive\n&#34;)
+        writer.write(&#34;Connection: keep-alive\n&#34;.encode())
 
     # Send the body itself...
-    writer.write(f&#34;\n{self._body}\n&#34;)
+    writer.write(f&#34;\n{self._body}\n&#34;.encode())
 
     # ... and ensure that it gets back to the client
     await writer.drain()</code></pre>

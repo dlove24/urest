@@ -551,7 +551,7 @@ class RESTServer:
 
             await response.send(writer)
 
-            writer.write("\n")
+            writer.write("\n".encode())
 
             await writer.drain()
 
@@ -612,7 +612,7 @@ class RESTServer:
             print(f"SERVER: Started on {self.host}:{self.port}")
 
         self._server = await asyncio.start_server(
-            self.dispatch_noun, self.host, self.port, self.backlog
+            self.dispatch_noun, host=self.host, port=self.port, backlog=self.backlog
         )
 
     async def stop(self):
