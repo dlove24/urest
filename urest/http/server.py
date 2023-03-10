@@ -456,10 +456,16 @@ class RESTServer:
                         # DEBUG
                         if __debug__:
                             print(f"!EXCEPTION!: {e}")
+                            print(
+                                f"!INVALID DATA!: [{writer.get_extra_info('peername')[0]}] {request_data}"
+                            )
                         request_body = {}
 
                 # DEBUG
                 if __debug__:
+                    print(
+                        f"CLIENT DATA: [{writer.get_extra_info('peername')[0]}] {request_data}"
+                    )
                     print(
                         f"CLIENT BODY: [{writer.get_extra_info('peername')[0]}] {request_body}"
                     )

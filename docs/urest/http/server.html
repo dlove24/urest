@@ -518,10 +518,16 @@ class RESTServer:
                         # DEBUG
                         if __debug__:
                             print(f&#34;!EXCEPTION!: {e}&#34;)
+                            print(
+                                f&#34;!INVALID DATA!: [{writer.get_extra_info(&#39;peername&#39;)[0]}] {request_data}&#34;
+                            )
                         request_body = {}
 
                 # DEBUG
                 if __debug__:
+                    print(
+                        f&#34;CLIENT DATA: [{writer.get_extra_info(&#39;peername&#39;)[0]}] {request_data}&#34;
+                    )
                     print(
                         f&#34;CLIENT BODY: [{writer.get_extra_info(&#39;peername&#39;)[0]}] {request_body}&#34;
                     )
@@ -1206,10 +1212,16 @@ client, before declaring failure.</p>
                         # DEBUG
                         if __debug__:
                             print(f&#34;!EXCEPTION!: {e}&#34;)
+                            print(
+                                f&#34;!INVALID DATA!: [{writer.get_extra_info(&#39;peername&#39;)[0]}] {request_data}&#34;
+                            )
                         request_body = {}
 
                 # DEBUG
                 if __debug__:
+                    print(
+                        f&#34;CLIENT DATA: [{writer.get_extra_info(&#39;peername&#39;)[0]}] {request_data}&#34;
+                    )
                     print(
                         f&#34;CLIENT BODY: [{writer.get_extra_info(&#39;peername&#39;)[0]}] {request_body}&#34;
                     )
@@ -1526,10 +1538,16 @@ streamwriter">asyncio.StreamWriter</a>.</dd>
                     # DEBUG
                     if __debug__:
                         print(f&#34;!EXCEPTION!: {e}&#34;)
+                        print(
+                            f&#34;!INVALID DATA!: [{writer.get_extra_info(&#39;peername&#39;)[0]}] {request_data}&#34;
+                        )
                     request_body = {}
 
             # DEBUG
             if __debug__:
+                print(
+                    f&#34;CLIENT DATA: [{writer.get_extra_info(&#39;peername&#39;)[0]}] {request_data}&#34;
+                )
                 print(
                     f&#34;CLIENT BODY: [{writer.get_extra_info(&#39;peername&#39;)[0]}] {request_body}&#34;
                 )
