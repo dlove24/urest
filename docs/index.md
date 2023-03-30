@@ -4,7 +4,7 @@
 
 This library is designed to enable simple API's to be built on micro-controllers, based on a sub-set of the REST API design principles, and inspired by the design of the [Apollo DSKY](https://history-computer.com/apollo-guidance-computer/) guidance computer. Rather than build a full HTTP server stack, including JSON parser, and supporting the full complexity of modern REST API's, this library aims to support simple operations in a resource constrained environment.
 
-Like the DSKY unit, it is assumed that all the 'objects' representing the states we are interested in are held in '[nouns](https://dlove24.github.io/urest/urest/api/base.html)'. The HTTP actions then represent 'verbs' which dictate the actions on the noun. So each API call is then in the form of 'verb-noun'; e.g. 'GET /led', or 'PUT /led'. Valid verb actions are
+Like the DSKY unit, it is assumed that all the 'objects' representing the states we are interested in are held in '[nouns](https://dlove24.github.io/urest/urest/api/base.html)'. The HTTP actions then represent 'verbs' which dictate the actions on the noun. So each API call is then in the form of 'verb-noun'; e.g. '`GET /led`', or '`PUT /led`'. Valid verb actions are
 
 | Verb | HTTP Method | Action |
 | --- | --- | --- |

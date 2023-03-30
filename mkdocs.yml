@@ -19,9 +19,14 @@ markdown_extensions:
 
 nav:
   - Home: 'index.md'
-  - examples.md
+  - 'Tutorials':
+    - 'Pico Network Server': 'tutorials/pico_server.md'
+    - 'Creating a Client': 'tutorials/client_test.md'
+  - 'How-To':
+    - 'Set-Up the Pico Board': 'how_to/pico_setup.md'
+    - 'Testing the Library': 'how_to/run_tests.md'
   - 'Reference':
-    - 'Guide to the API': 'ref/reference.md'
-    - 'Driver Classes': 'ref/drivers/drivers.md'
-    - 'Seven Segment Drivers': 'ref/drivers/seven_segment.md'
-  - explanation.md
+    - 'Creating an API': 'ref/api.md'
+    - 'Serving the API': 'ref/http.md'
+  - 'Background':
+    - 'REST APIs': 'background/rest.md'
