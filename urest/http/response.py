@@ -57,7 +57,6 @@ HTTPStatus = {"OK", "NOT_OK", "NOT_FOUND"}
 
 
 class HTTPResponse:
-
     ##
     ## Constructor
     ##

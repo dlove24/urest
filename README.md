@@ -1,6 +1,8 @@
 uREST
 =====
 
+[![PyPI version](https://badge.fury.io/py/urest-mp.svg)](https://badge.fury.io/py/urest-mp)
+
 Background
 ----------
 

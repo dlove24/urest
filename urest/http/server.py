@@ -94,7 +94,6 @@ class RESTParseError(Exception):
 
 
 class RESTServer:
-
     #
     def __init__(
         self,
@@ -245,7 +244,6 @@ class RESTServer:
         token_str = ""
 
         for char in data_str.decode("ascii"):
-
             # Look for the first object
             if char in ["{"]:
                 object_start = True
@@ -253,10 +251,8 @@ class RESTServer:
             # If we are inside an object, attempt to assemble the
             # tokens
             if object_start:
-
                 # If a '"' is found...
                 if char in ['"']:
-
                     # ... and if we are building a token, this should be the
                     # end of a string, so push it to the stack ...
                     if token_start:
@@ -285,11 +281,9 @@ class RESTServer:
 
                 # Look for the end of a token
                 if char in [",", "}"]:
-
                     # Add the key/value to the return dictionary if
                     # it appears to be valid
                     if token_sep:
-
                         if token_type == JSON_TYPE_INT:
                             # The token won't have been terminated
                             # so still should be in `token_str`
@@ -343,7 +337,6 @@ class RESTServer:
         old_handler = None
 
         try:
-
             if noun in self._nouns:
                 old_handler = self._nouns[noun]
 
@@ -394,7 +387,6 @@ class RESTServer:
         # fragments into an API request. Any failures should result in an
         # `Exception`: success should result in an API call
         try:
-
             # Get the raw network request and decode into UTF-8
             request_uri = await asyncio.wait_for(reader.readline(), self.read_timeout)
             request_uri = request_uri.decode("utf8")
@@ -443,7 +435,6 @@ class RESTServer:
 
                 # ... check if there is _really a body to follow ...
                 if request_length > 0:
-
                     # ... if so, get the rest of the body of the request, decoded into UTF-8
 
                     try:
