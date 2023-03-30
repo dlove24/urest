@@ -1,0 +1,27 @@
+site_name: LBUtils Library
+
+theme:
+  name: readthedocs
+
+plugins:
+  - autorefs
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: numpy
+            heading_level: 4
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+
+nav:
+  - Home: 'index.md'
+  - examples.md
+  - 'Reference':
+    - 'Guide to the API': 'ref/reference.md'
+    - 'Driver Classes': 'ref/drivers/drivers.md'
+    - 'Seven Segment Drivers': 'ref/drivers/seven_segment.md'
+  - explanation.md
