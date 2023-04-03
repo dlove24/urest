@@ -47,7 +47,7 @@ try:
 
     from machine import Pin
     from micropython import const
-except ImporError:
+except ImportError:
     print("Ignoring MicroPython includes")
 
 try:
@@ -107,13 +107,19 @@ def netcode_to_str(error_code: int) -> str:
     elif error_code == CYW43_LINK_JOIN:
         return "The SSID or password is incorrect  - check the SSID and password."
     elif error_code == CYW43_LINK_NOIP:
-        return "The join request was successful, but no IP address was returned - check the DHCP settings for the specified SSID"
+        return (
+            "The join request was successful, but no IP address was returned - check"
+            " the DHCP settings for the specified SSID"
+        )
     elif error_code == CYW43_LINK_UP:
         return "Successfully joined, and an IP address was obtained from the network"
     elif error_code == CYW43_LINK_FAIL:
         return "The link specified by the SSID is unavailable for unknown reasons"
     elif error_code == CYW43_LINK_NONET:
-        return "The authentication likely succeeded: but the subsequent attempts to complete the connection failed"
+        return (
+            "The authentication likely succeeded: but the subsequent attempts to"
+            " complete the connection failed"
+        )
     elif error_code == CYW43_LINK_BADAUTH:
         return (
             "General failure code before authentication - check the supplied password."
@@ -186,7 +192,8 @@ def wireless_enable(
     # Handle connection error
     if wlan.status() != CYW43_LINK_UP:
         raise WirelessNetworkError(
-            f"Network connection attempt failed: { netcode_to_str(wlan.status()) } (Code: {wlan.status()})"
+            "Network connection attempt failed:"
+            f" { netcode_to_str(wlan.status()) } (Code: {wlan.status()})"
         )
     else:
         print("Connected")
