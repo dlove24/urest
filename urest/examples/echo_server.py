@@ -36,9 +36,9 @@ import time
 import urest.utils
 
 try:
- import uasyncio as asyncio
+    import uasyncio as asyncio
 except ImportError:
- import asyncio
+    import asyncio
 
 from urest.http import RESTServer
 from urest.api import APIBase
@@ -59,12 +59,11 @@ app = RESTServer(port=8024)
 
 # ... and register the nouns
 try:
- app.register_noun("echo", EchoServer())
+    app.register_noun("echo", EchoServer())
 except NameError:
- print("Cannot initalise the API")
+    print("Cannot initalise the API")
 
 if __name__ == "__main__":
- loop = asyncio.new_event_loop()
- loop.create_task(app.start())
- loop.run_forever()
-
+    loop = asyncio.new_event_loop()
+    loop.create_task(app.start())
+    loop.run_forever()
