@@ -5,7 +5,7 @@ Run as: `py.test test_simple_get.py`
 """
 import requests
 
-IP_ADDRESS = "10.0.30.225"
+IP_ADDRESS = "10.0.30.220"
 
 
 def test_pwm_get_check():

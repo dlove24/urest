@@ -26,4 +26,4 @@ Utility classes and function which are not part of the main library, but which a
 """
 
 ### Expose the `utils` helper classes
-from .network_connect import WirelessNetworkError, netcode_to_str
+from .network_connect import WirelessNetworkError, netcode_to_str, wireless_enable

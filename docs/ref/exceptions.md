@@ -8,6 +8,10 @@ internal or external (network) failures.
 
 The following exceptions are thrown by the [`urest.http.server.RESTServer`][urest.http.server.RESTServer] class, and should be handled by the _API server_ and not passed directly onto the network client.
 
+::: urest.http.server.RESTClientError
+          options:
+            heading_level: 3
+
 ::: urest.http.server.RESTServerError
           options:
             heading_level: 3

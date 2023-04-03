@@ -1,25 +1,3 @@
-# This module, and all included code, is made available under the terms of the MIT
-# Licence
-#
-# Copyright 2022 (c) Erik de Lange, Copyright (c) 2022-2023 David Love
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal in
-# the Software without restriction, including without limitation the rights to
-# use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-# the Software, and to permit persons to whom the Software is furnished to do so,
-# subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-# FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-# COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-# IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-# CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
 """
 Micro HTTP server dedicated to REST-style API Requests. Inspired by the
 [MicroPython HTTP Server](https://github.com/erikdelange/MicroPython-HTTP-Server)
@@ -36,6 +14,31 @@ Standards
 
   * For the HTTP/1.1 specification see: https://www.ietf.org/rfc/rfc2616.txt
   * For the JSON specification see: https://www.ecma-international.org/publications-and-standards/standards/ecma-404
+
+Licence
+-------
+
+This module, and all included code, is made available under the terms of the MIT
+Licence
+
+> Copyright 2022 (c) Erik de Lange, Copyright (c) 2022-2023 David Love
+
+> Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+> The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+> THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
 # Import the standard error library
@@ -77,43 +80,11 @@ JSON_TYPE_ERROR = 1
 ##
 
 
-class RESTClientError(Exception):
-    """
-    Client Error. Thrown as a general failure of client requests, usually as
-    a result of transient network errors.
-
-    This exception should be notified to the client as the HTTP response '`400
-    Bad Request`', and further processing should not be attempted until the client
-    retries the request.
-    """
-
-    pass
-
-
 class RESTServerError(Exception):
-    """
-    Internal Server Error. Thrown as a general failure of the
-    `urest.http.server` module when no more specific exception is available. This
-    usually indicates a bug in the library.
-
-    This exception should be notified to the client as the HTTP response '`500
-    Internal Server Error`', and further processing should not be attempted.
-    """
-
     pass
 
 
 class RESTParseError(Exception):
-    """
-    Parse failure. The HTTP header or body elements supplied by the network
-    client are invalid, and cannot be parsed correctly by the `urest.http.server`
-    module.
-
-    This exception should be notified to the client as the HTTP response '`400
-    Bad Request`', and further processing should not be attempted until the client
-    retries the request.
-    """
-
     pass
 
 
@@ -253,18 +224,13 @@ class RESTServer:
         data_str: str
             A JSON object string, representing a single dictionary
 
-        Raises
-        ------
-
-        RESTParseError
-
         Returns
         -------
 
         dict
-            A mapping of (key, value) pairs which defines the dictionary of the `data_str`
-            object. All `key` values will be in Python string format: values will be as
-            defined in the `data_str` object.
+          A mapping of (key, value) pairs which defines the dictionary of the `data_str`
+          object. All `key` values will be in Python string format: values will be as
+          defined in the `data_str` object.
         """
 
         return_dictionary = {}
@@ -486,19 +452,15 @@ class RESTServer:
                             )
                         request_body = {}
 
-                    # DEBUG
-                    if __debug__:
-                        print(
-                            f"CLIENT DATA: [{writer.get_extra_info('peername')[0]}] {request_data}"
-                        )
-                        print(
-                            f"CLIENT BODY: [{writer.get_extra_info('peername')[0]}] {request_body}"
-                        )
+                # DEBUG
+                if __debug__:
+                    print(
+                        f"CLIENT DATA: [{writer.get_extra_info('peername')[0]}] {request_data}"
+                    )
+                    print(
+                        f"CLIENT BODY: [{writer.get_extra_info('peername')[0]}] {request_body}"
+                    )
 
-                else:
-                    # DEBUG
-                    if __debug__:
-                        print("CLIENT BODY: NONE")
             else:
                 # DEBUG
                 if __debug__:
@@ -586,7 +548,7 @@ class RESTServer:
 
             await response.send(writer)
 
-            writer.write("\r\n".encode())
+            writer.write("\n".encode())
 
             await writer.drain()
 
@@ -599,10 +561,7 @@ class RESTServer:
             if e.args[0] == errno.ECONNRESET:  # connection reset by client
                 pass
             else:
-                if hasattr(e, "message"):
-                    raise RESTClientError(e.message)
-                else:
-                    raise RESTClientError("Client Error")
+                raise e
 
             # DEBUG
             if __debug__:

@@ -77,19 +77,6 @@ JSON_TYPE_ERROR = 1
 ##
 
 
-class RESTClientError(Exception):
-    """
-    Client Error. Thrown as a general failure of client requests, usually as
-    a result of transient network errors.
-
-    This exception should be notified to the client as the HTTP response '`400
-    Bad Request`', and further processing should not be attempted until the client
-    retries the request.
-    """
-
-    pass
-
-
 class RESTServerError(Exception):
     """
     Internal Server Error. Thrown as a general failure of the
@@ -430,14 +417,16 @@ class RESTServer:
                 # DEBUG
                 if __debug__:
                     print(
-                        f"CLIENT: [{writer.get_extra_info('peername')[0]}] Empty request line"
+                        f"CLIENT: [{writer.get_extra_info('peername')[0]}] Empty"
+                        " request line"
                     )
                     return
 
             # DEBUG
             if __debug__:
                 print(
-                    f"CLIENT URI : [{writer.get_extra_info('peername')[0]}] {request_uri.strip()}"
+                    f"CLIENT URI : [{writer.get_extra_info('peername')[0]}]"
+                    f" {request_uri.strip()}"
                 )
 
             # Get the header of the request, if it is available, decoded into UTF-8
@@ -458,7 +447,8 @@ class RESTServer:
             # DEBUG
             if __debug__:
                 print(
-                    f"CLIENT HEAD: [{writer.get_extra_info('peername')[0]}] {request_header}"
+                    f"CLIENT HEAD: [{writer.get_extra_info('peername')[0]}]"
+                    f" {request_header}"
                 )
 
             # Check if there is a body to follow the header ...
@@ -482,23 +472,23 @@ class RESTServer:
                         if __debug__:
                             print(f"!EXCEPTION!: {e}")
                             print(
-                                f"!INVALID DATA!: [{writer.get_extra_info('peername')[0]}] {request_data}"
+                                "!INVALID DATA!:"
+                                f" [{writer.get_extra_info('peername')[0]}]"
+                                f" {request_data}"
                             )
                         request_body = {}
 
-                    # DEBUG
-                    if __debug__:
-                        print(
-                            f"CLIENT DATA: [{writer.get_extra_info('peername')[0]}] {request_data}"
-                        )
-                        print(
-                            f"CLIENT BODY: [{writer.get_extra_info('peername')[0]}] {request_body}"
-                        )
+                # DEBUG
+                if __debug__:
+                    print(
+                        f"CLIENT DATA: [{writer.get_extra_info('peername')[0]}]"
+                        f" {request_data}"
+                    )
+                    print(
+                        f"CLIENT BODY: [{writer.get_extra_info('peername')[0]}]"
+                        f" {request_body}"
+                    )
 
-                else:
-                    # DEBUG
-                    if __debug__:
-                        print("CLIENT BODY: NONE")
             else:
                 # DEBUG
                 if __debug__:
@@ -586,7 +576,7 @@ class RESTServer:
 
             await response.send(writer)
 
-            writer.write("\r\n".encode())
+            writer.write("\n".encode())
 
             await writer.drain()
 
@@ -599,10 +589,7 @@ class RESTServer:
             if e.args[0] == errno.ECONNRESET:  # connection reset by client
                 pass
             else:
-                if hasattr(e, "message"):
-                    raise RESTClientError(e.message)
-                else:
-                    raise RESTClientError("Client Error")
+                raise e
 
             # DEBUG
             if __debug__:
