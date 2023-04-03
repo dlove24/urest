@@ -1,3 +1,25 @@
+# This module, and all included code, is made available under the terms of the MIT
+# Licence
+#
+# Copyright 2022 (c) Erik de Lange, Copyright (c) 2022-2023 David Love
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal in
+# the Software without restriction, including without limitation the rights to
+# use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+# the Software, and to permit persons to whom the Software is furnished to do so,
+# subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+# FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+# COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+# IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+# CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
 """
 Micro HTTP server dedicated to REST-style API Requests. Inspired by the
 [MicroPython HTTP Server](https://github.com/erikdelange/MicroPython-HTTP-Server)
@@ -14,31 +36,6 @@ Standards
 
   * For the HTTP/1.1 specification see: https://www.ietf.org/rfc/rfc2616.txt
   * For the JSON specification see: https://www.ecma-international.org/publications-and-standards/standards/ecma-404
-
-Licence
--------
-
-This module, and all included code, is made available under the terms of the MIT
-Licence
-
-> Copyright 2022 (c) Erik de Lange, Copyright (c) 2022-2023 David Love
-
-> Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-the Software, and to permit persons to whom the Software is furnished to do so,
-subject to the following conditions:
-
-> The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-> THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
 # Import the standard error library
@@ -228,9 +225,9 @@ class RESTServer:
         -------
 
         dict
-          A mapping of (key, value) pairs which defines the dictionary of the `data_str`
-          object. All `key` values will be in Python string format: values will be as
-          defined in the `data_str` object.
+            A mapping of (key, value) pairs which defines the dictionary of the `data_str`
+            object. All `key` values will be in Python string format: values will be as
+            defined in the `data_str` object.
         """
 
         return_dictionary = {}

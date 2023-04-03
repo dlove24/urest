@@ -3,6 +3,9 @@ site_name: uREST MicroPython Library
 theme:
   name: readthedocs
 
+extra_css:
+  - css/extra.css
+
 plugins:
   - autorefs
   - mkdocstrings:
@@ -10,10 +13,20 @@ plugins:
         python:
           options:
             docstring_style: numpy
-            heading_level: 4
+            heading_level: 2
+            separate_signature: True
+            docstring_section_style: list
+            show_root_heading: True
+            show_signature_annotations: True
+            show_category_heading: True
+            show_source: True
+
+
 
 markdown_extensions:
   - admonition
+  - attr_list
+  - md_in_html
   - pymdownx.details
   - pymdownx.superfences
 
@@ -30,3 +43,6 @@ nav:
     - 'Serving the API': 'ref/http.md'
   - 'Background':
     - 'REST APIs': 'background/rest.md'
+
+watch:
+  - urest

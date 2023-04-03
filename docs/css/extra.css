@@ -1,0 +1,86 @@
+/*
+ * This file is made available under the terms of the MIT Licence
+ *
+ * Copyright 2022-2023, David Love
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+/*** Alter the default mkdocs Read The Docs Theme to better define
+ *** the visual relationship between the class, functions, and
+ *** the function bodes.
+ **/
+
+/**
+ ** Class and Function Identifiers. Make these look more like
+ ** the Sphinx theme, but visually separate classes more than
+ ** functions.
+ **
+ */
+
+span.doc.doc-object-name.doc-class-name {
+  border-top: solid 3px #6ab0de;
+  background: #e7f2fa;
+  color: #2980B9;
+  padding: 6px;
+}
+
+span.doc.doc-object-name.doc-function-name {
+  border-left: solid 3px #ccc;
+  background: #f0f0f0;
+  color: #555;
+  padding: 6px;
+}
+
+/**
+ ** Parameter Lists. Currently (2023-04-03) the default mkdocs
+ ** Read The Docs theme gives very little control over the list
+ ** style parameter list. So we will tone down the markers, and
+ ** give the parameters more of a lift to change the typographic
+ ** colour and emphasise the parameters: but not at the expense
+ ** of the overall colour of the text. This should make it
+ ** visually easier to parse the somewhat dense presentation
+ ** of this style.
+ **
+ */
+
+li.field-body > b {
+  color: #6ab0de;
+  font-style: italic;
+}
+
+li.field-body::marker {
+  color: #ccc;
+}
+
+/**
+ ** Source Code. Stop the clash between the source code summary
+ ** and the other page elements. Visually integrate as well
+ ** whilst we are here.
+ **
+ */
+
+summary {
+  margin: 24px;
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
+
+summary::marker {
+  color: #6ab0de;
+}
