@@ -396,14 +396,16 @@ class RESTServer:
                 # DEBUG
                 if __debug__:
                     print(
-                        f"CLIENT: [{writer.get_extra_info('peername')[0]}] Empty request line"
+                        f"CLIENT: [{writer.get_extra_info('peername')[0]}] Empty"
+                        " request line"
                     )
                     return
 
             # DEBUG
             if __debug__:
                 print(
-                    f"CLIENT URI : [{writer.get_extra_info('peername')[0]}] {request_uri.strip()}"
+                    f"CLIENT URI : [{writer.get_extra_info('peername')[0]}]"
+                    f" {request_uri.strip()}"
                 )
 
             # Get the header of the request, if it is available, decoded into UTF-8
@@ -424,7 +426,8 @@ class RESTServer:
             # DEBUG
             if __debug__:
                 print(
-                    f"CLIENT HEAD: [{writer.get_extra_info('peername')[0]}] {request_header}"
+                    f"CLIENT HEAD: [{writer.get_extra_info('peername')[0]}]"
+                    f" {request_header}"
                 )
 
             # Check if there is a body to follow the header ...
@@ -448,17 +451,21 @@ class RESTServer:
                         if __debug__:
                             print(f"!EXCEPTION!: {e}")
                             print(
-                                f"!INVALID DATA!: [{writer.get_extra_info('peername')[0]}] {request_data}"
+                                "!INVALID DATA!:"
+                                f" [{writer.get_extra_info('peername')[0]}]"
+                                f" {request_data}"
                             )
                         request_body = {}
 
                 # DEBUG
                 if __debug__:
                     print(
-                        f"CLIENT DATA: [{writer.get_extra_info('peername')[0]}] {request_data}"
+                        f"CLIENT DATA: [{writer.get_extra_info('peername')[0]}]"
+                        f" {request_data}"
                     )
                     print(
-                        f"CLIENT BODY: [{writer.get_extra_info('peername')[0]}] {request_body}"
+                        f"CLIENT BODY: [{writer.get_extra_info('peername')[0]}]"
+                        f" {request_body}"
                     )
 
             else:
