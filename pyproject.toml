@@ -22,4 +22,4 @@ classifiers = [
 "Documentation" = "https://dlove24.github.io/urest/urest/index.html"
 
 [tool.setuptools]
-packages = ["urest", "urest.api", "urest.examples", "urest.http"]
+packages = ["urest", "urest.api", "urest.examples", "urest.http", "urest.utils"]

@@ -41,6 +41,7 @@ Implements the 'Abstract' Base Class for all the nouns used by the
   implementations.
 """
 
+
 class APIBase:
     ##
     ## Constructor

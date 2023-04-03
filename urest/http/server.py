@@ -78,10 +78,29 @@ JSON_TYPE_ERROR = 1
 
 
 class RESTServerError(Exception):
+    """
+    Internal Server Error. Thrown as a general failure of the
+    `urest.http.server` module when no more specific exception is available. This
+    usually indicates a bug in the library.
+
+    This exception should be notified to the client as the HTTP response '`500
+    Internal Server Error`', and further processing should not be attempted.
+    """
+
     pass
 
 
 class RESTParseError(Exception):
+    """
+    Parse failure. The HTTP header or body elements supplied by the network
+    client are invalid, and cannot be parsed correctly by the `urest.http.server`
+    module.
+
+    This exception should be notified to the client as the HTTP response '`400
+    Bad Request`', and further processing should not be attempted until the client
+    retries the request.
+    """
+
     pass
 
 
@@ -220,6 +239,11 @@ class RESTServer:
 
         data_str: str
             A JSON object string, representing a single dictionary
+
+        Raises
+        ------
+
+        RESTParseError
 
         Returns
         -------

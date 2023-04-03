@@ -21,8 +21,6 @@ plugins:
             show_category_heading: True
             show_source: True
 
-
-
 markdown_extensions:
   - admonition
   - attr_list
@@ -34,13 +32,15 @@ nav:
   - Home: 'index.md'
   - 'Tutorials':
     - 'Pico Network Server': 'tutorials/pico_server.md'
-    - 'Creating a Client': 'tutorials/client_test.md'
+    - 'A Simple Echo Server': 'tutorials/client_test.md'
   - 'How-To':
     - 'Set-Up the Pico Board': 'how_to/pico_setup.md'
     - 'Testing the Library': 'how_to/run_tests.md'
   - 'Reference':
     - 'Creating an API': 'ref/api.md'
     - 'Serving the API': 'ref/http.md'
+    - 'Library Exceptions': 'ref/exceptions.md'
+    - 'Library Utilities': 'ref/utils.md'
   - 'Background':
     - 'REST APIs': 'background/rest.md'
 
