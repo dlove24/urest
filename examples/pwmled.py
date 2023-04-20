@@ -97,7 +97,7 @@ class PWMLED(APIBase):
 
         self._state_attributes = {"desired": 0, "current": 0}
 
-    async def _slow_on(self):
+    async def _slow_on(self) -> None:
         # Wait for the GPIO lock if we need to
         await self._gpio_lock.acquire()
 
@@ -115,8 +115,8 @@ class PWMLED(APIBase):
             self._gpio.duty_u16(self._duty)
 
             await asyncio.sleep_ms(1000)
-        else:
-            self._state_attributes["current"] = 1
+
+        self._state_attributes["current"] = 1
 
         # Set the duty cycle to maximum before we leave,
         # and release the GPIO lock
@@ -125,7 +125,7 @@ class PWMLED(APIBase):
 
         self._gpio_lock.release()
 
-    async def _slow_off(self):
+    async def _slow_off(self) -> None:
         # Wait for the GPIO lock if we need to
         await self._gpio_lock.acquire()
 
@@ -143,8 +143,8 @@ class PWMLED(APIBase):
             self._gpio.duty_u16(self._duty)
 
             await asyncio.sleep_ms(1000)
-        else:
-            self._state_attributes["current"] = 0
+
+        self._state_attributes["current"] = 0
 
         # Set the duty cycle to 0 before we leave,
         # and release the GPIO lock
@@ -153,7 +153,7 @@ class PWMLED(APIBase):
 
         self._gpio_lock.release()
 
-    def set_state(self, state_attributes: dict):
+    def set_state(self, state_attributes: dict) -> None:
         try:
             loop = asyncio.get_event_loop()
 
@@ -180,7 +180,7 @@ class PWMLED(APIBase):
     def get_state(self) -> dict:
         return self._state_attributes
 
-    def delete_state(self):
+    def delete_state(self) -> None:
         self._gpio.duty_u16(0)
         self._gpio.freq(100)
         self._duty = 0
@@ -188,7 +188,7 @@ class PWMLED(APIBase):
         self._state_attributes["desired"] = 0
         self._state_attributes["current"] = 0
 
-    def update_state(self, state_attributes: dict):
+    def update_state(self, state_attributes: dict) -> None:
         loop = asyncio.get_event_loop()
 
         if self._state_attributes["desired"] == 0:

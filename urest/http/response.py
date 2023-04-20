@@ -80,9 +80,9 @@ class HTTPResponse:
         ----------
 
         body: string
-            The raw HTTP body returned to the client. This is `Empty` by default as
-            the return string is usually built by the caller via the `getters` and
-            `setters` of `urest.http.response.HTTPResponse`
+            The raw HTTP body returned to the client. This is `Empty` by default
+            as the return string is usually built by the caller via the `getters`
+            and `setters` of `urest.http.response.HTTPResponse`.
         status: urest.http.response.HTTPStatus
             HTTP status code, which must be formed from the set
             `urest.http.response.HTTPResponse`. Arbitrary return codes are **not**
@@ -93,23 +93,23 @@ class HTTPResponse:
             created.
         close: bool
             When set `True` the connection to the client will be closed by the
-            `urest.http.server.RESTServer` once the `urest.http.response.HTTPResponse`
-            has been sent. Otherwise, when set to `False` this will flag to the
-            client that the created `urest.http.response.HTTPResponse` is part of
-            a sequence to be sent over the same connection.
+            `urest.http.server.RESTServer` once the
+            `urest.http.response.HTTPResponse` has been sent. Otherwise, when set
+            to `False` this will flag to the client that the created
+            `urest.http.response.HTTPResponse` is part of a sequence to be sent
+            over the same connection.
         header:  Dictionary
             Raw (key, value) pairs for HTTP response header fields. This allows
-            setting of arbitrary fields by the caller, without extending/sub-classing
-            `urest.http.response.HTTPResponse`
+            setting of arbitrary fields by the caller, without extending/sub-
+            classing `urest.http.response.HTTPResponse`
 
         """
 
         if status in HTTPStatus:
             self._status = status
         else:
-            raise ValueError(
-                "Invalid HTTP status code passed to the HTTP Response class",
-            )
+            msg = "Invalid HTTP status code passed to the HTTP Response class"
+            raise ValueError(msg)
 
         if body is not None and isinstance(body, str):
             self._body = body
@@ -131,13 +131,13 @@ class HTTPResponse:
     # HTTP Body
 
     @property
-    def body(self):
+    def body(self) -> str:
         """The raw HTTP response, formatted to return to the client as the HTTP response."""
 
         return self._body
 
     @body.setter
-    def body(self, new_body: str):
+    def body(self, new_body: str) -> None:
         if new_body is not None and isinstance(new_body, str):
             self._body = new_body
         else:
@@ -146,7 +146,7 @@ class HTTPResponse:
     # HTTP Status
 
     @property
-    def status(self):
+    def status(self) -> HTTPResponse:
         """
         A valid `urest.http.response.HTTPResponse` representing the current
         error/status code that will be returned to the client.
@@ -154,19 +154,18 @@ class HTTPResponse:
         return self._status
 
     @status.setter
-    def status(self, new_status: HTTPStatus):
+    def status(self, new_status: HTTPStatus) -> None:
         if new_status in HTTPStatus:
             self._status = new_status
         else:
-            raise ValueError(
-                "Invalid HTTP status code passed to the HTTP Response class",
-            )
+            msg = "Invalid HTTP status code passed to the HTTP Response class"
+            raise ValueError(msg)
 
     ##
     ## Functions
     ##
 
-    async def send(self, writer: asyncio.StreamWriter):
+    async def send(self, writer: asyncio.StreamWriter) -> None:
         """Send an appropriate response to the client, based on the status code.
 
         This method assembles the full HTTP 1.1 header, based on the `mimetype`

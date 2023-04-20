@@ -72,19 +72,22 @@ In most cases, something similar to the following will suffice
     loop.run_forever()
 ```
 
-.. Warning::
-
-  There is no guarantee of thread-safety in this module, and all
-  'concurrency' is assumed to be via co-routines provided by the `asyncio`
-  library. For an overview of how multiple clients can be handled using
-  co-routines, [Async IO in Python](https://realpython.com/async-io-python) is
-  highly recommended reading.
+!!! Warning
+    There is no guarantee of thread-safety in this module, and all
+    'concurrency' is assumed to be via co-routines provided by the `asyncio`
+    library. For an overview of how multiple clients can be handled using
+    co-routines, [Async IO in Python](https://realpython.com/async-io-python) is
+    highly recommended reading.
 
 ### Creating the API Responses
 
 Most module consumers will not use the `urest.http.response` module directly:
 but will instead sub-class `urest.api.base.APIBase` to provide the core of the
-response to the network clients. For details of how the `urest.http.server.RESTServer` and `urest.api.base.APIBase` classes interact, the module documentation for `urest.api` should be consulted. In addition, the documentation for the `urest.examples.simpleled.SimpleLED` class might prove useful as an example of a simple implementation of the API.
+response to the network clients. For details of how the
+`urest.http.server.RESTServer` and `urest.api.base.APIBase` classes interact,
+the module documentation for `urest.api` should be consulted. In addition, the
+documentation for the `urest.examples.simpleled.SimpleLED` class might prove
+useful as an example of a simple implementation of the API.
 
 
 Tested Implementations

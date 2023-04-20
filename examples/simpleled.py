@@ -53,13 +53,13 @@ from urest.api.base import APIBase
 
 
 class SimpleLED(APIBase):
-    def __init__(self, pin) -> None:
+    def __init__(self, pin: Pin) -> None:
         self._gpio = Pin(pin, Pin.OUT)
         self._gpio.off()
 
         self._state_attributes = {"led": 0}
 
-    def set_state(self, state_attributes: dict):
+    def set_state(self, state_attributes: dict) -> None:
         try:
             self._state_attributes["led"] = state_attributes["led"]
 
@@ -77,11 +77,11 @@ class SimpleLED(APIBase):
     def get_state(self) -> dict:
         return {"led": self._gpio.value()}
 
-    def delete_state(self):
+    def delete_state(self) -> None:
         self._gpio.off()
         self._state_attributes["led"] = 0
 
-    def update_state(self, state_attributes: dict):
+    def update_state(self, state_attributes: dict) -> None:
         if self._state_attributes["led"] == 0:
             self._gpio.on()
             self._state_attributes["led"] = 1

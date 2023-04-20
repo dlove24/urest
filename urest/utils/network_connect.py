@@ -129,7 +129,9 @@ def netcode_to_str(error_code: int) -> str:
 
 
 def wireless_enable(
-    ssid: str, password: str, link_light: int | str = "WL_GPIO0",
+    ssid: str,
+    password: str,
+    link_light: int | str = "WL_GPIO0",
 ) -> None:
     """
     Enable the default wireless interface, connecting to the networking using

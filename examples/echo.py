@@ -45,7 +45,7 @@ class EchoServer(APIBase):
         self._state = False
         self._state_attributes = {"echo": 0}
 
-    def set_state(self, state_attributes: dict):
+    def set_state(self, state_attributes: dict) -> None:
         try:
             self._state_attributes["echo"] = state_attributes["echo"]
 
@@ -63,11 +63,11 @@ class EchoServer(APIBase):
     def get_state(self) -> dict:
         return {"echo": self._state}
 
-    def delete_state(self):
+    def delete_state(self) -> None:
         self._state = False
         self._state_attributes["echo"] = 0
 
-    def update_state(self, state_attributes: dict):
+    def update_state(self, state_attributes: dict) -> None:
         if self._state_attributes["echo"] == 0:
             self._state = True
             self._state_attributes["echo"] = 1

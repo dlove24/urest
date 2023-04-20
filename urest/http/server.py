@@ -136,19 +136,19 @@ class RESTServer:
         for most cases, and should be set so that most clients won't have
         to touch them.
 
-        The `urest.http.server.RESTServer` class acts as the primary interface
-        to the library, handling all the network communication with the client,
-        formatting the response and marshalling the API calls required to generate that
-        response.
+        The `urest.http.server.RESTServer` class acts as the primary interface to
+        the library, handling all the network communication with the client,
+        formatting the response and marshalling the API calls required to generate
+        that response.
 
         In most cases consumers of this module will create a single instance of
-        the `urest.http.server.RESTServer` class, and then pass the reference to the
-        `urest.http.server.RESTServer.start` method to an event loop of the `asyncio`
-        library.
+        the `urest.http.server.RESTServer` class, and then pass the reference to
+        the `urest.http.server.RESTServer.start` method to an event loop of the
+        `asyncio` library.
 
         For example the following code creates a variable `app` for the instance
-        of the `urest.http.server.RESTServer` class, and passes this to the 'main' event
-        loop of the `asyncio` library
+        of the `urest.http.server.RESTServer` class, and passes this to the 'main'
+        event loop of the `asyncio` library
 
         ```python
         app = RESTServer()
@@ -160,57 +160,53 @@ class RESTServer:
           loop.run_forever()
         ```
 
-        The `urest.http.server.RESTServer.start` method is expected to be used
-        in a [`asyncio` event
-        loop](https://docs.python.org/3.4/library/asyncio-eventloop.html), as above;
-        with the tasks being handled by the `urest.http.server.RESTServer.dispatch_noun`
-        method. If the event loop is required to be closed, or destroyed, the tasks
-        can be removed using the `urest.http.server.RESTServer.stop` method.
+        The `urest.http.server.RESTServer.start` method is expected to be used in
+        a [`asyncio` event loop](https://docs.python.org/3.4/library/asyncio-
+        eventloop.html), as above; with the tasks being handled by the
+        `urest.http.server.RESTServer.dispatch_noun` method. If the event loop is
+        required to be closed, or destroyed, the tasks can be removed using the
+        `urest.http.server.RESTServer.stop` method.
 
-        .. Note::
-          The code in this class assumes the `asyncio` library with an interface
-          roughly equivalent to Python 3.4: although the MicroPython module supports _some_
-          later extensions. Given the code churn in the `asyncio` module between Python 3.4
-          and Python 3.10, careful testing is required to ensure implementation compatibility.
+        !!! Note
+            The code in this class assumes the `asyncio` library with an interface
+            roughly equivalent to Python 3.4: although the MicroPython module
+            supports _some_ later extensions. Given the code churn in the
+            `asyncio` module between Python 3.4 and Python 3.10, careful testing
+            is required to ensure implementation compatibility.
 
         Parameters
         ----------
 
         host: string
-            A resolvable DNS host name or IP address. Note that the exact requirements are
-            determined by the
-            [`asyncio.BaseEventLoop.create_server`](https://docs.python.org/3.4/library/
-            asyncio-eventloop.html#asyncio.BaseEventLoop.create_server) method, which should
-            be checked carefully for implementation defined limitations.
+            A resolvable DNS host name or IP address. Note that the exact
+            requirements are determined by the
+            [`asyncio.BaseEventLoop.create_server`](https://docs.python.org/3.4/
+            library/asyncio-eventloop.html#asyncio.BaseEventLoop.create_server)
+            method, which should be checked carefully for implementation defined
+            limitations.
 
             **Default:** An IPv4 sock on the local host.
-
         port: integer
-            The local (server) port to bind the socket to. Note that the exact requirements are
-            determined by the
-            [`asyncio.BaseEventLoop.create_server`](https://docs.python.org/3.4/library/
-            asyncio-eventloop.html#asyncio.BaseEventLoop.create_server) method, which should
-            be checked carefully for implementation defined limitations (e.g. extra privileges
-            required for system ports).
+            The local (server) port to bind the socket to. Note that the exact
+            requirements are determined by the [`asyncio.BaseEventLoop.create_server`](https://docs.python.org/3.4/library/asyncio-eventloop.html#asyncio.BaseEventLoop.create_server)
+            method, which should be checked carefully for implementation defined
+            limitations (e.g. extra privileges required for system ports).
 
             **Default:** The IANA Assigned port 80 for an HTTP Server.
-
         backlog: integer
             Roughly the size of the pool of connections for the underlying
-            `socket`. Once this value has been exceeded, the tasks will be suspended by the
-            co-routine handler until the underlying `socket` can clear them. Note that the
-            size (and interpretation) of this value is system dependent: see the [`socket`
-            API](https://docs.python.org/3.4/library/socket.html#module-socket) for more
-            details.
+            `socket`. Once this value has been exceeded, the tasks will be
+            suspended by the co-routine handler until the underlying `socket` can
+            clear them. Note that the size (and interpretation) of this value is
+            system dependent: see the [`socket` API](https://docs.python.org/3.4/library/socket.html#module-socket)
+            for more details.
 
             **Default:** 5 (typically the maximum pool size allowed).
-
         read_timeout: integer
             Length of time in seconds to wait for a response from the client before declaring
             failure.
 
             **Default:** 30 seconds.
-
         write_timeout: integer
             Length of time in seconds to wait for the network socket to accept a write to the
             client, before declaring failure.
@@ -231,21 +227,23 @@ class RESTServer:
         """
         Attempt to parse a string containing JSON-like formatting into a single dictionary.
 
-        This function is **very** far from a full JSON parser: quite deliberately it will
-        only accept a single object of name/value pairs. Any arrays are **not** accepted.
-        In addition, this parser will coerce the 'name' side of the dictionary into a
-        string; or if this cannot be done will raise a 'RESTParseError'. The 'value' of a
-        name/value pair will like-wise be coerced into its JSON type; or a 'RESTParseError'
-        raised if this cannot be done.
+        This function is **very** far from a full JSON parser: quite deliberately
+        it will only accept a single object of name/value pairs. Any arrays are
+        **not** accepted. In addition, this parser will coerce the 'name' side of
+        the dictionary into a string; or if this cannot be done will raise a
+        `RESTParseError`. The 'value' of a name/value pair will like-wise be
+        coerced into its JSON type; or a `RESTParseError` raised if this cannot be
+        done.
 
-        The parsing is done via a very simple stack-based parser, assuming no backtracking.
-        This will cope with valid JSON: but will quickly abort if the JSON is malformed,
-        raising a 'RESTParseError'. This is quite deliberate as we will only accept valid
-        JSON from the client: if we can't parse the result that is the clients problem...
+        The parsing is done via a very simple stack-based parser, assuming no
+        backtracking. This will cope with valid JSON: but will quickly abort if
+        the JSON is malformed, raising a `RESTParseError`. This is quite
+        deliberate as we will only accept valid JSON from the client: if we can't
+        parse the result that is the clients problem...
 
-        The parser will also finish after the first found JSON object. We are expecting
-        only a single dictionary from the client, and so attempts to add something more
-        exotic will be ignored.
+        The parser will also finish after the first found JSON object. We are
+        expecting only a single dictionary from the client, and so attempts to add
+        something more exotic will be ignored.
 
         Parameters
         ----------
@@ -262,9 +260,9 @@ class RESTServer:
         -------
 
         dict
-            A mapping of (key, value) pairs which defines the dictionary of the `data_str`
-            object. All `key` values will be in Python string format: values will be as
-            defined in the `data_str` object.
+            A mapping of (key, value) pairs which defines the dictionary of the
+            `data_str` object. All `key` values will be in Python string format:
+            values will be as defined in the `data_str` object.
         """
 
         return_dictionary = {}
@@ -295,7 +293,8 @@ class RESTServer:
 
                             token_start = False
                         else:
-                            raise RESTParseError("Invalid string termination")
+                            msg = "Invalid string termination"
+                            raise RESTParseError(msg)
 
                         token_type = JSON_TYPE_INT
                         token_sep = False
@@ -354,7 +353,7 @@ class RESTServer:
 
         return return_dictionary
 
-    def register_noun(self, noun: str, handler: APIBase):
+    def register_noun(self, noun: str, handler: APIBase) -> None:
         """
         Register a new object handler for the noun passed by the client.
 
@@ -382,39 +381,36 @@ class RESTServer:
                 self._nouns[noun] = old_handler
 
     async def dispatch_noun(
-        self, reader: asyncio.StreamReader, writer: asyncio.StreamWriter,
-    ):
+        self,
+        reader: asyncio.StreamReader,
+        writer: asyncio.StreamWriter,
+    ) -> None:
         """
         Core client handling routine. This connects the `reader` and `writer`
         streams from the IO library to the API requests detailed by the rest
         of the server. Most of the work is done elsewhere, by the API handlers:
         this is mostly a sanity check and a routing engine.
 
-        .. Warning::
-          This routine _must_ handle arbitrary network traffic, and so
-          **must** be as defensive as possible to avoid security issues in
-          the API layer which results from arbitrary input stuffing and
-          alike. Assume that anything from the `reader` is potentially
-          dangerous to the health of the API layer: unless shown otherwise...
-
-
+        !!! Warning
+            This routine _must_ handle arbitrary network traffic, and so
+            **must** be as defensive as possible to avoid security issues in
+            the API layer which results from arbitrary input stuffing and
+            alike. Assume that anything from the `reader` is potentially
+            dangerous to the health of the API layer: unless shown otherwise...
 
         Parameters
         ----------
 
         reader: `asyncio.StreamReader`
             An asynchronous stream, representing the network response _from_ the
-            client. This is usually set-up indirectly by the `asyncio` library as part of a
-            network response to the client, and will be represented by an
-            [asyncio.StreamReader](https://docs.python.org/3.4/library/asyncio-stream.html#
-            streamreader).
-
+            client. This is usually set-up indirectly by the `asyncio` library as
+            part of a network response to the client, and will be represented by
+            an [`asyncio.StreamReader`](https://docs.python.org/3.4/library/asyncio-stream.html# streamreader).
         writer: `asyncio.StreamWriter`
             An asynchronous stream, representing the network response _to_ the
-            client. This is usually set-up indirectly by the `asyncio` library as part of a
-            network response to the client, and will be represented by an
-            [asyncio.StreamWriter](https://docs.python.org/3.4/library/asyncio-stream.html#
-            streamwriter).
+            client. This is usually set-up indirectly by the `asyncio` library as
+            part of a network response to the client, and will be represented by
+            an [`asyncio.StreamWriter`](https://docs.python.org/3.4/library/asyncio-stream.html# streamwriter).
         """
 
         # Attempt the parse whatever rubbish the client sends, and assemble the
@@ -446,7 +442,8 @@ class RESTServer:
 
             while request_line not in [b"", b"\r\n"]:
                 request_line = await asyncio.wait_for(
-                    reader.readline(), self.read_timeout,
+                    reader.readline(),
+                    self.read_timeout,
                 )
 
                 if request_line.find(b":") != -1:
@@ -474,7 +471,8 @@ class RESTServer:
                     try:
                         request_length = int(request_header["content-length"])
                         request_data = await asyncio.wait_for(
-                            reader.read(request_length), self.read_timeout,
+                            reader.read(request_length),
+                            self.read_timeout,
                         )
                         request_body = self.parse_data(request_data)
                     except Exception as e:
@@ -590,9 +588,9 @@ class RESTServer:
 
             await writer.drain()
 
-        # Deal with any exceptions. These are mostly client errors, and since the REST
-        # API _should_ be idempotent, the client _should_ be able to simply retry. So
-        # we won't do anything very fancy here
+        # Deal with any exceptions. These are mostly client errors, and since the
+        # REST API _should_ be idempotent, the client _should_ be able to simply
+        # retry. So we won't do anything very fancy here
         except asyncio.TimeoutError:
             pass
         except Exception as e:
@@ -612,9 +610,9 @@ class RESTServer:
             response.status = "NOT_OK"
 
         # In principle the response should have been sent back to the client by now.
-        # But we will give it one last try, and then also try to close the connection
-        # cleanly for the client. This may not work due to the earlier exceptions: but
-        # we will try anyway
+        # But we will give it one last try, and then also try to close the
+        # connection cleanly for the client. This may not work due to the earlier
+        # exceptions: but we will try anyway
         finally:
             # Do a soft close, dropping our end of the connection
             # to see if the client closes ...
@@ -628,21 +626,17 @@ class RESTServer:
 
     async def start(self):
         """
-        Attach the method `urest.http.server.RESTServer.dispatch_noun` to an `asyncio`
-        event loop, allowing the `urest.http.server.RESTServer.dispatch_noun` method to
-        handle tasks representing network events from the client.
+        Attach the method `urest.http.server.RESTServer.dispatch_noun` to an `asyncio` event loop, allowing the `urest.http.server.RESTServer.dispatch_noun` method to handle tasks representing network events from the client.
 
         Most of the implementation of this method is handled by
-        [asyncio.start_server](https://docs.python.org/3.4/library/asyncio-stream.html#
-        asyncio.start_server). In particular the
-        [asyncio.start_server](https://docs.python.org/3.4/library/asyncio-stream.html#
-        asyncio.start_server) method is responsible for setting up the lower-level
-        networks socket, using the `host` and `port` class attributes holding the server
-        (local) elements of the TCP/IP tuple. Lower level timers and queues are also
-        provided by the resolution of the
-        [asyncio.start_server](https://docs.python.org/3.4/library/asyncio-stream.html#
-        asyncio.start_server) method, with the class attribute `backlog` being used to
-        set the client (downstream) timeout.
+        [`asyncio.start_server`](https://docs.python.org/3.4/library/asyncio-stream.html# asyncio.start_server).
+        In particular the [`asyncio.start_server`](https://docs.python.org/3.4/library/asyncio-stream.html# asyncio.start_server)
+        method is responsible for setting up the lower-level networks socket,
+        using the `host` and `port` class attributes holding the server (local)
+        elements of the TCP/IP tuple. Lower level timers and queues are also
+        provided by the resolution of the [`asyncio.start_server`](https://docs.python.org/3.4/library/asyncio-stream.html# asyncio.start_server)
+        method, with the class attribute `backlog` being used to set the client
+        (downstream) timeout.
         """
 
         # DEBUG
@@ -650,10 +644,13 @@ class RESTServer:
             print(f"SERVER: Started on {self.host}:{self.port}")
 
         self._server = await asyncio.start_server(
-            self.dispatch_noun, host=self.host, port=self.port, backlog=self.backlog,
+            self.dispatch_noun,
+            host=self.host,
+            port=self.port,
+            backlog=self.backlog,
         )
 
-    async def stop(self):
+    async def stop(self) -> None:
         """
         Remove the tasks from an event loop, in preparation for the termination
         of that loop. Most of the implementation of this method is handled by the
