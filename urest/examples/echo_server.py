@@ -33,6 +33,7 @@ This version is written for MicroPython 3.4, and has been tested on:
 """
 
 import time
+
 import urest.utils
 
 try:
@@ -40,9 +41,9 @@ try:
 except ImportError:
     import asyncio
 
-from urest.http import RESTServer
 from urest.api import APIBase
 from urest.examples.echo import EchoServer
+from urest.http import RESTServer
 
 ###
 ### Connect to the Wireless network

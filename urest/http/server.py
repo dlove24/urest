@@ -49,10 +49,10 @@ except ImportError:
     import asyncio
 
 # Import the RAWResponse class
-from .response import HTTPResponse
-
 # Import the API Base class
-from ..api.base import APIBase
+from urest.api.base import APIBase
+
+from .response import HTTPResponse
 
 ##
 ## Constants
@@ -131,7 +131,7 @@ class RESTServer:
         backlog: int = 5,
         read_timeout: int = 30,
         write_timeout: int = 5,
-    ):
+    ) -> None:
         """Initialise the server with reasonable defaults. These should work
         for most cases, and should be set so that most clients won't have
         to touch them.
@@ -382,7 +382,7 @@ class RESTServer:
                 self._nouns[noun] = old_handler
 
     async def dispatch_noun(
-        self, reader: asyncio.StreamReader, writer: asyncio.StreamWriter
+        self, reader: asyncio.StreamReader, writer: asyncio.StreamWriter,
     ):
         """
         Core client handling routine. This connects the `reader` and `writer`
@@ -430,14 +430,14 @@ class RESTServer:
                 # DEBUG
                 if __debug__:
                     print(
-                        f"CLIENT: [{writer.get_extra_info('peername')[0]}] Empty request line"
+                        f"CLIENT: [{writer.get_extra_info('peername')[0]}] Empty request line",
                     )
                     return
 
             # DEBUG
             if __debug__:
                 print(
-                    f"CLIENT URI : [{writer.get_extra_info('peername')[0]}] {request_uri.strip()}"
+                    f"CLIENT URI : [{writer.get_extra_info('peername')[0]}] {request_uri.strip()}",
                 )
 
             # Get the header of the request, if it is available, decoded into UTF-8
@@ -446,19 +446,19 @@ class RESTServer:
 
             while request_line not in [b"", b"\r\n"]:
                 request_line = await asyncio.wait_for(
-                    reader.readline(), self.read_timeout
+                    reader.readline(), self.read_timeout,
                 )
 
                 if request_line.find(b":") != -1:
                     name, value = request_line.split(b":", 1)
                     request_header[name.decode("utf-8").lower()] = value.decode(
-                        "utf-8"
+                        "utf-8",
                     ).strip()
 
             # DEBUG
             if __debug__:
                 print(
-                    f"CLIENT HEAD: [{writer.get_extra_info('peername')[0]}] {request_header}"
+                    f"CLIENT HEAD: [{writer.get_extra_info('peername')[0]}] {request_header}",
                 )
 
             # Check if there is a body to follow the header ...
@@ -474,7 +474,7 @@ class RESTServer:
                     try:
                         request_length = int(request_header["content-length"])
                         request_data = await asyncio.wait_for(
-                            reader.read(request_length), self.read_timeout
+                            reader.read(request_length), self.read_timeout,
                         )
                         request_body = self.parse_data(request_data)
                     except Exception as e:
@@ -482,17 +482,17 @@ class RESTServer:
                         if __debug__:
                             print(f"!EXCEPTION!: {e}")
                             print(
-                                f"!INVALID DATA!: [{writer.get_extra_info('peername')[0]}] {request_data}"
+                                f"!INVALID DATA!: [{writer.get_extra_info('peername')[0]}] {request_data}",
                             )
                         request_body = {}
 
                     # DEBUG
                     if __debug__:
                         print(
-                            f"CLIENT DATA: [{writer.get_extra_info('peername')[0]}] {request_data}"
+                            f"CLIENT DATA: [{writer.get_extra_info('peername')[0]}] {request_data}",
                         )
                         print(
-                            f"CLIENT BODY: [{writer.get_extra_info('peername')[0]}] {request_body}"
+                            f"CLIENT BODY: [{writer.get_extra_info('peername')[0]}] {request_body}",
                         )
 
                 else:
@@ -586,7 +586,7 @@ class RESTServer:
 
             await response.send(writer)
 
-            writer.write("\r\n".encode())
+            writer.write(b"\r\n")
 
             await writer.drain()
 
@@ -650,7 +650,7 @@ class RESTServer:
             print(f"SERVER: Started on {self.host}:{self.port}")
 
         self._server = await asyncio.start_server(
-            self.dispatch_noun, host=self.host, port=self.port, backlog=self.backlog
+            self.dispatch_noun, host=self.host, port=self.port, backlog=self.backlog,
         )
 
     async def stop(self):

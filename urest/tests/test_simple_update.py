@@ -1,5 +1,5 @@
 """
-Tests of the `update` verb (HTTP POST method), using the simple server `urest.examples.simpleled.SimpleLED`
+Tests of the `update` verb (HTTP POST method), using the simple server `urest.examples.simpleled.SimpleLED`.
 
 Run as: `py.test test_simple_update.py`
 """
@@ -11,7 +11,7 @@ IP_ADDRESS = "10.0.30.220"
 def test_requests_update_check():
     """
     Test
-    ----
+    ----.
 
     Check for basic connection to the server. The URI is given, but for
     this test the response is not checked.
@@ -43,7 +43,7 @@ def test_requests_update_check():
 def test_requests_update_init():
     """
     Test
-    ----
+    ----.
 
     Attempt to reset the server back to the known (default) state. This is
     achieved by sending an HTTP `DELETE` method request to the server to return the
@@ -68,7 +68,7 @@ def test_requests_update_init():
 def test_requests_update_init_check():
     """
     Test
-    ----
+    ----.
 
     Check the noun is in the default state of `0`
 
@@ -91,7 +91,7 @@ def test_requests_update_init_check():
 def test_requests_update_on():
     """
     Test
-    ----
+    ----.
 
     Attempt to toggle the current state, setting the noun `green_led0` to `1`
 
@@ -114,7 +114,7 @@ def test_requests_update_on():
 def test_requests_update_on_check():
     """
     Test
-    ----
+    ----.
 
     Check the noun has been set to the state value `1`
 
@@ -137,7 +137,7 @@ def test_requests_update_on_check():
 def test_requests_update_off():
     """
     Test
-    ----
+    ----.
 
     Attempt to toggle the current state, setting the noun `green_led0` to `0`
 
@@ -160,7 +160,7 @@ def test_requests_update_off():
 def test_requests_update_off_check():
     """
     Test
-    ----
+    ----.
 
     Check the noun has been set to the state value `0`
 

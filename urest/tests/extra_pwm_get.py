@@ -1,5 +1,5 @@
 """
-Tests of the `get` verb (HTTP GET method), using the simple server `urest.examples.pwmled.PWMLED`
+Tests of the `get` verb (HTTP GET method), using the simple server `urest.examples.pwmled.PWMLED`.
 
 Run as: `py.test test_simple_get.py`
 """
@@ -11,7 +11,7 @@ IP_ADDRESS = "10.0.30.220"
 def test_pwm_get_check():
     """
     Test
-    ----
+    ----.
 
     Check for basic connection to the server. The URI is given, but for
     this test the response is not checked.
@@ -43,7 +43,7 @@ def test_pwm_get_check():
 def test_pwm_get_setup():
     """
     Test
-    ----
+    ----.
 
     Ensures the test server is in the known (default) state required for further tests. This is achieved by sending an HTTP `DELETE` method request to the
     server to return the `green_led0` noun to the default state.
@@ -70,7 +70,7 @@ def test_pwm_get_setup():
 def test_pwm_get_data():
     """
     Test
-    ----
+    ----.
 
     Check the noun has been returned to the default state of `current == 0`
 
@@ -93,7 +93,7 @@ def test_pwm_get_data():
 def test_pwm_set_on():
     """
     Test
-    ----
+    ----.
 
     Attempt to set the noun 'led' to `1`
 

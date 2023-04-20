@@ -47,7 +47,7 @@ class APIBase:
     ## Constructor
     ##
 
-    def __init__(self):
+    def __init__(self) -> None:
         """The Abstract Base Class for the nouns, used in the response from the server.
 
         This base class defines the minimum interface used in marshalling requests from

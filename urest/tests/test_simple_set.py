@@ -1,5 +1,5 @@
 """
-Tests of the `set` verb (HTTP PUT method), using the simple server `urest.examples.simpleled.SimpleLED`
+Tests of the `set` verb (HTTP PUT method), using the simple server `urest.examples.simpleled.SimpleLED`.
 
 Run as: `py.test test_simple_set.py`
 """
@@ -11,7 +11,7 @@ IP_ADDRESS = "10.0.30.220"
 def test_requests_set_check():
     """
     Test
-    ----
+    ----.
 
     Check for basic connection to the server. The URI is given, but for
     this test the response is not checked.
@@ -43,7 +43,7 @@ def test_requests_set_check():
 def test_requests_set_on():
     """
     Test
-    ----
+    ----.
 
     Attempt to set the noun 'led' to `1`
 
@@ -66,7 +66,7 @@ def test_requests_set_on():
 def test_requests_set_on_check():
     """
     Test
-    ----
+    ----.
 
     Check the noun has been set to the state value `1`
 
@@ -89,7 +89,7 @@ def test_requests_set_on_check():
 def test_requests_set_off():
     """
     Test
-    ----
+    ----.
 
     Attempt to set the noun `green_led0` to `0`
 
@@ -112,7 +112,7 @@ def test_requests_set_off():
 def test_requests_set_off_check():
     """
     Test
-    ----
+    ----.
 
     Check the noun has been set to the state value `0`
 

@@ -21,7 +21,7 @@
 
 """
 Examples of the module use, both as simple applications and as helper classes
-for reuse in more complete applications
+for reuse in more complete applications.
 
 Overview
 --------

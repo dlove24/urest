@@ -129,7 +129,7 @@ def netcode_to_str(error_code: int) -> str:
 
 
 def wireless_enable(
-    ssid: str, password: str, link_light: Union[int, str] = "WL_GPIO0"
+    ssid: str, password: str, link_light: int | str = "WL_GPIO0",
 ) -> None:
     """
     Enable the default wireless interface, connecting to the networking using
@@ -193,7 +193,7 @@ def wireless_enable(
     if wlan.status() != CYW43_LINK_UP:
         raise WirelessNetworkError(
             "Network connection attempt failed:"
-            f" { netcode_to_str(wlan.status()) } (Code: {wlan.status()})"
+            f" { netcode_to_str(wlan.status()) } (Code: {wlan.status()})",
         )
     else:
         print("Connected")

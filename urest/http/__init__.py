@@ -98,5 +98,5 @@ This version is written for MicroPython 3.4, and has been tested on:
 """
 
 ### Expose the `http` module interface
-from .server import RESTServer
 from .response import HTTPResponse
+from .server import RESTServer

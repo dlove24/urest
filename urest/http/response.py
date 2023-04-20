@@ -26,7 +26,7 @@ determined by the callers API layer: `urest.http.response.HTTPResponse` is a
 utility class designed just handles to handle the raw response to the network
 client. As such it should be largely invisible to the API layer, and most
 consumers of the `urest.http` module _should not_ create instance of the
-`urest.http.response.HTTPResponse` class directly
+`urest.http.response.HTTPResponse` class directly.
 
 Standards
 ---------
@@ -65,7 +65,7 @@ class HTTPResponse:
         mimetype: str = None,
         close: bool = True,
         header: dict = None,
-    ):
+    ) -> None:
         """Create a response object, representing the raw HTTP header returned to the
         network client.
 
@@ -108,7 +108,7 @@ class HTTPResponse:
             self._status = status
         else:
             raise ValueError(
-                "Invalid HTTP status code passed to the HTTP Response class"
+                "Invalid HTTP status code passed to the HTTP Response class",
             )
 
         if body is not None and isinstance(body, str):
@@ -159,7 +159,7 @@ class HTTPResponse:
             self._status = new_status
         else:
             raise ValueError(
-                "Invalid HTTP status code passed to the HTTP Response class"
+                "Invalid HTTP status code passed to the HTTP Response class",
             )
 
     ##
@@ -203,7 +203,7 @@ class HTTPResponse:
 
         if "OK" in self._status:
             # First tell the client we accepted the request
-            writer.write("HTTP/1.1 200 OK\r\n".encode())
+            writer.write(b"HTTP/1.1 200 OK\r\n")
 
             # Then we try to assemble the body
             if self._mimetype is not None:
@@ -212,21 +212,21 @@ class HTTPResponse:
         elif "NOT_OK" in self._status:
             # Tell the client we think we can route it: but the request
             # makes no sense
-            writer.write("HTTP/1.1 400 Bad Request\r\n".encode())
+            writer.write(b"HTTP/1.1 400 Bad Request\r\n")
 
         elif "NOT_FOUND" in self._status:
             # Tell the client we can't route their request
-            writer.write("HTTP/1.1 404 Not Found\r\n".encode())
+            writer.write(b"HTTP/1.1 404 Not Found\r\n")
 
         else:
             # This _really_ shouldn't be here. Assume an internal error
-            writer.write("HTTP/1.1 500 Internal Server Error\r\n".encode())
+            writer.write(b"HTTP/1.1 500 Internal Server Error\r\n")
 
         # Send the body length
         writer.write(f"Content-Length: {len(self._body)}\r\n".encode())
 
         # Send the body content type
-        writer.write("Content-Type: text/html\r\n".encode())
+        writer.write(b"Content-Type: text/html\r\n")
 
         # Send any other header fields
         if len(self._header) > 0:
@@ -235,9 +235,9 @@ class HTTPResponse:
 
         # Send the HTTP connection state
         if self._close:
-            writer.write("Connection: close\r\n".encode())
+            writer.write(b"Connection: close\r\n")
         else:
-            writer.write("Connection: keep-alive\r\n".encode())
+            writer.write(b"Connection: keep-alive\r\n")
 
         # Send the body itself...
         writer.write(f"\r\n{self._body}\r\n".encode())
