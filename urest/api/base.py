@@ -48,7 +48,8 @@ class APIBase:
     ##
 
     def __init__(self) -> None:
-        """The Abstract Base Class for the nouns, used in the response from the server.
+        """Define the Abstract Base Class for the nouns, used to structure the response
+        from the server to the client.
 
         This base class defines the minimum interface used in marshalling requests from
         the clients by the `urest.http.server.RESTServer` class. The API defined by the
@@ -82,9 +83,7 @@ class APIBase:
     ##
 
     def get_state(self) -> dict:
-        """Returns the state of the resource.
-
-        Return the state of the resource, as defined by the sub-classes. By default
+        """Return the state of the resource, as defined by the sub-classes. By default
         this method will return the contents of the private `state_attributes` `Dictionary`
         to the client; assuming that `Dictionary` has been appropriately completed
         in the processing of the resource.
@@ -99,8 +98,8 @@ class APIBase:
 
         return self._state_attributes
 
-    def set_state(self, state_attributes: dict):
-        """Sets the full state of the resource.
+    def set_state(self, state_attributes: dict) -> None:
+        """Set the full state of the resource.
 
         The exact mechanism for updating the internal state of the resource represented
         by sub-classes is implementation defined. By default this method expects the
@@ -121,8 +120,8 @@ class APIBase:
         else:
             self._state_attributes = []
 
-    def update_state(self, state_attributes: dict):
-        """Updates the state of the resource, using the 'key/value' pairs of the
+    def update_state(self, state_attributes: dict) -> None:
+        """Update the state of the resource, using the 'key/value' pairs of the
         `Dictionary` in `state_attributes`.
 
 
@@ -150,8 +149,8 @@ class APIBase:
         else:
             self._state_attributes = []
 
-    def delete_state(self):
-        """Removes the internal state of the resource, essentially 'resetting' or
+    def delete_state(self) -> None:
+        """Remove the internal state of the resource, essentially 'resetting' or
         re-initialising the object.
 
         The exact mechanism for returning the state to the defaults are left to
