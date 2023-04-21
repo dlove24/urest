@@ -4,6 +4,9 @@
 # Python Virtal Environment
 .venv/
 
+# Backup files
+*.orig
+
 # Temporary packaging files
 dist/
 urest.egg-info/
