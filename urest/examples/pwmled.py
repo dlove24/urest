@@ -82,6 +82,8 @@ from urest.api.base import APIBase
 PWM_STEP = 6550
 """Determines the increment (or decrement) for each step in the PWM 'on' or
 'off' movement."""
+PWM_LIMIT = 65000
+"""Determines the limit for the PWM duty cycle."""
 
 
 class PWMLED(APIBase):
@@ -106,7 +108,7 @@ class PWMLED(APIBase):
 
         self._duty = 0
 
-        while self._duty < (65000):
+        while self._duty < (PWM_LIMIT):
             print(f"duty on: {self._duty}")
 
             self._duty += PWM_STEP
@@ -134,7 +136,7 @@ class PWMLED(APIBase):
 
         self._duty = 2**16
 
-        while self._duty > 6000:
+        while self._duty > PWM_STEP:
             print(f"duty off: {self._duty}")
 
             self._duty -= PWM_STEP

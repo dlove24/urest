@@ -43,6 +43,7 @@ import errno
 # Import the Asynchronous IO Library, preferring the MicroPython library if
 # available
 try:
+    import const
     import uasyncio as asyncio
 except ImportError:
     import asyncio
@@ -64,12 +65,14 @@ ASCII_DIGITS = set("0123456789")
 ASCII_EXTRA = set("_")
 """Constant for the extra ASCII characters allowed in the URI."""
 
-JSON_TYPE_INT = 0
+JSON_TYPE_INT = const(0)
 """Constant for JSON token type of Integer."""
-JSON_TYPE_STR = 1
+JSON_TYPE_STR = const(1)
 """Constant for JSON token type of String."""
-JSON_TYPE_ERROR = 1
+JSON_TYPE_ERROR = const(1)
 """Constant for JSON token type of error/unknown."""
+
+HTTP_LONGEST_VERB = const(7)
 
 ##
 ## Exceptions
@@ -469,7 +472,7 @@ class RESTServer:
                             self.read_timeout,
                         )
                         request_body = self.parse_data(request_data)
-                    except Exception as e:
+                    except IndexError as e:
                         # DEBUG
                         if __debug__:
                             print(f"!EXCEPTION!: {e}")
@@ -510,8 +513,8 @@ class RESTServer:
 
             first_space = request_uri.find(" ", 0, 7)
 
-            if first_space > 7:
-                first_space = 7
+            if first_space > HTTP_LONGEST_VERB:
+                first_space = HTTP_LONGEST_VERB
 
             verb = request_uri[0:first_space].upper()
 
@@ -592,9 +595,10 @@ class RESTServer:
                 pass
             else:
                 if hasattr(e, "message"):
-                    raise RESTClientError(e.message)
+                    raise RESTClientError(e.message) from None
                 else:
-                    raise RESTClientError("Client Error")
+                    msg = "Unknown client Error"
+                    raise RESTClientError(msg) from None
 
             # DEBUG
             if __debug__:
@@ -618,7 +622,7 @@ class RESTServer:
             await asyncio.sleep(self.write_timeout)
             await writer.wait_closed()
 
-    async def start(self):
+    async def start(self) -> None:
         """Attach the method `urest.http.server.RESTServer.dispatch_noun` to an
         `asyncio` event loop, allowing the
         `urest.http.server.RESTServer.dispatch_noun` method to handle tasks

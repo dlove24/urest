@@ -79,8 +79,15 @@ target-version = "py310"
 "examples/led_control.py" = ["FBT003", "PLR2004", "S105", "TRY301"]
 # Dummy passwords in use, and values from the network API
 "examples/pwmled.py" = ["ARG002", "FBT003", "PLR2004", "S105", "TRY301"]
-# Ignore the unused argument for the simple server
-"examples/simpleled.py" = ["ARG002"]
+# Ignore the unused argument for the simple servers
+"urest/examples/echo.py" = ["ARG002"]
+"urest/examples/pwmled.py" = ["ARG002"]
+"urest/examples/simpleled.py" = ["ARG002"]
+# Ignore default binding for the server class, and the long 'dispatch_noun',
+# the nested '__debug__' flags, and the fake 'switch..case' statements
+"urest/http/server.py" = ["BLE001", "PLR0915", "PLR5501", "S104", "SIM102", "SIM114"]
+# Ignore the many returns of the network checks
+"urest/utils/network_connect.py" = ["PLR0911"]
 # Ignore 'typing' as far as possible
 "urest/typing.py" = ["ANN", "ARG"]
 

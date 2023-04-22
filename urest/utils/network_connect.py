@@ -124,7 +124,7 @@ class WirelessNetworkError(Exception):
 
 
 def netcode_to_str(error_code: int) -> str:
-    """Converts the given wireless network error code to a short string,
+    """Convert the given wireless network error code to a short string,
     indicating the possible error.
 
     Note that no validation for sanity of the error code is attempted by
@@ -222,10 +222,8 @@ def wireless_enable(
 
     # Handle connection error
     if wlan.status() != CYW43_LINK_UP:
-        raise WirelessNetworkError(
-            "Network connection attempt failed:"
-            f" { netcode_to_str(wlan.status()) } (Code: {wlan.status()})",
-        )
+        msg = f"Network connection attempt failed: { netcode_to_str(wlan.status()) } (Code: {wlan.status()})"
+        raise WirelessNetworkError(msg)
     else:
         print("Connected")
         print("IP: " + wlan.ifconfig()[0])
