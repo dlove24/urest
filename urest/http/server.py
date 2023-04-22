@@ -19,12 +19,11 @@
 # COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-"""
-Micro HTTP server dedicated to REST-style API Requests. Inspired by the
-[MicroPython HTTP Server](https://github.com/erikdelange/MicroPython-HTTP-Server)
-by Erik de Lange, as a simple consumer of the Python 3 `asyncio` library for the
-low-level socket handling and use of co-routines to simplify request handling.
+"""Micro HTTP server dedicated to REST-style API Requests. Inspired by the
+[MicroPython HTTP Server](https://github.com/erikdelange/MicroPython-HTTP-
+Server) by Erik de Lange, as a simple consumer of the Python 3 `asyncio`
+library for the low-level socket handling and use of co-routines to simplify
+request handling.
 
 This version is written for MicroPython 3.4, and has been tested on:
 
@@ -59,18 +58,18 @@ from .response import HTTPResponse
 ##
 
 ASCII_UPPERCASE = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
-""" Constant for the set of ASCII letters """
+"""Constant for the set of ASCII letters."""
 ASCII_DIGITS = set("0123456789")
-""" Constant for the set of ASCII digits """
+"""Constant for the set of ASCII digits."""
 ASCII_EXTRA = set("_")
-""" Constant for the extra ASCII characters allowed in the URI """
+"""Constant for the extra ASCII characters allowed in the URI."""
 
 JSON_TYPE_INT = 0
-""" Constant for JSON token type of Integer """
+"""Constant for JSON token type of Integer."""
 JSON_TYPE_STR = 1
-""" Constant for JSON token type of String """
+"""Constant for JSON token type of String."""
 JSON_TYPE_ERROR = 1
-""" Constant for JSON token type of error/unknown """
+"""Constant for JSON token type of error/unknown."""
 
 ##
 ## Exceptions
@@ -78,40 +77,38 @@ JSON_TYPE_ERROR = 1
 
 
 class RESTClientError(Exception):
-    """
-    Client Error. Thrown as a general failure of client requests, usually as
+    """Client Error. Thrown as a general failure of client requests, usually as
     a result of transient network errors.
 
-    This exception should be notified to the client as the HTTP response '`400
-    Bad Request`', and further processing should not be attempted until the client
-    retries the request.
+    This exception should be notified to the client as the HTTP response
+    '`400 Bad Request`', and further processing should not be attempted
+    until the client retries the request.
     """
 
     pass
 
 
 class RESTServerError(Exception):
-    """
-    Internal Server Error. Thrown as a general failure of the
-    `urest.http.server` module when no more specific exception is available. This
-    usually indicates a bug in the library.
+    """Internal Server Error. Thrown as a general failure of the
+    `urest.http.server` module when no more specific exception is available.
+    This usually indicates a bug in the library.
 
-    This exception should be notified to the client as the HTTP response '`500
-    Internal Server Error`', and further processing should not be attempted.
+    This exception should be notified to the client as the HTTP response
+    '`500 Internal Server Error`', and further processing should not be
+    attempted.
     """
 
     pass
 
 
 class RESTParseError(Exception):
-    """
-    Parse failure. The HTTP header or body elements supplied by the network
-    client are invalid, and cannot be parsed correctly by the `urest.http.server`
-    module.
+    """Parse failure. The HTTP header or body elements supplied by the network
+    client are invalid, and cannot be parsed correctly by the
+    `urest.http.server` module.
 
-    This exception should be notified to the client as the HTTP response '`400
-    Bad Request`', and further processing should not be attempted until the client
-    retries the request.
+    This exception should be notified to the client as the HTTP response
+    '`400 Bad Request`', and further processing should not be attempted
+    until the client retries the request.
     """
 
     pass
@@ -133,8 +130,8 @@ class RESTServer:
         write_timeout: int = 5,
     ) -> None:
         """Initialise the server with reasonable defaults. These should work
-        for most cases, and should be set so that most clients won't have
-        to touch them.
+        for most cases, and should be set so that most clients won't have to
+        touch them.
 
         The `urest.http.server.RESTServer` class acts as the primary interface to
         the library, handling all the network communication with the client,
@@ -212,7 +209,6 @@ class RESTServer:
             client, before declaring failure.
 
             **Default:** 5 seconds.
-
         """
 
         self.host = host
@@ -224,8 +220,8 @@ class RESTServer:
         self._nouns = {}
 
     def parse_data(self, data_str: str) -> dict:
-        """
-        Attempt to parse a string containing JSON-like formatting into a single dictionary.
+        """Attempt to parse a string containing JSON-like formatting into a
+        single dictionary.
 
         This function is **very** far from a full JSON parser: quite deliberately
         it will only accept a single object of name/value pairs. Any arrays are
@@ -354,8 +350,7 @@ class RESTServer:
         return return_dictionary
 
     def register_noun(self, noun: str, handler: APIBase) -> None:
-        """
-        Register a new object handler for the noun passed by the client.
+        """Register a new object handler for the noun passed by the client.
 
         Parameters
         ----------
@@ -385,11 +380,10 @@ class RESTServer:
         reader: asyncio.StreamReader,
         writer: asyncio.StreamWriter,
     ) -> None:
-        """
-        Core client handling routine. This connects the `reader` and `writer`
-        streams from the IO library to the API requests detailed by the rest
-        of the server. Most of the work is done elsewhere, by the API handlers:
-        this is mostly a sanity check and a routing engine.
+        """Core client handling routine. This connects the `reader` and
+        `writer` streams from the IO library to the API requests detailed by
+        the rest of the server. Most of the work is done elsewhere, by the API
+        handlers: this is mostly a sanity check and a routing engine.
 
         !!! Warning
             This routine _must_ handle arbitrary network traffic, and so
@@ -625,8 +619,10 @@ class RESTServer:
             await writer.wait_closed()
 
     async def start(self):
-        """
-        Attach the method `urest.http.server.RESTServer.dispatch_noun` to an `asyncio` event loop, allowing the `urest.http.server.RESTServer.dispatch_noun` method to handle tasks representing network events from the client.
+        """Attach the method `urest.http.server.RESTServer.dispatch_noun` to an
+        `asyncio` event loop, allowing the
+        `urest.http.server.RESTServer.dispatch_noun` method to handle tasks
+        representing network events from the client.
 
         Most of the implementation of this method is handled by
         [`asyncio.start_server`](https://docs.python.org/3.4/library/asyncio-stream.html# asyncio.start_server).
@@ -651,9 +647,10 @@ class RESTServer:
         )
 
     async def stop(self) -> None:
-        """
-        Remove the tasks from an event loop, in preparation for the termination
-        of that loop. Most of the implementation of this method is handled by the
+        """Remove the tasks from an event loop, in preparation for the
+        termination of that loop.
+
+        Most of the implementation of this method is handled by the
         [`close`
         method](https://docs.python.org/3.4/library/asyncio-protocol.html#asyncio.
         BaseTransport.close) of `asyncio.BaseTransport`.

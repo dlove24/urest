@@ -1,5 +1,5 @@
-"""
-Tests of the `update` verb (HTTP POST method), using the simple server `urest.examples.simpleled.SimpleLED`.
+"""Tests of the `update` verb (HTTP POST method), using the simple server
+`urest.examples.simpleled.SimpleLED`.
 
 Run as: `py.test test_simple_update.py`
 """
@@ -9,8 +9,8 @@ IP_ADDRESS = "10.0.30.220"
 
 
 def test_requests_update_check():
-    """
-    Test
+    """Test.
+
     ----.
 
     Check for basic connection to the server. The URI is given, but for
@@ -34,15 +34,14 @@ def test_requests_update_check():
       * Check that `IP_ADDRESS` is correct
       * Check the `urest.examples.simpleled.SimpleLED` is running
       * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun("green_led0", SimpleLED(1))` has been made
-
     """
     r = requests.get(f"http://{ IP_ADDRESS }/green_led0")
     assert r.status_code == requests.codes.ok
 
 
 def test_requests_update_init():
-    """
-    Test
+    """Test.
+
     ----.
 
     Attempt to reset the server back to the known (default) state. This is
@@ -59,15 +58,14 @@ def test_requests_update_init():
 
       * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun("green_led0", SimpleLED(1))` has been made
       * Check that the call to `test_requests_init_check()` was successful
-
     """
     r = requests.delete(f"http://{ IP_ADDRESS }/green_led0")
     assert r.status_code == requests.codes.ok
 
 
 def test_requests_update_init_check():
-    """
-    Test
+    """Test.
+
     ----.
 
     Check the noun is in the default state of `0`
@@ -82,15 +80,14 @@ def test_requests_update_init_check():
 
       * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun("green_led0", SimpleLED(1))` has been made
       * Check the results of the `test_requests_update_setup()` method, to ensure the noun was initialised correctly
-
     """
     r = requests.get(f"http://{ IP_ADDRESS }/green_led0")
     assert r.content == b'{"led": 0}'
 
 
 def test_requests_update_on():
-    """
-    Test
+    """Test.
+
     ----.
 
     Attempt to toggle the current state, setting the noun `green_led0` to `1`
@@ -104,7 +101,6 @@ def test_requests_update_on():
     ----------
 
       * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun("green_led0", SimpleLED(1))` has been made
-
     """
     state = {"led": 1}
     r = requests.post(f"http://{ IP_ADDRESS }/green_led0", json=state)
@@ -112,8 +108,8 @@ def test_requests_update_on():
 
 
 def test_requests_update_on_check():
-    """
-    Test
+    """Test.
+
     ----.
 
     Check the noun has been set to the state value `1`
@@ -128,15 +124,14 @@ def test_requests_update_on_check():
 
       * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun("green_led0", SimpleLED(1))` has been made
       * Check the results of the `urest.tests.test_simple_update.test_requests_update_on` method, to ensure the noun was initialised correctly
-
     """
     r = requests.get(f"http://{ IP_ADDRESS }/green_led0")
     assert r.content == b'{"led": 1}'
 
 
 def test_requests_update_off():
-    """
-    Test
+    """Test.
+
     ----.
 
     Attempt to toggle the current state, setting the noun `green_led0` to `0`
@@ -150,7 +145,6 @@ def test_requests_update_off():
     ----------
 
       * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun("green_led0", SimpleLED(1))` has been made
-
     """
     state = {"led": 0}
     r = requests.put(f"http://{ IP_ADDRESS }/green_led0", json=state)
@@ -158,8 +152,8 @@ def test_requests_update_off():
 
 
 def test_requests_update_off_check():
-    """
-    Test
+    """Test.
+
     ----.
 
     Check the noun has been set to the state value `0`
@@ -174,7 +168,6 @@ def test_requests_update_off_check():
 
       * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun("green_led0", SimpleLED(1))` has been made
       * Check the results of the `urest.tests.test_simple_update.test_requests_update_off` method, to ensure the noun was initialised correctly
-
     """
     r = requests.get(f"http://{ IP_ADDRESS }/green_led0")
     assert r.content == b'{"led": 0}'

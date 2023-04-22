@@ -18,13 +18,12 @@
 # COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-"""
-Network interface and helper classes for abstracting the underlying HTTP stream.
-This module provides the abstraction of the underlying socket handling code,
-using in marshaling requests from clients and building the response. All the
-socket handling is built around the Python 3 `asyncio` library for the low-level
-network interface, and for the use of co-routines to simplify request handling.
+"""Network interface and helper classes for abstracting the underlying HTTP
+stream. This module provides the abstraction of the underlying socket handling
+code, using in marshaling requests from clients and building the response. All
+the socket handling is built around the Python 3 `asyncio` library for the low-
+level network interface, and for the use of co-routines to simplify request
+handling.
 
 In most cases, consumers of this module only need to provide an `asynio` event
 loop: see "Creating the Network Server" in the Section _Using the Module_ below.
@@ -96,8 +95,6 @@ Tested Implementations
 This version is written for MicroPython 3.4, and has been tested on:
 
   * Raspberry Pi Pico W
-
-
 """
 
 ### Expose the `http` module interface

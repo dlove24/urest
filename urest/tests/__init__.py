@@ -18,9 +18,7 @@
 # COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-"""
-Test scripts for checking the library functionality. This module describes a
+"""Test scripts for checking the library functionality. This module describes a
 number of tests, designed to be run under the
 [PyTest](https://docs.pytest.org/en/7.2.x/contents.html) harness. Nearly all
 tests also require the [requests](https://requests.readthedocs.io/en/latest)

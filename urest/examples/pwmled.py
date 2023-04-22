@@ -1,23 +1,3 @@
-# This class, and all included code, is made available under the terms of the MIT Licence
-#
-# Copyright (c) 2023 David Love
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal in
-# the Software without restriction, including without limitation the rights to
-# use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-# the Software, and to permit persons to whom the Software is furnished to do so,
-# subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-# FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-# COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-# IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-# CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """An example of a 'noun' class, able to serve as the basis for PWM control of
 an LED attached to a suitable GPIO pin.
 
@@ -67,17 +47,41 @@ Tested Implementations
 This version is written for MicroPython 3.4, and has been tested on:
 
   * Raspberry Pi Pico W
+
+Licence
+-------
+
+This class, and all included code, is made available under the terms of the MIT Licence
+
+> Copyright (c) 2023 David Love
+
+> Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+> The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+> THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
 # Import the Asynchronous IO Library, preferring the MicroPython library if
 # available
 try:
+    from machine import Pin, PWM
     import uasyncio as asyncio
-    from machine import PWM, Pin
 except ImportError:
     print("Ignoring MicroPython include: machine")
 
-from urest.api.base import APIBase
+from ..api.base import APIBase
 
 PWM_STEP = 6550
 """Determines the increment (or decrement) for each step in the PWM 'on' or
@@ -85,7 +89,7 @@ PWM_STEP = 6550
 
 
 class PWMLED(APIBase):
-    def __init__(self, pin: int) -> None:
+    def __init__(self, pin: int):
         self._gpio = PWM(Pin(pin))
         self._gpio.duty_u16(0)
         self._gpio.freq(100)
@@ -93,9 +97,9 @@ class PWMLED(APIBase):
 
         self._duty = 0
 
-        self._state_attributes = {"desired": 0, "current": 0}
+        self._state_attributes = dict(desired=0, current=0)
 
-    async def _slow_on(self) -> None:
+    async def _slow_on(self):
         # Wait for the GPIO lock if we need to
         await self._gpio_lock.acquire()
 
@@ -113,8 +117,8 @@ class PWMLED(APIBase):
             self._gpio.duty_u16(self._duty)
 
             await asyncio.sleep_ms(1000)
-
-        self._state_attributes["current"] = 1
+        else:
+            self._state_attributes["current"] = 1
 
         # Set the duty cycle to maximum before we leave,
         # and release the GPIO lock
@@ -123,7 +127,7 @@ class PWMLED(APIBase):
 
         self._gpio_lock.release()
 
-    async def _slow_off(self) -> None:
+    async def _slow_off(self):
         # Wait for the GPIO lock if we need to
         await self._gpio_lock.acquire()
 
@@ -141,8 +145,8 @@ class PWMLED(APIBase):
             self._gpio.duty_u16(self._duty)
 
             await asyncio.sleep_ms(1000)
-
-        self._state_attributes["current"] = 0
+        else:
+            self._state_attributes["current"] = 0
 
         # Set the duty cycle to 0 before we leave,
         # and release the GPIO lock
@@ -151,7 +155,7 @@ class PWMLED(APIBase):
 
         self._gpio_lock.release()
 
-    def set_state(self, state_attributes: dict) -> None:
+    def set_state(self, state_attributes: dict):
         try:
             loop = asyncio.get_event_loop()
 
@@ -178,7 +182,7 @@ class PWMLED(APIBase):
     def get_state(self) -> dict:
         return self._state_attributes
 
-    def delete_state(self) -> None:
+    def delete_state(self):
         self._gpio.duty_u16(0)
         self._gpio.freq(100)
         self._duty = 0
@@ -186,7 +190,7 @@ class PWMLED(APIBase):
         self._state_attributes["desired"] = 0
         self._state_attributes["current"] = 0
 
-    def update_state(self, state_attributes: dict) -> None:
+    def update_state(self, state_attributes: dict):
         loop = asyncio.get_event_loop()
 
         if self._state_attributes["desired"] == 0:

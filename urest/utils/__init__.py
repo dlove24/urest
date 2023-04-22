@@ -19,10 +19,11 @@
 # COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+"""Utility classes and function which are not part of the main library, but
+which assist in the building of servers using the library.
 
-
-"""
-Utility classes and function which are not part of the main library, but which assist in the building of servers using the library. All code in here is strictly optional, and nothing inside the library should directly depend on it.
+All code in here is strictly optional, and nothing inside the library
+should directly depend on it.
 """
 
 ### Expose the `utils` helper classes

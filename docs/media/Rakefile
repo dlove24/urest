@@ -1,0 +1,17 @@
+source_files = Rake::FileList.new("**/*") do |fl|
+  fl.exclude("Rakefile")
+  fl.exclude("*.png")
+end
+
+
+task :default => :svg
+
+task :puml => source_files.ext(".puml")
+task :svg => source_files.ext(".svg")
+
+rule ".svg" => ".puml" do |t|
+  sh "java -jar ../../bin/plantuml.jar #{t.source} -svg"
+  sh "java -jar ../../bin/plantuml.jar #{t.source} -txt"
+end
+
+

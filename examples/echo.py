@@ -18,13 +18,11 @@
 # COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-"""
-An example of a 'noun' class which echo's responses to the client. The main use
-of this library is as a test: it should work on both the Pico (W) boards and any
-'normal' installation of Python. As such it provides very little functionality,
-but could in principle also be used as a the basis for a more useful test
-harness or stub.
+"""An example of a 'noun' class which echo's responses to the client. The main
+use of this library is as a test: it should work on both the Pico (W) boards
+and any 'normal' installation of Python. As such it provides very little
+functionality, but could in principle also be used as a the basis for a more
+useful test harness or stub.
 
 Tested Implementations
 ----------------------

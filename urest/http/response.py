@@ -19,13 +19,11 @@
 # COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-"""
-Formats a basic HTTP/1.1 response. The actual body of the response is largely
-determined by the callers API layer: `urest.http.response.HTTPResponse` is a
-utility class designed just handles to handle the raw response to the network
-client. As such it should be largely invisible to the API layer, and most
-consumers of the `urest.http` module _should not_ create instance of the
+"""Formats a basic HTTP/1.1 response. The actual body of the response is
+largely determined by the callers API layer: `urest.http.response.HTTPResponse`
+is a utility class designed just handles to handle the raw response to the
+network client. As such it should be largely invisible to the API layer, and
+most consumers of the `urest.http` module _should not_ create instance of the
 `urest.http.response.HTTPResponse` class directly.
 
 Standards
@@ -46,10 +44,11 @@ except ImportError:
 # from enum import Enum
 # Unfortunately not in MicroPython yet, so we can't enforce the type
 HTTPStatus = {"OK", "NOT_OK", "NOT_FOUND"}
-"""
-    Define the HTTP response codes in use. See the Mozilla [HTTP response status
-    codes](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status) for more
-    details
+"""Define the HTTP response codes in use.
+
+See the Mozilla [HTTP response status
+codes](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status) for more
+details
 """
 
 
@@ -66,8 +65,8 @@ class HTTPResponse:
         close: bool = True,
         header: dict = None,
     ) -> None:
-        """Create a response object, representing the raw HTTP header returned to the
-        network client.
+        """Create a response object, representing the raw HTTP header returned
+        to the network client.
 
         This instance is guaranteed to be a valid _class_ on creation, and
         _should_ also be a valid HTTP response. However the caller should check the
@@ -102,7 +101,6 @@ class HTTPResponse:
             Raw (key, value) pairs for HTTP response header fields. This allows
             setting of arbitrary fields by the caller, without extending/sub-
             classing `urest.http.response.HTTPResponse`
-
         """
 
         if status in HTTPStatus:
@@ -132,7 +130,8 @@ class HTTPResponse:
 
     @property
     def body(self) -> str:
-        """The raw HTTP response, formatted to return to the client as the HTTP response."""
+        """The raw HTTP response, formatted to return to the client as the HTTP
+        response."""
 
         return self._body
 
@@ -147,10 +146,8 @@ class HTTPResponse:
 
     @property
     def status(self) -> HTTPResponse:
-        """
-        A valid `urest.http.response.HTTPResponse` representing the current
-        error/status code that will be returned to the client.
-        """
+        """A valid `urest.http.response.HTTPResponse` representing the current
+        error/status code that will be returned to the client."""
         return self._status
 
     @status.setter
@@ -166,7 +163,8 @@ class HTTPResponse:
     ##
 
     async def send(self, writer: asyncio.StreamWriter) -> None:
-        """Send an appropriate response to the client, based on the status code.
+        """Send an appropriate response to the client, based on the status
+        code.
 
         This method assembles the full HTTP 1.1 header, based on the `mimetype`
         the content currently in the `body`, and the error code forming the

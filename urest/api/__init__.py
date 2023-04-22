@@ -1,5 +1,4 @@
-"""
-Abstract base class and helper classes for the server-provided REST API.
+"""Abstract base class and helper classes for the server-provided REST API.
 
 Overview
 --------

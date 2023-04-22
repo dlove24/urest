@@ -18,10 +18,8 @@
 # COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-"""
-Examples of the module use, both as simple applications and as helper classes
-for reuse in more complete applications.
+"""Examples of the module use, both as simple applications and as helper
+classes for reuse in more complete applications.
 
 Overview
 --------

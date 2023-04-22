@@ -1,5 +1,5 @@
-"""
-Tests of the `delete` verb (HTTP DELETE method), using the simple server `urest.examples.simpleled.SimpleLED`.
+"""Tests of the `delete` verb (HTTP DELETE method), using the simple server
+`urest.examples.simpleled.SimpleLED`.
 
 Run as: `py.test test_simple_delete.py`
 """
@@ -9,8 +9,8 @@ IP_ADDRESS = "10.0.30.220"
 
 
 def test_requests_delete_check():
-    """
-    Test
+    """Test.
+
     ----.
 
     Check for basic connection to the server. The URI is given, but for
@@ -34,15 +34,14 @@ def test_requests_delete_check():
       * Check that `IP_ADDRESS` is correct
       * Check the `urest.examples.simpleled.SimpleLED` is running
       * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun("green_led0", SimpleLED(1))` has been made
-
     """
     r = requests.get(f"http://{ IP_ADDRESS }/green_led0")
     assert r.status_code == requests.codes.ok
 
 
 def test_requests_init_delete():
-    """
-    Test
+    """Test.
+
     ----.
 
     Attempt to set the noun `green_led0` to `1`, to allow checking of the next
@@ -57,7 +56,6 @@ def test_requests_init_delete():
     ----------
 
       * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun("green_led0", SimpleLED(1))` has been made
-
     """
     state = {"led": 1}
     r = requests.put(f"http://{ IP_ADDRESS }/green_led0", json=state)
@@ -65,8 +63,8 @@ def test_requests_init_delete():
 
 
 def test_requests_try_delete():
-    """
-    Test
+    """Test.
+
     ----.
 
     Attempt to reset the server back to the known (default) state. This is
@@ -83,15 +81,14 @@ def test_requests_try_delete():
 
       * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun("green_led0", SimpleLED(1))` has been made
       * Check that the call to `test_requests_init_delete()` was successful
-
     """
     r = requests.delete(f"http://{ IP_ADDRESS }/green_led0")
     assert r.status_code == requests.codes.ok
 
 
 def test_requests_check_delete():
-    """
-    Test
+    """Test.
+
     ----.
 
     Check the noun has been returned to the default state of `0`
@@ -106,7 +103,6 @@ def test_requests_check_delete():
 
       * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun("green_led0", SimpleLED(1))` has been made
       * Check the results of the `test_requests_init_delete()` method, to ensure the noun was initialised correctly
-
     """
     r = requests.get(f"http://{ IP_ADDRESS }/green_led0")
     assert r.content == b'{"led": 0}'

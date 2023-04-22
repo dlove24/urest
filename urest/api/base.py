@@ -19,11 +19,8 @@
 # COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-"""
-Implements the 'Abstract' Base Class for all the nouns used by the
+"""Implements the 'Abstract' Base Class for all the nouns used by the
 `urest.http.server.RESTServer` class in defining resources.
-
 
 .. Note::
   MicroPython does not implement the
@@ -48,8 +45,8 @@ class APIBase:
     ##
 
     def __init__(self) -> None:
-        """Define the Abstract Base Class for the nouns, used to structure the response
-        from the server to the client.
+        """Define the Abstract Base Class for the nouns, used to structure the
+        response from the server to the client.
 
         This base class defines the minimum interface used in marshalling requests from
         the clients by the `urest.http.server.RESTServer` class. The API defined by the
@@ -76,17 +73,18 @@ class APIBase:
         """
 
         self._state_attributes = []
-        """ Holds the current state and attributes of the resource """
+        """Holds the current state and attributes of the resource."""
 
     ##
     ## State Manipulation Methods
     ##
 
     def get_state(self) -> dict:
-        """Return the state of the resource, as defined by the sub-classes. By default
-        this method will return the contents of the private `state_attributes` `Dictionary`
-        to the client; assuming that `Dictionary` has been appropriately completed
-        in the processing of the resource.
+        """Return the state of the resource, as defined by the sub-classes. By
+        default this method will return the contents of the private
+        `state_attributes` `Dictionary` to the client; assuming that
+        `Dictionary` has been appropriately completed in the processing of the
+        resource.
 
         Returns
         -------
@@ -124,7 +122,6 @@ class APIBase:
         """Update the state of the resource, using the 'key/value' pairs of the
         `Dictionary` in `state_attributes`.
 
-
         The exact mechanism for updating the internal state of the resource represented
         by sub-classes is implementation defined. By default this expects to update
         only part of the state through the use of the partial state defined in
@@ -150,12 +147,13 @@ class APIBase:
             self._state_attributes = []
 
     def delete_state(self) -> None:
-        """Remove the internal state of the resource, essentially 'resetting' or
-        re-initialising the object.
+        """Remove the internal state of the resource, essentially 'resetting'
+        or re-initialising the object.
 
-        The exact mechanism for returning the state to the defaults are left to
-        the implementation. However it is expected that once this call completes
-        the internal state will be _identical_ to that of the default constructor.
+        The exact mechanism for returning the state to the defaults are
+        left to the implementation. However it is expected that once
+        this call completes the internal state will be _identical_ to
+        that of the default constructor.
         """
 
         self._state_attributes = []

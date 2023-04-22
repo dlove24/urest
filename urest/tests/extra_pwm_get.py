@@ -1,5 +1,5 @@
-"""
-Tests of the `get` verb (HTTP GET method), using the simple server `urest.examples.pwmled.PWMLED`.
+"""Tests of the `get` verb (HTTP GET method), using the simple server
+`urest.examples.pwmled.PWMLED`.
 
 Run as: `py.test test_simple_get.py`
 """
@@ -9,8 +9,8 @@ IP_ADDRESS = "10.0.30.220"
 
 
 def test_pwm_get_check():
-    """
-    Test
+    """Test.
+
     ----.
 
     Check for basic connection to the server. The URI is given, but for
@@ -34,15 +34,14 @@ def test_pwm_get_check():
       * Check that `IP_ADDRESS` is correct
       * Check the `urest.examples.pwmled.PWMLED` is running
       * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun("green_led0", PWMLED(1))` has been made
-
     """
     r = requests.get(f"http://{ IP_ADDRESS }/green_led0")
     assert r.status_code == requests.codes.ok
 
 
 def test_pwm_get_setup():
-    """
-    Test
+    """Test.
+
     ----.
 
     Ensures the test server is in the known (default) state required for further tests. This is achieved by sending an HTTP `DELETE` method request to the
@@ -61,15 +60,14 @@ def test_pwm_get_setup():
     ----------
 
       * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun("green_led0", PWMLED(1))` has been made
-
     """
     r = requests.delete(f"http://{ IP_ADDRESS }/green_led0")
     assert r.status_code == requests.codes.ok
 
 
 def test_pwm_get_data():
-    """
-    Test
+    """Test.
+
     ----.
 
     Check the noun has been returned to the default state of `current == 0`
@@ -84,15 +82,14 @@ def test_pwm_get_data():
 
       * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun("green_led0", PWMLED(1))` has been made
       * Check the results of the `test_pwm_get_setup()` method, to ensure the noun was initialised correctly
-
     """
     r = requests.get(f"http://{ IP_ADDRESS }/green_led0")
     assert r.content == b'{"current": 0,"desired": 0}'
 
 
 def test_pwm_set_on():
-    """
-    Test
+    """Test.
+
     ----.
 
     Attempt to set the noun 'led' to `1`
@@ -106,7 +103,6 @@ def test_pwm_set_on():
     ----------
 
       * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun("green_led0", PWMLED(1))` has been made
-
     """
     state = {"led": 1}
     r = requests.put(f"http://{ IP_ADDRESS }/green_led0", json=state)

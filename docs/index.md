@@ -35,6 +35,8 @@ Console output from the `urest.http.server.RESTServer` is controlled by the stan
 
 The core of the library is a simple HTTP server, specialised to the delivery of a REST-like API instead of a general HTTP server. The design, and the use of the `asyncio` library, is inspired by the [MicroPython HTTP Server](https://github.com/erikdelange/MicroPython-HTTP-Server) by Erik de Lange. This library uses a roughly similar structure for the core of the `asyncio` event loop, and especially in the design of the [`RESTServer`](https://dlove24.github.io/urest/urest/http/server.html) class.
 
+![Full Package Diagram](/media/urest.svg)
+
 Key differences include
 
 - Support for `PUT`, `POST` and `DELETE` operations, in addition to `GET`. These are required for an API server, and also form the 'verbs' of the actions allowed on the 'nouns' by the API built on-top of this library.
