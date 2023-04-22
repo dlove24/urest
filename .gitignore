@@ -9,6 +9,7 @@ bin/plantuml.jar
 
 # Backup files
 *.orig
+*.kate-swp
 
 # Temporary packaging files
 dist/

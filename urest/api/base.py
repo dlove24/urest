@@ -23,13 +23,13 @@
 `urest.http.server.RESTServer` class in defining resources.
 
 .. Note::
-  MicroPython does not implement the
-  [`abc` module](https://docs.python.org/3.10/library/abc.html) which provides
-  language-level support for abstract base classes. Therefore the
-  `urest.http.server.RESTServer` class checks the ancestors of the class
-  passed as a resource for the API to ensure they derive from `urest.api.base.APIBase`.
-  Any class which _does not_ have `urest.api.base.APIBase` as an ancestor will
-  therefore **not** work as a valid resource.
+  MicroPython does not implement the [`abc` module]
+  (https://docs.python.org/3.10/library/abc.html) which provides language-level
+  support for abstract base classes. Therefore the [`RESTServer`]
+  [urest.http.server.RESTServer] class checks the ancestors of the class passed as
+  a resource for the API to ensure they derive from `urest.api.base.APIBase`. Any
+  class which _does not_ have [`APIBase`][urest.api.base.APIBase] as an ancestor
+  will therefore **not** work as a valid resource.
 
   This also means that `urest.api.base.APIBase` is not a pure virtual ABC, and
   so implements a minimum set of methods which hold and manipulate resource state.
@@ -38,48 +38,68 @@
   implementations.
 """
 
+# Import the typing support
+try:
+    from typing import Union
+except ImportError:
+    from urest.typing import Union  # type: ignore
+
 
 class APIBase:
+    """Define the Abstract Base Class for the nouns, used to structure the
+    response from the server to the client.
+
+    This base class defines the minimum interface used in marshalling
+    requests from the clients by the
+    [`RESTServer`][urest.http.server.RESTServer] class. The API defined
+    by the server consists of 'nouns' representing the resources defined
+    by the sub-classes of this base class, and the methods which act
+    upon those resources (which map to the 'verbs' of the HTTP requests
+    made to the [`RESTServer`][urest.http.server.RESTServer] class).
+
+    Where data is returned to the client by the, e.g by the `get_state`
+    method, JSON will ultimately be used as the encoding format. Sub-
+    classes do not need to implement the saving of the object state to
+    the client: however to assist they should be aware of the type of
+    the each `value` returned as part of a `key/value` pair in the
+    dictionary.
+
+    When returning data to the client, the `value` of each entry in the
+    dictionary will attempt to be inferred using the normal Python type
+    library. If the type can be identified, then an appropriate JSON
+    type of `string` or `integer` will be used as appropriate. If the
+    type for the `value` of that dictionary entry cannot be determined,
+    or cannot be coerced to an integer, then the value will be returned
+    as a string.
+
+    !!! warning "Data will be returned to the client 'as is'"
+        No further checking on the validity (or otherwise)
+        of the content of the dictionary will be undertaken past this
+        point. Anything that appear to be in a valid dictionary (of type
+        `dict[str, Union[str, int]]`) will be returned to the client. It
+        is the module consumers responsibility to ensure the returned data
+        follows the form expected by those clients.
+    """
+
+    ##
+    ## Attributes
+    ##
+
+    _state_attributes: dict[str, Union[str, int]]
+    """The current state and attributes of the resource."""
+
     ##
     ## Constructor
     ##
 
     def __init__(self) -> None:
-        """Define the Abstract Base Class for the nouns, used to structure the
-        response from the server to the client.
-
-        This base class defines the minimum interface used in marshalling requests from
-        the clients by the `urest.http.server.RESTServer` class. The API defined by the
-        server consists of 'nouns' representing the resources defined by the sub-classes
-        of this base class, and the methods which act upon those resources (which map to
-        the 'verbs' of the HTTP requests made to the `urest.http.server.RESTServer` class.
-
-        Where data is returned to the client by the, e.g by the `get_state` method, JSON
-        will ultimately be used as the encoding format. Sub-classes do not need to
-        implement the saving of the object state to the client: however to assist they
-        should be aware of the type of the each `value` returned as part of a `key/value`
-        pair in the `Dictionary`.
-
-        When returning data to the client, the `value` of each entry in the `Dictionary`
-        will attempt to be inferred using the normal Python type library. If the type can be
-        identified, then an appropriate JSON type will be used: otherwise the `value` of that
-        `Dictionary` entry will be returned as a string.
-
-        .. Warning:: Data will be returned to the client 'as is'
-            No further checking on the validity (or otherwise) of the content of
-            the `Dictionary` will be undertaken past this point. Anything that appear to be in
-            a valid `Dictionary` will be returned to the client. It is the module consumers
-            responsibility to ensure the returned data follows the form expected by those clients.
-        """
-
-        self._state_attributes = []
-        """Holds the current state and attributes of the resource."""
+        self._state_attributes = {"": 0}
 
     ##
     ## State Manipulation Methods
     ##
 
-    def get_state(self) -> dict:
+    def get_state(self) -> dict[str, Union[str, int]]:
         """Return the state of the resource, as defined by the sub-classes. By
         default this method will return the contents of the private
         `state_attributes` `Dictionary` to the client; assuming that
@@ -89,14 +109,14 @@ class APIBase:
         Returns
         -------
 
-        Dictionary
+        dict[str, Union[str, int]]
             A mapping of (key, value) pairs which defines the resource state to return to the
             client.
         """
 
         return self._state_attributes
 
-    def set_state(self, state_attributes: dict) -> None:
+    def set_state(self, state_attributes: dict[str, Union[str, int]]) -> None:
         """Set the full state of the resource.
 
         The exact mechanism for updating the internal state of the resource represented
@@ -108,7 +128,7 @@ class APIBase:
         Parameters
         ----------
 
-        state_attributes: Dictionary
+        state_attributes: dict[str, Union[str, int]]
             A list of (key, value) pairs representing the _full_ state of the
             resource. No merging of state is undertaken, or attempted.
         """
@@ -116,9 +136,12 @@ class APIBase:
         if state_attributes is not None and isinstance(state_attributes, dict):
             self._state_attributes = state_attributes
         else:
-            self._state_attributes = []
+            self._state_attributes = {"": 0}
 
-    def update_state(self, state_attributes: dict) -> None:
+    def update_state(
+        self,
+        state_attributes: dict[str, Union[str, int]],
+    ) -> None:
         """Update the state of the resource, using the 'key/value' pairs of the
         `Dictionary` in `state_attributes`.
 
@@ -131,7 +154,7 @@ class APIBase:
         Parameters
         ----------
 
-        state_attributes: Dictionary
+        state_attributes: dict[str, Union[str, int]]
             A list of (key, value) pairs representing the _partial_ state of the
             resource. The exact mechanism for merging this partial state if left
             to the implementation of the sub-classes.
@@ -142,9 +165,9 @@ class APIBase:
                 try:
                     self._state_attributes[key] = state_attributes[key]
                 except KeyError:
-                    self._state_attributes[key] = None
+                    self._state_attributes[key] = ""
         else:
-            self._state_attributes = []
+            self._state_attributes = {"": 0}
 
     def delete_state(self) -> None:
         """Remove the internal state of the resource, essentially 'resetting'
@@ -156,4 +179,4 @@ class APIBase:
         that of the default constructor.
         """
 
-        self._state_attributes = []
+        self._state_attributes = {"": 0}

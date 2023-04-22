@@ -38,7 +38,8 @@ select = ["A", "ANN0", "ANN2", "ARG", "B", "BLE", "C4", "COM", "D4", "DTZ", "E",
 # * PIE790 - Ignore pass comments as these are required to stop black fighting docformatter
 # * PLR0913 - We use optional arguments a lot, so ignore complaints about the number of arguments
 # * PLR0912 - Ignore deep branches
-ignore = ["D412", "D416", "E501", "F401", "F821", "FBT0", "N802", "PIE790", "PLR0912", "PLR0913"]
+# * UP007 - Don't allow Python 3.10 syle type annotations (just yet)
+ignore = ["D412", "D416", "E501", "F401", "F821", "FBT0", "N802", "PIE790", "PLR0912", "PLR0913", "UP007"]
 
 # Allow autofix for all enabled rules (when `--fix`) is provided.
 fixable = ["A", "B", "C", "D", "E", "F", "G", "I", "N", "Q", "S", "T", "W", "ANN", "ARG", "BLE", "COM", "DJ", "DTZ", "EM", "ERA", "EXE", "FBT", "ICN", "INP", "ISC", "NPY", "PD", "PGH", "PIE", "PL", "PT", "PTH", "PYI", "RET", "RSE", "RUF", "SIM", "SLF", "TCH", "TID", "TRY", "UP", "YTT"]
@@ -97,3 +98,6 @@ max-complexity = 10
 
 [tool.mypy]
 ignore_missing_imports = true
+exclude = [
+    "typing.py",
+]

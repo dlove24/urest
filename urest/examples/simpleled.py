@@ -47,6 +47,13 @@ try:
 except ImportError:
     print("Ignoring MicroPython include: machine")
 
+# Import the typing support
+try:
+    from typing import Union
+except ImportError:
+    from urest.typing import Union  # type: ignore
+
+
 from urest.api.base import APIBase
 
 
@@ -57,7 +64,7 @@ class SimpleLED(APIBase):
 
         self._state_attributes = {"led": 0}
 
-    def set_state(self, state_attributes: dict) -> None:
+    def set_state(self, state_attributes: dict[str, Union[str, int]]) -> None:
         try:
             self._state_attributes["led"] = state_attributes["led"]
 
@@ -72,14 +79,17 @@ class SimpleLED(APIBase):
             self._gpio.off()
             self._state_attributes["led"] = 0
 
-    def get_state(self) -> dict:
+    def get_state(self) -> dict[str, Union[str, int]]:
         return {"led": self._gpio.value()}
 
     def delete_state(self) -> None:
         self._gpio.off()
         self._state_attributes["led"] = 0
 
-    def update_state(self, state_attributes: dict) -> None:
+    def update_state(
+        self,
+        state_attributes: dict[str, Union[str, int]],
+    ) -> None:
         if self._state_attributes["led"] == 0:
             self._gpio.on()
             self._state_attributes["led"] = 1

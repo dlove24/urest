@@ -77,6 +77,13 @@ try:
 except ImportError:
     print("Ignoring MicroPython include: machine")
 
+# Import the typing support
+try:
+    from typing import Union
+except ImportError:
+    from urest.typing import Union  # type: ignore
+
+
 from urest.api.base import APIBase
 
 PWM_STEP = 6550
@@ -153,7 +160,7 @@ class PWMLED(APIBase):
 
         self._gpio_lock.release()
 
-    def set_state(self, state_attributes: dict) -> None:
+    def set_state(self, state_attributes: dict[str, Union[str, int]]) -> None:
         try:
             loop = asyncio.get_event_loop()
 
@@ -177,7 +184,7 @@ class PWMLED(APIBase):
             self._state_attributes["desired"] = 0
             self._state_attributes["current"] = 0
 
-    def get_state(self) -> dict:
+    def get_state(self) -> dict[str, Union[str, int]]:
         return self._state_attributes
 
     def delete_state(self) -> None:
@@ -188,7 +195,10 @@ class PWMLED(APIBase):
         self._state_attributes["desired"] = 0
         self._state_attributes["current"] = 0
 
-    def update_state(self, state_attributes: dict) -> None:
+    def update_state(
+        self,
+        state_attributes: dict[str, Union[str, int]],
+    ) -> None:
         loop = asyncio.get_event_loop()
 
         if self._state_attributes["desired"] == 0:

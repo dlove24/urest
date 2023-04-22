@@ -33,7 +33,12 @@ This version is written for MicroPython 3.4, and has been tested on:
 """
 
 
-# Import the core libraries
+# Import the typing support
+try:
+    from typing import Union
+except ImportError:
+    from urest.typing import Union  # type: ignore
+
 
 from urest.api.base import APIBase
 
@@ -43,7 +48,7 @@ class EchoServer(APIBase):
         self._state = False
         self._state_attributes = {"echo": 0}
 
-    def set_state(self, state_attributes: dict) -> None:
+    def set_state(self, state_attributes: dict[str, Union[str, int]]) -> None:
         try:
             self._state_attributes["echo"] = state_attributes["echo"]
 
@@ -58,14 +63,17 @@ class EchoServer(APIBase):
             self._state = False
             self._state_attributes["echo"] = 0
 
-    def get_state(self) -> dict:
+    def get_state(self) -> dict[str, Union[str, int]]:
         return {"echo": self._state}
 
     def delete_state(self) -> None:
         self._state = False
         self._state_attributes["echo"] = 0
 
-    def update_state(self, state_attributes: dict) -> None:
+    def update_state(
+        self,
+        state_attributes: dict[str, Union[str, int]],
+    ) -> None:
         if self._state_attributes["echo"] == 0:
             self._state = True
             self._state_attributes["echo"] = 1
