@@ -59,17 +59,16 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 import time
 
 try:
-    from machine import Pin
-    from micropython import const
-
     import network
     import uasyncio as asyncio
+    from machine import Pin
+    from micropython import const
 except ImportError:
     print("Ignoring MicroPython includes")
 
-from urest.http import RESTServer
 from urest.api import APIBase
 from urest.examples.simpleled import SimpleLED
+from urest.http import RESTServer
 
 ###
 ### Main Loop

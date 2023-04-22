@@ -76,12 +76,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 # Import the Asynchronous IO Library, preferring the MicroPython library if
 # available
 try:
-    from machine import Pin, PWM
     import uasyncio as asyncio
+    from machine import PWM, Pin
 except ImportError:
     print("Ignoring MicroPython include: machine")
 
-from ..api.base import APIBase
+from urest.api.base import APIBase
 
 PWM_STEP = 6550
 """Determines the increment (or decrement) for each step in the PWM 'on' or
@@ -89,7 +89,7 @@ PWM_STEP = 6550
 
 
 class PWMLED(APIBase):
-    def __init__(self, pin: int):
+    def __init__(self, pin: int) -> None:
         self._gpio = PWM(Pin(pin))
         self._gpio.duty_u16(0)
         self._gpio.freq(100)
@@ -97,7 +97,7 @@ class PWMLED(APIBase):
 
         self._duty = 0
 
-        self._state_attributes = dict(desired=0, current=0)
+        self._state_attributes = {"desired": 0, "current": 0}
 
     async def _slow_on(self):
         # Wait for the GPIO lock if we need to

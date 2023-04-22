@@ -51,15 +51,15 @@ try:
 except ImportError:
     print("Ignoring MicroPython include: machine")
 
-from ..api.base import APIBase
+from urest.api.base import APIBase
 
 
 class SimpleLED(APIBase):
-    def __init__(self, pin):
+    def __init__(self, pin) -> None:
         self._gpio = Pin(pin, Pin.OUT)
         self._gpio.off()
 
-        self._state_attributes = dict(led=0)
+        self._state_attributes = {"led": 0}
 
     def set_state(self, state_attributes: dict):
         try:
@@ -77,7 +77,7 @@ class SimpleLED(APIBase):
             self._state_attributes["led"] = 0
 
     def get_state(self) -> dict:
-        return dict(led=self._gpio.value())
+        return {"led": self._gpio.value()}
 
     def delete_state(self):
         self._gpio.off()

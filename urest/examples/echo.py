@@ -43,13 +43,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 # Import the core libraries
 
-from ..api.base import APIBase
+from urest.api.base import APIBase
 
 
 class EchoServer(APIBase):
-    def __init__(self):
+    def __init__(self) -> None:
         self._state = False
-        self._state_attributes = dict(echo=0)
+        self._state_attributes = {"echo": 0}
 
     def set_state(self, state_attributes: dict):
         try:
@@ -67,7 +67,7 @@ class EchoServer(APIBase):
             self._state_attributes["echo"] = 0
 
     def get_state(self) -> dict:
-        return dict(echo=self._state)
+        return {"echo": self._state}
 
     def delete_state(self):
         self._state = False
