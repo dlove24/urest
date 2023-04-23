@@ -48,7 +48,7 @@ namespace urest {
                 + int read_timeout
                 + int write_timeout
 
-                + parse_data()
+                - parse_data()
                 + dispatch_noun()
                 + register_noun()
                 + start()
@@ -95,13 +95,27 @@ namespace urest {
 namespace errno {
     abstract class Exception {
     }
+    class IndexError {
+    }
+    class KeyError {
+    }
 }
+
+errno.IndexError <|-- errno.Exception
+errno.KeyError <|-- errno.Exception
 
 urest.http.response.HTTPResponse::_status <-- urest.http.response.HTTPStatus
 
 urest.http.server.RESTClientError <|-- errno.Exception
 urest.http.server.RESTParseError <|-- errno.Exception
 urest.http.server.RESTServerError <|-- errno.Exception
+
+urest.http.server.RESTServer::dispatch_noun <-- urest.http.response.HTTPResponse
+urest.http.server.RESTServer::dispatch_noun <-- urest.http.server.RESTClientError
+urest.http.server.RESTServer::dispatch_noun <-- errno.IndexError
+urest.http.server.RESTServer::register_noun <-- urest.api.base.APIBase
+urest.http.server.RESTServer::register_noun <-- errno.KeyError
+urest.http.server.RESTServer::parse_data <-- urest.http.server.RESTParseError
 
 urest.utils.network_connect.WirelessNetworkError <|-- errno.Exception
 

@@ -1,28 +1,39 @@
-                                                                                                                                                                                                ,-------------------.
-                                                                                                                                                                                                |RESTServer         |
-                                                                                                                                                                                                |-------------------|
-                                                                                            ,------------.                                                                                      |- _server          |
-,--------------------------.  ,--------------------------.   ,--------------------------.   |HTTPResponse|                                                                                      |- dict _nouns      |
-|EchoServer                |  |PWMLED                    |   |SimpleLED                 |   |------------|                                                                                      |+ str host         |
-|--------------------------|  |--------------------------|   |--------------------------|   |- _status   |                                                                                      |+ int port         |
-|- _state_attributes : dict|  |- _state_attributes : dict|   |- _state_attributes : dict|   |- _body     |   ,---------------.   ,--------------.   ,---------------.   ,--------------------.  |+ int backlog      |
-|+ delete_state()          |  |+ delete_state()          |   |+ delete_state()          |   |- _mimetype |   |RESTClientError|   |RESTParseError|   |RESTServerError|   |WirelessNetworkError|  |+ int read_timeout |
-|+ get_state()             |  |+ get_state()             |   |+ get_state()             |   |- _close    |   |---------------|   |--------------|   |---------------|   |--------------------|  |+ int write_timeout|
-|+ set_state()             |  |+ set_state()             |   |+ set_state()             |   |- _header   |   `---------------'   `--------------'   `---------------'   `--------------------'  |                   |
-|+ update_state()          |  |+ update_state()          |   |+ update_state()          |   |+ body      |                                                                                      |+ parse_data()     |
-`--------------------------'  `--------------------------'   `--------------------------'   |+ status    |                                                                                      |+ dispatch_noun()  |
-                                            |                                               |+ send()    |                                                                                      |+ register_noun()  |
-                                            |                                               `------------'                                                                                      |+ start()          |
-                                            |                                                      |                                                                                            |+ stop()           |
-                                            |                                                      |                                                                                            `-------------------'
-                                            |                                                      |                                                                                                                 
-                                            |                                                      |                                                                                                                 
-                              ,---------------------------.                                        |                                                                                                                 
-                              |APIBase                    |                                 ,-----------.                                                                                                            
-                              |---------------------------|                                 |HTTPStatus |                                    ,---------.                                                             
-                              |- _state_attributes : dict |                                 |-----------|                                    |Exception|                                                             
-                              |{abstract} + delete_state()|                                 |+ OK       |                                    |---------|                                                             
-                              |{abstract} + get_state()   |                                 |+ NOT_OK   |                                    `---------'                                                             
-                              |{abstract} + set_state()   |                                 |+ NOT_FOUND|                                                                                                            
-                              |{abstract} + update_state()|                                 `-----------'                                                                                                            
-                              `---------------------------'                                                                                                                                                          
+                                                                                              ,-------------------.                                                                        
+                                                                                              |RESTServer         |                                                                        
+                                                                                              |-------------------|                                                                        
+                                                                                              |- _server          |                                                                        
+,--------------------------.  ,--------------------------.   ,--------------------------.     |- dict _nouns      |                                                                        
+|EchoServer                |  |PWMLED                    |   |SimpleLED                 |     |+ str host         |                                                                        
+|--------------------------|  |--------------------------|   |--------------------------|     |+ int port         |                                                                        
+|- _state_attributes : dict|  |- _state_attributes : dict|   |- _state_attributes : dict|     |+ int backlog      |                                                                        
+|+ delete_state()          |  |+ delete_state()          |   |+ delete_state()          |     |+ int read_timeout |                                                                        
+|+ get_state()             |  |+ get_state()             |   |+ get_state()             |     |+ int write_timeout|                                                                        
+|+ set_state()             |  |+ set_state()             |   |+ set_state()             |     |                   |                                                                        
+|+ update_state()          |  |+ update_state()          |   |+ update_state()          |     |- parse_data()     |                                                                        
+`--------------------------'  `--------------------------'   `--------------------------'     |+ dispatch_noun()  |                                                                        
+                                            |                                                 |+ register_noun()  |                                                                        
+                                            |                                                 |+ start()          |                                                                        
+                                            |                                                 |+ stop()           |                                                                        
+                                            |                                                 `-------------------'                                                                        
+                                            |                                                                                                                                              
+                                            |                                                                                                                                              
+                                            |                 ,------------.                                                                                                               
+                              ,---------------------------.   |HTTPResponse|                                                                                                               
+                              |APIBase                    |   |------------|                                                                                                               
+                              |---------------------------|   |- _status   |                                                                                                               
+                              |- _state_attributes : dict |   |- _body     |   ,---------------.   ,--------------.  ,----------.   ,--------.   ,---------------.   ,--------------------.
+                              |{abstract} + delete_state()|   |- _mimetype |   |RESTClientError|   |RESTParseError|  |IndexError|   |KeyError|   |RESTServerError|   |WirelessNetworkError|
+                              |{abstract} + get_state()   |   |- _close    |   |---------------|   |--------------|  |----------|   |--------|   |---------------|   |--------------------|
+                              |{abstract} + set_state()   |   |- _header   |   `---------------'   `--------------'  `----------'   `--------'   `---------------'   `--------------------'
+                              |{abstract} + update_state()|   |+ body      |                                                                                                               
+                              `---------------------------'   |+ status    |                                                                                                               
+                                                              |+ send()    |                                                                                                               
+                                                              `------------'                                                                                                               
+                                                                     |                                                                                                                     
+                                                              ,-----------.                                                                                                                
+                                                              |HTTPStatus |                                                                                                                
+                                                              |-----------|                                                  ,---------.                                                   
+                                                              |+ OK       |                                                  |Exception|                                                   
+                                                              |+ NOT_OK   |                                                  |---------|                                                   
+                                                              |+ NOT_FOUND|                                                  `---------'                                                   
+                                                              `-----------'                                                                                                                
