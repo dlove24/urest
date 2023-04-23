@@ -423,12 +423,12 @@ class RESTServer:
             An asynchronous stream, representing the network response _from_ the
             client. This is usually set-up indirectly by the `asyncio` library as
             part of a network response to the client, and will be represented by
-            an [`asyncio.StreamReader`](https://docs.python.org/3.4/library/asyncio-stream.html# streamreader).
+            an [`asyncio.StreamReader`](https://docs.python.org/3.4/library/asyncio-stream.html#streamreader).
         writer: `asyncio.StreamWriter`
             An asynchronous stream, representing the network response _to_ the
             client. This is usually set-up indirectly by the `asyncio` library as
             part of a network response to the client, and will be represented by
-            an [`asyncio.StreamWriter`](https://docs.python.org/3.4/library/asyncio-stream.html# streamwriter).
+            an [`asyncio.StreamWriter`](https://docs.python.org/3.4/library/asyncio-stream.html#streamwriter).
 
         Raises
         ------
