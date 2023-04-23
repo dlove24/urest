@@ -29,14 +29,15 @@ In most cases, consumers of this module only need to provide an `asynio` event
 loop: see "Creating the Network Server" in the Section _Using the Module_ below.
 By default the module will also bind to the _network_ address of the host on the
 standard port 80 used by HTTP requests. This can be changed in the instantiation
-of the  `urest.http.server.RESTServer` class.
+of the  [`RESTServer`][urest.http.server.RESTServer] class.
 
 Implementation
 --------------
 
-During the instantiation of the `urest.http.server.RESTServer` class, the resulting
-object creates a socket bound to the specified address and port (or the host network
-address and port 80 by default). This binding is undertaken as part of the `asyncio`
+During the instantiation of the [`RESTServer`][urest.http.server.RESTServer]
+class, the resulting object creates a socket bound to the specified address and
+port (or the host network address and port 80 by default). This binding is
+undertaken as part of the `asyncio` instantiation.
 
 
 Using the Module
@@ -44,13 +45,14 @@ Using the Module
 
 ### Creating the Network Server
 
-All network clients are assumed to be handled by an instance of the
-`urest.http.server.RESTServer` class from the `urest.http.server` module. The
-`urest.http.server.RESTServer` class provides both an event loop for the
-`asyncio` library, and also takes care of the lower-level networking interface
+All network clients are assumed to be handled by an instance of the [`RESTServer`]
+[urest.http.server.RESTServer] class from the `urest.http.server` module. The
+[`RESTServer`][urest.http.server.RESTServer] class provides both an event loop for
+the `asyncio` library, and also takes care of the lower-level networking interface
 for the clients. Unless working with multiple instances (e.g. via a thread
 library), most model consumers are assumed have a single instance of the
-`urest.http.server.RESTServer` --- **but the module will not check this**.
+[`RESTServer`][urest.http.server.RESTServer] -- **but the module will not check
+this**.
 
 In most cases, something similar to the following will suffice
 
@@ -80,13 +82,14 @@ In most cases, something similar to the following will suffice
 
 ### Creating the API Responses
 
-Most module consumers will not use the `urest.http.response` module directly:
-but will instead sub-class `urest.api.base.APIBase` to provide the core of the
-response to the network clients. For details of how the
-`urest.http.server.RESTServer` and `urest.api.base.APIBase` classes interact,
-the module documentation for `urest.api` should be consulted. In addition, the
-documentation for the `urest.examples.simpleled.SimpleLED` class might prove
-useful as an example of a simple implementation of the API.
+Most module consumers will not use the [`urest.http.response`][urest.http.response]
+module directly: but will instead sub-class [`APIBase`][urest.api.base.APIBase] to
+provide the core of the response to the network clients. For details of how the
+[`RESTServer`][urest.http.server.RESTServer] and [`APIBase`]
+[urest.api.base.APIBase] classes interact, the module documentation for
+`urest.api` should be consulted. In addition, the documentation for the
+[`SimpleLED`][urest.examples.simpleled.SimpleLED] might prove useful as an example
+of a simple implementation of the API.
 
 
 Tested Implementations

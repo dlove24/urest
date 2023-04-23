@@ -131,18 +131,18 @@ class RESTServer:
     most cases, and should be set so that most clients won't have to touch
     them.
 
-    The `urest.http.server.RESTServer` class acts as the primary interface to
+    The [`RESTServer`][urest.http.server.RESTServer] class acts as the primary interface to
     the library, handling all the network communication with the client,
     formatting the response and marshalling the API calls required to generate
     that response.
 
     In most cases consumers of this module will create a single instance of
-    the `urest.http.server.RESTServer` class, and then pass the reference to
-    the `urest.http.server.RESTServer.start` method to an event loop of the
+    the [`RESTServer`][urest.http.server.RESTServer] class, and then pass the reference to
+    the [`RESTServer.start()`][urest.http.server.RESTServer.start] method to an event loop of the
     `asyncio` library.
 
     For example the following code creates a variable `app` for the instance
-    of the `urest.http.server.RESTServer` class, and passes this to the 'main'
+    of the [`RESTServer`][urest.http.server.RESTServer] class, and passes this to the 'main'
     event loop of the `asyncio` library
 
     ```python
@@ -155,12 +155,12 @@ class RESTServer:
       loop.run_forever()
     ```
 
-    The `urest.http.server.RESTServer.start` method is expected to be used in
+    The [`RESTServer.start()`][urest.http.server.RESTServer.start] method is expected to be used in
     a [`asyncio` event loop](https://docs.python.org/3.4/library/asyncio-
     eventloop.html), as above; with the tasks being handled by the
-    `urest.http.server.RESTServer.dispatch_noun` method. If the event loop is
+    [`RESTServer.dispatch_noun()`][urest.http.server.RESTServer.dispatch_noun] method. If the event loop is
     required to be closed, or destroyed, the tasks can be removed using the
-    `urest.http.server.RESTServer.stop` method.
+    [`RESTServer.stop()`][urest.http.server.RESTServer.stop] method.
 
     !!! Note
         The code in this class assumes the `asyncio` library with an interface
@@ -237,7 +237,7 @@ class RESTServer:
         self._server = None
         self._nouns = {"": APIBase()}
 
-    def parse_data(self, data_str: str) -> dict[str, Union[str, int]]:
+    def _parse_data(self, data_str: str) -> dict[str, Union[str, int]]:
         """Attempt to parse a string containing JSON-like formatting into a
         single dictionary.
 
@@ -335,7 +335,7 @@ class RESTServer:
                             # The token won't have been terminated
                             # so still should be in `token_str`
                             #
-                            # NOTE: Technically an unterminated String
+                            # NOTE: Technically an un-terminated String
                             #       is an error, so will parsing will
                             #       break here (and we won't care)
                             parse_stack.append(token_str)
@@ -378,6 +378,12 @@ class RESTServer:
 
         handler: APIBase
             Object handling the request from the client
+
+        Raises
+        ------
+
+        KeyError:
+            When the handler cannot be registered
         """
 
         old_handler = APIBase()
@@ -403,7 +409,7 @@ class RESTServer:
         the rest of the server. Most of the work is done elsewhere, by the API
         handlers: this is mostly a sanity check and a routing engine.
 
-        !!! Warning
+        !!! Danger
             This routine _must_ handle arbitrary network traffic, and so
             **must** be as defensive as possible to avoid security issues in
             the API layer which results from arbitrary input stuffing and
@@ -423,6 +429,15 @@ class RESTServer:
             client. This is usually set-up indirectly by the `asyncio` library as
             part of a network response to the client, and will be represented by
             an [`asyncio.StreamWriter`](https://docs.python.org/3.4/library/asyncio-stream.html# streamwriter).
+
+        Raises
+        ------
+
+        IndexError:
+            When an appropriate handler cannot be found for the noun.
+        RESTClientError:
+            When a handler exists, but cannot be used to service the request
+            due to errors in the request from the client.
         """
 
         # Attempt the parse whatever rubbish the client sends, and assemble the
@@ -486,7 +501,7 @@ class RESTServer:
                             reader.read(request_length),
                             self.read_timeout,
                         )
-                        request_body = self.parse_data(request_data)
+                        request_body = self._parse_data(request_data)
                     except IndexError as e:
                         # DEBUG
                         if __debug__:
@@ -638,10 +653,10 @@ class RESTServer:
             await writer.wait_closed()
 
     async def start(self) -> None:
-        """Attach the method `urest.http.server.RESTServer.dispatch_noun` to an
-        `asyncio` event loop, allowing the
-        `urest.http.server.RESTServer.dispatch_noun` method to handle tasks
-        representing network events from the client.
+        """Attach the method [`RESTServer.dispatch_noun()`][urest.http.server.R
+        ESTServer.dispatch_noun] to an `asyncio` event loop, allowing the [`RES
+        TServer.dispatch_noun()`][urest.http.server.RESTServer.dispatch_noun]
+        method to handle tasks representing network events from the client.
 
         Most of the implementation of this method is handled by
         [`asyncio.start_server`](https://docs.python.org/3.4/library/asyncio-stream.html# asyncio.start_server).

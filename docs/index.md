@@ -21,7 +21,9 @@ A package of this library is provided on PyPi as [`urest-mp`](https://pypi.org/p
 
 For manual installation, everything under the `urest` directory should be copied to the appropriate directory on the MicroPython board, usually `/lib`. The library can then be imported as normal, e.g.
 
-`python from urest.http import RESTServer from urest.api import APIBase `
+````python
+from urest.http import RESTServer from urest.api import APIBase
+````
 
 See the documentation for the [examples](https://dlove24.github.io/urest/urest/examples/index.html) for more detailed guidance on the use of the library. This code is also available in the `urest/examples` folder, or as the library `urest.examples` when the package is installed.
 
