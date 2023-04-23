@@ -5,9 +5,9 @@ try:
 except ImportError:
     import asyncio
 
-from urest.http import RESTServer
 from urest.api import APIBase
 from urest.examples.echo import EchoServer
+from urest.http import RESTServer
 
 ###
 ### Main Loop

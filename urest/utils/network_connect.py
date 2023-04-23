@@ -19,9 +19,11 @@
 # COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-"""
-Utility function and exceptions which handle the network initialisation for the Pico W. The majority of this library is boiler-plate, and mimics the C library set-up required by the Pico W. For compatibility with that library (and the documentation) the `Exception` names in this module mirror those of the C library.
+"""Utility function and exceptions which handle the network initialisation for
+the Pico W. The majority of this library is boiler-plate, and mimics the C
+library set-up required by the Pico W. For compatibility with that library (and
+the documentation) the `Exception` names in this module mirror those of the C
+library.
 
 !!! warning "Pico W Only"
 
@@ -60,19 +62,41 @@ except ImportError:
 ##
 
 CYW43_LINK_DOWN = const(0)
-"""Failure code indicating the wireless link is unavailable. Check the SSID is correct."""
+"""Failure code indicating the wireless link is unavailable.
+
+Check the SSID is correct.
+"""
 CYW43_LINK_JOIN = const(1)
-"""Failure code indicating the SSID or password is incorrect and the specified SSID cannot be joined. Check the SSID and password."""
+"""Failure code indicating the SSID or password is incorrect and the specified
+SSID cannot be joined.
+
+Check the SSID and password.
+"""
 CYW43_LINK_NOIP = const(2)
-"""Failure code indicating the join request was successful: but no IP address was returned. Check the DHCP settings for the specified SSID"""
+"""Failure code indicating the join request was successful: but no IP address
+was returned.
+
+Check the DHCP settings for the specified SSID
+"""
 CYW43_LINK_UP = const(3)
-"""Success code indicating a successful join, and that an IP address was obtained from the network"""
+"""Success code indicating a successful join, and that an IP address was
+obtained from the network."""
 CYW43_LINK_FAIL = const(-1)
-"""General failure code. The link specified by the SSID is unavailable for unknown reasons."""
+"""General failure code.
+
+The link specified by the SSID is unavailable for unknown reasons.
+"""
 CYW43_LINK_NONET = const(-2)
-"""General failure code _after_ authentication. The authentication likely succeeded: but the subsequent attempts to complete the connection failed."""
+"""General failure code _after_ authentication.
+
+The authentication likely succeeded: but the subsequent attempts to
+complete the connection failed.
+"""
 CYW43_LINK_BADAUTH = const(-3)
-"""General failure code _before_ authentication. Check the supplied password."""
+"""General failure code _before_ authentication.
+
+Check the supplied password.
+"""
 
 ##
 ## Exceptions
@@ -80,10 +104,15 @@ CYW43_LINK_BADAUTH = const(-3)
 
 
 class WirelessNetworkError(Exception):
-    """
-    General Wireless Network Exception. Thrown in response to one of the codes listed in the module `Attributes`, and originating from the underlying C library.
+    """General Wireless Network Exception. Thrown in response to one of the
+    codes listed in the module `Attributes`, and originating from the
+    underlying C library.
 
-    The message of the the `Exception` is set to an appropriate response, and it should be assumed that the text of the `Exception` will be passed back to the user. Therefore it is important that the message aids further debugging without having to consult the underlying library documentation.
+    The message of the the `Exception` is set to an appropriate
+    response, and it should be assumed that the text of the `Exception`
+    will be passed back to the user. Therefore it is important that the
+    message aids further debugging without having to consult the
+    underlying library documentation.
     """
 
     pass
@@ -95,12 +124,13 @@ class WirelessNetworkError(Exception):
 
 
 def netcode_to_str(error_code: int) -> str:
-    """
-    Converts the given wireless network error code to a short string, indicating the
-    possible error. Note that no validation for sanity of the error code is
-    attempted by this function. However the returned values are expected to be
-    displayed directly to the user, and so should indicate (at least minimally)
-    where further investigation might be helpful.
+    """Convert the given wireless network error code to a short string,
+    indicating the possible error.
+
+    Note that no validation for sanity of the error code is attempted by
+    this function. However the returned values are expected to be
+    displayed directly to the user, and so should indicate (at least
+    minimally) where further investigation might be helpful.
     """
     if error_code == CYW43_LINK_DOWN:
         return "The wireless link is unavailable - check the SSID is correct"
@@ -129,13 +159,14 @@ def netcode_to_str(error_code: int) -> str:
 
 
 def wireless_enable(
-    ssid: str, password: str, link_light: Union[int, str] = "WL_GPIO0"
+    ssid: str,
+    password: str,
+    link_light: int | str = "WL_GPIO0",
 ) -> None:
-    """
-    Enable the default wireless interface, connecting to the networking using
-    the specified `ssid` and `password`. Optionally also supply the name, or the pin
-    number, of the GPIO pin to use as the `link_light`, which will be 'on' if the
-    network connection succeeds (and 'off' otherwise).
+    """Enable the default wireless interface, connecting to the networking
+    using the specified `ssid` and `password`. Optionally also supply the name,
+    or the pin number, of the GPIO pin to use as the `link_light`, which will
+    be 'on' if the network connection succeeds (and 'off' otherwise).
 
     !!! danger "Clear Text Password"
 
@@ -191,10 +222,8 @@ def wireless_enable(
 
     # Handle connection error
     if wlan.status() != CYW43_LINK_UP:
-        raise WirelessNetworkError(
-            "Network connection attempt failed:"
-            f" { netcode_to_str(wlan.status()) } (Code: {wlan.status()})"
-        )
+        msg = f"Network connection attempt failed: { netcode_to_str(wlan.status()) } (Code: {wlan.status()})"
+        raise WirelessNetworkError(msg)
     else:
         print("Connected")
         print("IP: " + wlan.ifconfig()[0])

@@ -18,26 +18,26 @@
 # COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-"""
-Network interface and helper classes for abstracting the underlying HTTP stream.
-This module provides the abstraction of the underlying socket handling code,
-using in marshaling requests from clients and building the response. All the
-socket handling is built around the Python 3 `asyncio` library for the low-level
-network interface, and for the use of co-routines to simplify request handling.
+"""Network interface and helper classes for abstracting the underlying HTTP
+stream. This module provides the abstraction of the underlying socket handling
+code, using in marshaling requests from clients and building the response. All
+the socket handling is built around the Python 3 `asyncio` library for the low-
+level network interface, and for the use of co-routines to simplify request
+handling.
 
 In most cases, consumers of this module only need to provide an `asynio` event
 loop: see "Creating the Network Server" in the Section _Using the Module_ below.
 By default the module will also bind to the _network_ address of the host on the
 standard port 80 used by HTTP requests. This can be changed in the instantiation
-of the  `urest.http.server.RESTServer` class.
+of the  [`RESTServer`][urest.http.server.RESTServer] class.
 
 Implementation
 --------------
 
-During the instantiation of the `urest.http.server.RESTServer` class, the resulting
-object creates a socket bound to the specified address and port (or the host network
-address and port 80 by default). This binding is undertaken as part of the `asyncio`
+During the instantiation of the [`RESTServer`][urest.http.server.RESTServer]
+class, the resulting object creates a socket bound to the specified address and
+port (or the host network address and port 80 by default). This binding is
+undertaken as part of the `asyncio` instantiation.
 
 
 Using the Module
@@ -45,13 +45,14 @@ Using the Module
 
 ### Creating the Network Server
 
-All network clients are assumed to be handled by an instance of the
-`urest.http.server.RESTServer` class from the `urest.http.server` module. The
-`urest.http.server.RESTServer` class provides both an event loop for the
-`asyncio` library, and also takes care of the lower-level networking interface
+All network clients are assumed to be handled by an instance of the [`RESTServer`]
+[urest.http.server.RESTServer] class from the `urest.http.server` module. The
+[`RESTServer`][urest.http.server.RESTServer] class provides both an event loop for
+the `asyncio` library, and also takes care of the lower-level networking interface
 for the clients. Unless working with multiple instances (e.g. via a thread
 library), most model consumers are assumed have a single instance of the
-`urest.http.server.RESTServer` --- **but the module will not check this**.
+[`RESTServer`][urest.http.server.RESTServer] -- **but the module will not check
+this**.
 
 In most cases, something similar to the following will suffice
 
@@ -72,19 +73,23 @@ In most cases, something similar to the following will suffice
     loop.run_forever()
 ```
 
-.. Warning::
-
-  There is no guarantee of thread-safety in this module, and all
-  'concurrency' is assumed to be via co-routines provided by the `asyncio`
-  library. For an overview of how multiple clients can be handled using
-  co-routines, [Async IO in Python](https://realpython.com/async-io-python) is
-  highly recommended reading.
+!!! Warning
+    There is no guarantee of thread-safety in this module, and all
+    'concurrency' is assumed to be via co-routines provided by the `asyncio`
+    library. For an overview of how multiple clients can be handled using
+    co-routines, [Async IO in Python](https://realpython.com/async-io-python) is
+    highly recommended reading.
 
 ### Creating the API Responses
 
-Most module consumers will not use the `urest.http.response` module directly:
-but will instead sub-class `urest.api.base.APIBase` to provide the core of the
-response to the network clients. For details of how the `urest.http.server.RESTServer` and `urest.api.base.APIBase` classes interact, the module documentation for `urest.api` should be consulted. In addition, the documentation for the `urest.examples.simpleled.SimpleLED` class might prove useful as an example of a simple implementation of the API.
+Most module consumers will not use the [`urest.http.response`][urest.http.response]
+module directly: but will instead sub-class [`APIBase`][urest.api.base.APIBase] to
+provide the core of the response to the network clients. For details of how the
+[`RESTServer`][urest.http.server.RESTServer] and [`APIBase`]
+[urest.api.base.APIBase] classes interact, the module documentation for
+`urest.api` should be consulted. In addition, the documentation for the
+[`SimpleLED`][urest.examples.simpleled.SimpleLED] might prove useful as an example
+of a simple implementation of the API.
 
 
 Tested Implementations
@@ -93,10 +98,8 @@ Tested Implementations
 This version is written for MicroPython 3.4, and has been tested on:
 
   * Raspberry Pi Pico W
-
-
 """
 
 ### Expose the `http` module interface
-from .server import RESTServer
 from .response import HTTPResponse
+from .server import RESTServer

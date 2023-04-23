@@ -18,13 +18,11 @@
 # COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-"""
-An example of a 'noun' class which echo's responses to the client. The main use
-of this library is as a test: it should work on both the Pico (W) boards and any
-'normal' installation of Python. As such it provides very little functionality,
-but could in principle also be used as a the basis for a more useful test
-harness or stub.
+"""An example of a 'noun' class which echo's responses to the client. The main
+use of this library is as a test: it should work on both the Pico (W) boards
+and any 'normal' installation of Python. As such it provides very little
+functionality, but could in principle also be used as a the basis for a more
+useful test harness or stub.
 
 Tested Implementations
 ----------------------
@@ -35,17 +33,22 @@ This version is written for MicroPython 3.4, and has been tested on:
 """
 
 
-# Import the core libraries
+# Import the typing support
+try:
+    from typing import Union
+except ImportError:
+    from urest.typing import Union  # type: ignore
 
-from ..api.base import APIBase
+
+from urest.api.base import APIBase
 
 
 class EchoServer(APIBase):
-    def __init__(self):
+    def __init__(self) -> None:
         self._state = False
-        self._state_attributes = dict(echo=0)
+        self._state_attributes = {"echo": 0}
 
-    def set_state(self, state_attributes: dict):
+    def set_state(self, state_attributes: dict[str, Union[str, int]]) -> None:
         try:
             self._state_attributes["echo"] = state_attributes["echo"]
 
@@ -60,14 +63,17 @@ class EchoServer(APIBase):
             self._state = False
             self._state_attributes["echo"] = 0
 
-    def get_state(self) -> dict:
-        return dict(echo=self._state)
+    def get_state(self) -> dict[str, Union[str, int]]:
+        return {"echo": self._state}
 
-    def delete_state(self):
+    def delete_state(self) -> None:
         self._state = False
         self._state_attributes["echo"] = 0
 
-    def update_state(self, state_attributes: dict):
+    def update_state(
+        self,
+        state_attributes: dict[str, Union[str, int]],
+    ) -> None:
         if self._state_attributes["echo"] == 0:
             self._state = True
             self._state_attributes["echo"] = 1

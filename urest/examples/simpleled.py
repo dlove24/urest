@@ -18,9 +18,8 @@
 # COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-"""
-An example of a 'noun' class, able to serve as the basis for control of an LED attached to a GPIO pin
+"""An example of a 'noun' class, able to serve as the basis for control of an
+LED attached to a GPIO pin.
 
 Overview
 --------
@@ -38,7 +37,6 @@ Tested Implementations
 This version is written for MicroPython 3.4, and has been tested on:
 
   * Raspberry Pi Pico W
-
 """
 
 
@@ -49,17 +47,24 @@ try:
 except ImportError:
     print("Ignoring MicroPython include: machine")
 
-from ..api.base import APIBase
+# Import the typing support
+try:
+    from typing import Union
+except ImportError:
+    from urest.typing import Union  # type: ignore
+
+
+from urest.api.base import APIBase
 
 
 class SimpleLED(APIBase):
-    def __init__(self, pin):
+    def __init__(self, pin: Pin) -> None:
         self._gpio = Pin(pin, Pin.OUT)
         self._gpio.off()
 
-        self._state_attributes = dict(led=0)
+        self._state_attributes = {"led": 0}
 
-    def set_state(self, state_attributes: dict):
+    def set_state(self, state_attributes: dict[str, Union[str, int]]) -> None:
         try:
             self._state_attributes["led"] = state_attributes["led"]
 
@@ -74,14 +79,17 @@ class SimpleLED(APIBase):
             self._gpio.off()
             self._state_attributes["led"] = 0
 
-    def get_state(self) -> dict:
-        return dict(led=self._gpio.value())
+    def get_state(self) -> dict[str, Union[str, int]]:
+        return {"led": self._gpio.value()}
 
-    def delete_state(self):
+    def delete_state(self) -> None:
         self._gpio.off()
         self._state_attributes["led"] = 0
 
-    def update_state(self, state_attributes: dict):
+    def update_state(
+        self,
+        state_attributes: dict[str, Union[str, int]],
+    ) -> None:
         if self._state_attributes["led"] == 0:
             self._gpio.on()
             self._state_attributes["led"] = 1

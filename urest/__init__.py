@@ -19,7 +19,6 @@
 # COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
 """Micro REST-Style API Server.
 
 Background
@@ -82,12 +81,15 @@ _unless_ the `__debug__` flag is `True`.
 
 **Note:** that in the standard Python environments the status of the `__debug__`
 flag is often controlled by the optimisation level of the interpreter: see the
-standard [Python documentation](https://docs.python.org/3/using/cmdline.html#cmdoption-O)
-for more details. For MicroPython the status of the `__debug__` flag is set by
-[internal constants](https://docs.micropython.org/en/latest/library/micropython.html#micropython.opt_level).
-However if the `__debug__` constant is set whilst a programming is running the
-[results may be unexpected](https://forum.micropython.org/viewtopic.php?t=6839),
-due to optimisations undertaken by the MicroPython lexer. Instead for MicroPython set
+standard [Python
+documentation](https://docs.python.org/3/using/cmdline.html#cmdoption-O) for
+more details. For MicroPython the status of the `__debug__` flag is set by
+[internal
+constants](https://docs.micropython.org/en/latest/library/micropython.html#
+micropython.opt_level). However if the `__debug__` constant is set whilst a
+programming is running the [results may be
+unexpected](https://forum.micropython.org/viewtopic.php?t=6839), due to
+optimisations undertaken by the MicroPython lexer. Instead for MicroPython set
 the status of the `__debug__` flag in the platform standard `boot.py` or
 similar: see the documentation for the specific port for more details.
 
@@ -187,6 +189,6 @@ Putting the above together, a minimal main loop looks something like
       loop.run_forever()
 ```
 
-An example of a small application which uses the above pattern can be found in the _Examples_ section as `urest.examples.led_control`
-
+An example of a small application which uses the above pattern can be found in
+the _Examples_ section as `urest.examples.led_control`
 """

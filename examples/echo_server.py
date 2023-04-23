@@ -18,11 +18,9 @@
 # COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-"""
-The server used in the Tutorial "_A Simple Echo Server_". This provides a
-minimal 'echo' server to test the client against, and make sure all of the
-set-up steps are working.
+"""The server used in the Tutorial "_A Simple Echo Server_". This provides a
+minimal 'echo' server to test the client against, and make sure all of the set-
+up steps are working.
 
 Tested Implementations
 ----------------------
@@ -33,6 +31,7 @@ This version is written for MicroPython 3.4, and has been tested on:
 """
 
 import time
+
 import urest.utils
 
 try:
@@ -40,9 +39,9 @@ try:
 except ImportError:
     import asyncio
 
-from urest.http import RESTServer
 from urest.api import APIBase
 from urest.examples.echo import EchoServer
+from urest.http import RESTServer
 
 ###
 ### Connect to the Wireless network

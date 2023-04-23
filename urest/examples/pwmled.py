@@ -18,10 +18,8 @@
 # COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-"""
-An example of a 'noun' class, able to serve as the basis for PWM control of an
-LED attached to a suitable GPIO pin
+"""An example of a 'noun' class, able to serve as the basis for PWM control of
+an LED attached to a suitable GPIO pin.
 
 Overview
 --------
@@ -69,25 +67,34 @@ Tested Implementations
 This version is written for MicroPython 3.4, and has been tested on:
 
   * Raspberry Pi Pico W
-
 """
 
 # Import the Asynchronous IO Library, preferring the MicroPython library if
 # available
 try:
-    from machine import Pin, PWM
     import uasyncio as asyncio
+    from machine import PWM, Pin
 except ImportError:
     print("Ignoring MicroPython include: machine")
 
-from ..api.base import APIBase
+# Import the typing support
+try:
+    from typing import Union
+except ImportError:
+    from urest.typing import Union  # type: ignore
+
+
+from urest.api.base import APIBase
 
 PWM_STEP = 6550
-""" Determines the increment (or decrement) for each step in the PWM 'on' or 'off' movement"""
+"""Determines the increment (or decrement) for each step in the PWM 'on' or
+'off' movement."""
+PWM_LIMIT = 65000
+"""Determines the limit for the PWM duty cycle."""
 
 
 class PWMLED(APIBase):
-    def __init__(self, pin: int):
+    def __init__(self, pin: int) -> None:
         self._gpio = PWM(Pin(pin))
         self._gpio.duty_u16(0)
         self._gpio.freq(100)
@@ -95,9 +102,9 @@ class PWMLED(APIBase):
 
         self._duty = 0
 
-        self._state_attributes = dict(desired=0, current=0)
+        self._state_attributes = {"desired": 0, "current": 0}
 
-    async def _slow_on(self):
+    async def _slow_on(self) -> None:
         # Wait for the GPIO lock if we need to
         await self._gpio_lock.acquire()
 
@@ -108,15 +115,15 @@ class PWMLED(APIBase):
 
         self._duty = 0
 
-        while self._duty < (65000):
+        while self._duty < (PWM_LIMIT):
             print(f"duty on: {self._duty}")
 
             self._duty += PWM_STEP
             self._gpio.duty_u16(self._duty)
 
             await asyncio.sleep_ms(1000)
-        else:
-            self._state_attributes["current"] = 1
+
+        self._state_attributes["current"] = 1
 
         # Set the duty cycle to maximum before we leave,
         # and release the GPIO lock
@@ -125,7 +132,7 @@ class PWMLED(APIBase):
 
         self._gpio_lock.release()
 
-    async def _slow_off(self):
+    async def _slow_off(self) -> None:
         # Wait for the GPIO lock if we need to
         await self._gpio_lock.acquire()
 
@@ -136,15 +143,15 @@ class PWMLED(APIBase):
 
         self._duty = 2**16
 
-        while self._duty > 6000:
+        while self._duty > PWM_STEP:
             print(f"duty off: {self._duty}")
 
             self._duty -= PWM_STEP
             self._gpio.duty_u16(self._duty)
 
             await asyncio.sleep_ms(1000)
-        else:
-            self._state_attributes["current"] = 0
+
+        self._state_attributes["current"] = 0
 
         # Set the duty cycle to 0 before we leave,
         # and release the GPIO lock
@@ -153,7 +160,7 @@ class PWMLED(APIBase):
 
         self._gpio_lock.release()
 
-    def set_state(self, state_attributes: dict):
+    def set_state(self, state_attributes: dict[str, Union[str, int]]) -> None:
         try:
             loop = asyncio.get_event_loop()
 
@@ -177,10 +184,10 @@ class PWMLED(APIBase):
             self._state_attributes["desired"] = 0
             self._state_attributes["current"] = 0
 
-    def get_state(self) -> dict:
+    def get_state(self) -> dict[str, Union[str, int]]:
         return self._state_attributes
 
-    def delete_state(self):
+    def delete_state(self) -> None:
         self._gpio.duty_u16(0)
         self._gpio.freq(100)
         self._duty = 0
@@ -188,7 +195,10 @@ class PWMLED(APIBase):
         self._state_attributes["desired"] = 0
         self._state_attributes["current"] = 0
 
-    def update_state(self, state_attributes: dict):
+    def update_state(
+        self,
+        state_attributes: dict[str, Union[str, int]],
+    ) -> None:
         loop = asyncio.get_event_loop()
 
         if self._state_attributes["desired"] == 0:

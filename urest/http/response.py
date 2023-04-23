@@ -19,14 +19,12 @@
 # COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-"""
-Formats a basic HTTP/1.1 response. The actual body of the response is largely
-determined by the callers API layer: `urest.http.response.HTTPResponse` is a
-utility class designed just handles to handle the raw response to the network
-client. As such it should be largely invisible to the API layer, and most
-consumers of the `urest.http` module _should not_ create instance of the
-`urest.http.response.HTTPResponse` class directly
+"""Formats a basic HTTP/1.1 response. The actual body of the response is
+largely determined by the callers API layer: `urest.http.response.HTTPResponse`
+is a utility class designed just handles to handle the raw response to the
+network client. As such it should be largely invisible to the API layer, and
+most consumers of the `urest.http` module _should not_ create instance of the
+`urest.http.response.HTTPResponse` class directly.
 
 Standards
 ---------
@@ -42,18 +40,83 @@ try:
 except ImportError:
     import asyncio
 
-# Import the enumerations library.
-# from enum import Enum
-# Unfortunately not in MicroPython yet, so we can't enforce the type
-HTTPStatus = {"OK", "NOT_OK", "NOT_FOUND"}
-"""
-    Define the HTTP response codes in use. See the Mozilla [HTTP response status
+# Import the enumerations library. Unfortunately the full version in not
+# in MicroPython yet, so this is a bit of a hack
+try:
+    from enum import IntEnum
+except ImportError:
+    from urest.enum import IntEnum  # type: ignore
+
+# Import the typing support
+try:
+    from typing import Optional, Union
+except ImportError:
+    from urest.typing import Optional, Union  # type: ignore
+
+
+class HTTPStatus(IntEnum):
+    """Enumeration defining the valid HTTP responses, and the associated
+    response codes to use.
+
+    See the Mozilla [HTTP response status
     codes](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status) for more
     details
-"""
+    """
+
+    OK = 200
+    NOT_OK = 400
+    NOT_FOUND = 404
 
 
 class HTTPResponse:
+    """Create a response object, representing the raw HTTP header returned to
+    the network client.
+
+    This instance is guaranteed to be a valid _class_ on creation, and
+    _should_ also be a valid HTTP response. However the caller should check the
+    validity of the header before returning to the client. In particular,  responses
+    returned to the client by this class _must_ be formatted according to the
+    [HTTP/1.1 specification](https://www.ietf.org/rfc/rfc2616.txt) and _must_ be
+    valid.
+
+    Parameters
+    ----------
+
+    body: string
+        The raw HTTP body returned to the client. This is `Empty` by default
+        as the return string is usually built by the caller via the `getters`
+        and `setters` of `urest.http.response.HTTPResponse`.
+    status: urest.http.response.HTTPStatus
+        HTTP status code, which must be formed from the set
+        `urest.http.response.HTTPResponse`. Arbitrary return codes are **not**
+        supported by this class.
+    mimetype: string
+        A valid HTTP mime type. This is `Empty` by default and should be set
+        once the `body` of the `urest.http.response.HTTPResponse` has been
+        created.
+    close: bool
+        When set `True` the connection to the client will be closed by the
+        `urest.http.server.RESTServer` once the
+        `urest.http.response.HTTPResponse` has been sent. Otherwise, when set
+        to `False` this will flag to the client that the created
+        `urest.http.response.HTTPResponse` is part of a sequence to be sent
+        over the same connection.
+    header:  Dictionary
+        Raw (key, value) pairs for HTTP response header fields. This allows
+        setting of arbitrary fields by the caller, without extending/sub-
+        classing `urest.http.response.HTTPResponse`
+    """
+
+    ##
+    ## Attributes
+    ##
+
+    _body: str
+    _status: HTTPStatus
+    _mimetype: Optional[str]
+    _close: bool
+    _header: Optional[dict]
+
     ##
     ## Constructor
     ##
@@ -61,55 +124,16 @@ class HTTPResponse:
     def __init__(
         self,
         body: str = "",
-        status: HTTPStatus = "OK",
-        mimetype: str = None,
+        status: HTTPStatus = HTTPStatus.OK,
+        mimetype: Optional[str] = None,
         close: bool = True,
-        header: dict = None,
-    ):
-        """Create a response object, representing the raw HTTP header returned to the
-        network client.
-
-        This instance is guaranteed to be a valid _class_ on creation, and
-        _should_ also be a valid HTTP response. However the caller should check the
-        validity of the header before returning to the client. In particular,  responses
-        returned to the client by this class _must_ be formatted according to the
-        [HTTP/1.1 specification](https://www.ietf.org/rfc/rfc2616.txt) and _must_ be
-        valid.
-
-        Parameters
-        ----------
-
-        body: string
-            The raw HTTP body returned to the client. This is `Empty` by default as
-            the return string is usually built by the caller via the `getters` and
-            `setters` of `urest.http.response.HTTPResponse`
-        status: urest.http.response.HTTPStatus
-            HTTP status code, which must be formed from the set
-            `urest.http.response.HTTPResponse`. Arbitrary return codes are **not**
-            supported by this class.
-        mimetype: string
-            A valid HTTP mime type. This is `Empty` by default and should be set
-            once the `body` of the `urest.http.response.HTTPResponse` has been
-            created.
-        close: bool
-            When set `True` the connection to the client will be closed by the
-            `urest.http.server.RESTServer` once the `urest.http.response.HTTPResponse`
-            has been sent. Otherwise, when set to `False` this will flag to the
-            client that the created `urest.http.response.HTTPResponse` is part of
-            a sequence to be sent over the same connection.
-        header:  Dictionary
-            Raw (key, value) pairs for HTTP response header fields. This allows
-            setting of arbitrary fields by the caller, without extending/sub-classing
-            `urest.http.response.HTTPResponse`
-
-        """
-
+        header: Optional[dict] = None,
+    ) -> None:
         if status in HTTPStatus:
             self._status = status
         else:
-            raise ValueError(
-                "Invalid HTTP status code passed to the HTTP Response class"
-            )
+            msg = "Invalid HTTP status code passed to the HTTP Response class"
+            raise ValueError(msg)
 
         if body is not None and isinstance(body, str):
             self._body = body
@@ -131,13 +155,14 @@ class HTTPResponse:
     # HTTP Body
 
     @property
-    def body(self):
-        """The raw HTTP response, formatted to return to the client as the HTTP response."""
+    def body(self) -> str:
+        """The raw HTTP response, formatted to return to the client as the HTTP
+        response."""
 
         return self._body
 
     @body.setter
-    def body(self, new_body: str):
+    def body(self, new_body: str) -> None:
         if new_body is not None and isinstance(new_body, str):
             self._body = new_body
         else:
@@ -146,28 +171,26 @@ class HTTPResponse:
     # HTTP Status
 
     @property
-    def status(self):
-        """
-        A valid `urest.http.response.HTTPResponse` representing the current
-        error/status code that will be returned to the client.
-        """
+    def status(self) -> HTTPStatus:
+        """A valid [`HTTPStatus][urest.http.response.HTTPStatus] representing
+        the current error/status code that will be returned to the client."""
         return self._status
 
     @status.setter
-    def status(self, new_status: HTTPStatus):
+    def status(self, new_status: HTTPStatus) -> None:
         if new_status in HTTPStatus:
             self._status = new_status
         else:
-            raise ValueError(
-                "Invalid HTTP status code passed to the HTTP Response class"
-            )
+            msg = "Invalid HTTP status code passed to the HTTP Response class"
+            raise ValueError(msg)
 
     ##
     ## Functions
     ##
 
-    async def send(self, writer: asyncio.StreamWriter):
-        """Send an appropriate response to the client, based on the status code.
+    async def send(self, writer: asyncio.StreamWriter) -> None:
+        """Send an appropriate response to the client, based on the status
+        code.
 
         This method assembles the full HTTP 1.1 header, based on the `mimetype`
         the content currently in the `body`, and the error code forming the
@@ -201,43 +224,43 @@ class HTTPResponse:
         #       doesn't have a 3.10 release yet. When it does, this
         #       implementation should be updated
 
-        if "OK" in self._status:
+        if self._status == HTTPStatus.OK:
             # First tell the client we accepted the request
-            writer.write("HTTP/1.1 200 OK\r\n".encode())
+            writer.write(b"HTTP/1.1 200 OK\r\n")
 
             # Then we try to assemble the body
             if self._mimetype is not None:
-                writer.write(f"Content-Type: {self.mimetype}\r\n".encode())
+                writer.write(f"Content-Type: {self._mimetype}\r\n".encode())
 
-        elif "NOT_OK" in self._status:
+        elif self._status == HTTPStatus.NOT_OK:
             # Tell the client we think we can route it: but the request
             # makes no sense
-            writer.write("HTTP/1.1 400 Bad Request\r\n".encode())
+            writer.write(b"HTTP/1.1 400 Bad Request\r\n")
 
-        elif "NOT_FOUND" in self._status:
+        elif self._status == HTTPStatus.NOT_FOUND:
             # Tell the client we can't route their request
-            writer.write("HTTP/1.1 404 Not Found\r\n".encode())
+            writer.write(b"HTTP/1.1 404 Not Found\r\n")
 
         else:
             # This _really_ shouldn't be here. Assume an internal error
-            writer.write("HTTP/1.1 500 Internal Server Error\r\n".encode())
+            writer.write(b"HTTP/1.1 500 Internal Server Error\r\n")
 
         # Send the body length
         writer.write(f"Content-Length: {len(self._body)}\r\n".encode())
 
         # Send the body content type
-        writer.write("Content-Type: text/html\r\n".encode())
+        writer.write(b"Content-Type: text/html\r\n")
 
         # Send any other header fields
-        if len(self._header) > 0:
+        if self._header is not None and len(self._header) > 0:
             for key, value in self._header.items():
                 writer.write(f"{key}: {value}\r\n".encode())
 
         # Send the HTTP connection state
         if self._close:
-            writer.write("Connection: close\r\n".encode())
+            writer.write(b"Connection: close\r\n")
         else:
-            writer.write("Connection: keep-alive\r\n".encode())
+            writer.write(b"Connection: keep-alive\r\n")
 
         # Send the body itself...
         writer.write(f"\r\n{self._body}\r\n".encode())

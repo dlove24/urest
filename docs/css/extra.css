@@ -84,3 +84,14 @@ summary {
 summary::marker {
   color: #6ab0de;
 }
+
+/**
+ ** Images. Changes to frame images in the same way as for other
+ ** objects
+ **/
+
+.section > p > img {
+  border-color: rgb(225, 228, 229);
+  border-style: solid;
+  border-width: 1px;
+}

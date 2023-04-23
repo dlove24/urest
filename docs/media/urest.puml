@@ -1,0 +1,126 @@
+@startuml urest
+!theme vibrant
+namespace urest {
+    namespace api {
+        namespace base <<Rectangle>> {
+            abstract class APIBase {
+                - _state_attributes : dict
+                {abstract} + delete_state()
+                {abstract} + get_state()
+                {abstract} + set_state()
+                {abstract} + update_state()
+            }
+        }
+
+    }
+    namespace http {
+        namespace response <<Rectangle>> {
+            class HTTPResponse {
+                - _status
+                - _body
+                - _mimetype
+                - _close
+                - _header
+                + body
+                + status
+                + send()
+            }
+            enum HTTPStatus {
+                + OK
+                + NOT_OK
+                + NOT_FOUND
+            }
+        }
+        namespace server <<Rectangle>> {
+            class RESTClientError {
+            }
+            class RESTParseError {
+            }
+            class RESTServerError {
+            }
+
+            class RESTServer {
+                - _server
+                - dict _nouns
+                + str host
+                + int port
+                + int backlog
+                + int read_timeout
+                + int write_timeout
+
+                - parse_data()
+                + dispatch_noun()
+                + register_noun()
+                + start()
+                + stop()
+            }
+        }
+    }
+    namespace utils {
+        namespace network_connect <<Rectangle>> {
+            class WirelessNetworkError {
+            }
+        }
+    }
+    namespace examples {
+        namespace echo <<Rectangle>> {
+            class EchoServer {
+                - _state_attributes : dict
+                + delete_state()
+                + get_state()
+                + set_state()
+                + update_state()
+            }
+        }
+        namespace pwmled <<Rectangle>> {
+            class PWMLED {
+                - _state_attributes : dict
+                + delete_state()
+                + get_state()
+                + set_state()
+                + update_state()
+            }
+        }
+        namespace simpleled <<Rectangle>> {
+            class SimpleLED {
+                - _state_attributes : dict
+                + delete_state()
+                + get_state()
+                + set_state()
+                + update_state()
+            }
+        }
+    }
+}
+namespace errno {
+    abstract class Exception {
+    }
+    class IndexError {
+    }
+    class KeyError {
+    }
+}
+
+errno.IndexError <|-- errno.Exception
+errno.KeyError <|-- errno.Exception
+
+urest.http.response.HTTPResponse::_status <-- urest.http.response.HTTPStatus
+
+urest.http.server.RESTClientError <|-- errno.Exception
+urest.http.server.RESTParseError <|-- errno.Exception
+urest.http.server.RESTServerError <|-- errno.Exception
+
+urest.http.server.RESTServer::dispatch_noun <-- urest.http.response.HTTPResponse
+urest.http.server.RESTServer::dispatch_noun <-- urest.http.server.RESTClientError
+urest.http.server.RESTServer::dispatch_noun <-- errno.IndexError
+urest.http.server.RESTServer::register_noun <-- urest.api.base.APIBase
+urest.http.server.RESTServer::register_noun <-- errno.KeyError
+urest.http.server.RESTServer::parse_data <-- urest.http.server.RESTParseError
+
+urest.utils.network_connect.WirelessNetworkError <|-- errno.Exception
+
+urest.examples.echo.EchoServer <|-- urest.api.base.APIBase
+urest.examples.pwmled.PWMLED <|-- urest.api.base.APIBase
+urest.examples.simpleled.SimpleLED <|-- urest.api.base.APIBase
+
+@enduml

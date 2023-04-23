@@ -8,6 +8,7 @@ extra_css:
 
 plugins:
   - autorefs
+  - glightbox
   - mkdocstrings:
       handlers:
         python:

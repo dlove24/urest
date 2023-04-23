@@ -1,5 +1,5 @@
-"""
-Tests of the `set` verb (HTTP PUT method), using the simple server `urest.examples.simpleled.SimpleLED`
+"""Tests of the `set` verb (HTTP PUT method), using the simple server
+`urest.examples.simpleled.SimpleLED`.
 
 Run as: `py.test test_simple_set.py`
 """
@@ -9,9 +9,9 @@ IP_ADDRESS = "10.0.30.220"
 
 
 def test_requests_set_check():
-    """
-    Test
-    ----
+    """Test.
+
+    ----.
 
     Check for basic connection to the server. The URI is given, but for
     this test the response is not checked.
@@ -34,16 +34,15 @@ def test_requests_set_check():
       * Check that `IP_ADDRESS` is correct
       * Check the `urest.examples.simpleled.SimpleLED` is running
       * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun('led', SimpleLED(28))` has been made
-
     """
     r = requests.get(f"http://{ IP_ADDRESS }/green_led0")
     assert r.status_code == requests.codes.ok
 
 
 def test_requests_set_on():
-    """
-    Test
-    ----
+    """Test.
+
+    ----.
 
     Attempt to set the noun 'led' to `1`
 
@@ -56,7 +55,6 @@ def test_requests_set_on():
     ----------
 
       * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun("green_led0", SimpleLED(1))` has been made
-
     """
     state = {"led": 1}
     r = requests.put(f"http://{ IP_ADDRESS }/green_led0", json=state)
@@ -64,9 +62,9 @@ def test_requests_set_on():
 
 
 def test_requests_set_on_check():
-    """
-    Test
-    ----
+    """Test.
+
+    ----.
 
     Check the noun has been set to the state value `1`
 
@@ -80,16 +78,15 @@ def test_requests_set_on_check():
 
       * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun('led', SimpleLED(28))` has been made
       * Check the results of the `test_requests_set_on()` method, to ensure the noun was initialised correctly
-
     """
     r = requests.get(f"http://{ IP_ADDRESS }/green_led0")
     assert r.content == b'{"led": 1}'
 
 
 def test_requests_set_off():
-    """
-    Test
-    ----
+    """Test.
+
+    ----.
 
     Attempt to set the noun `green_led0` to `0`
 
@@ -102,7 +99,6 @@ def test_requests_set_off():
     ----------
 
       * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun("green_led0", SimpleLED(1))` has been made
-
     """
     state = {"led": 0}
     r = requests.put(f"http://{ IP_ADDRESS }/green_led0", json=state)
@@ -110,9 +106,9 @@ def test_requests_set_off():
 
 
 def test_requests_set_off_check():
-    """
-    Test
-    ----
+    """Test.
+
+    ----.
 
     Check the noun has been set to the state value `0`
 
@@ -126,7 +122,6 @@ def test_requests_set_off_check():
 
       * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun("green_led0", SimpleLED(1))` has been made
       * Check the results of the `test_requests_set_off()` method, to ensure the noun was initialised correctly
-
     """
     r = requests.get(f"http://{ IP_ADDRESS }/green_led0")
     assert r.content == b'{"led": 0}'

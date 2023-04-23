@@ -4,6 +4,13 @@
 # Python Virtal Environment
 .venv/
 
+# Java documentation build tools
+bin/plantuml.jar
+
+# Backup files
+*.orig
+*.kate-swp
+
 # Temporary packaging files
 dist/
 urest.egg-info/

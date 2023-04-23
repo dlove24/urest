@@ -21,7 +21,9 @@ A package of this library is provided on PyPi as [`urest-mp`](https://pypi.org/p
 
 For manual installation, everything under the `urest` directory should be copied to the appropriate directory on the MicroPython board, usually `/lib`. The library can then be imported as normal, e.g.
 
-`python from urest.http import RESTServer from urest.api import APIBase `
+````python
+from urest.http import RESTServer from urest.api import APIBase
+````
 
 See the documentation for the [examples](https://dlove24.github.io/urest/urest/examples/index.html) for more detailed guidance on the use of the library. This code is also available in the `urest/examples` folder, or as the library `urest.examples` when the package is installed.
 
@@ -34,6 +36,8 @@ Console output from the `urest.http.server.RESTServer` is controlled by the stan
 ## Design
 
 The core of the library is a simple HTTP server, specialised to the delivery of a REST-like API instead of a general HTTP server. The design, and the use of the `asyncio` library, is inspired by the [MicroPython HTTP Server](https://github.com/erikdelange/MicroPython-HTTP-Server) by Erik de Lange. This library uses a roughly similar structure for the core of the `asyncio` event loop, and especially in the design of the [`RESTServer`](https://dlove24.github.io/urest/urest/http/server.html) class.
+
+![Full Package Diagram](/media/urest.svg)
 
 Key differences include
 

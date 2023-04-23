@@ -1,5 +1,5 @@
-"""
-Tests of the `get` verb (HTTP GET method), using the simple server `urest.examples.simpleled.SimpleLED`
+"""Tests of the `get` verb (HTTP GET method), using the simple server
+`urest.examples.simpleled.SimpleLED`.
 
 Run as: `py.test test_simple_get.py`
 """
@@ -9,9 +9,9 @@ IP_ADDRESS = "10.0.30.220"
 
 
 def test_requests_get_check():
-    """
-    Test
-    ----
+    """Test.
+
+    ----.
 
     Check for basic connection to the server. The URI is given, but for
     this test the response is not checked.
@@ -34,16 +34,15 @@ def test_requests_get_check():
       * Check that `IP_ADDRESS` is correct
       * Check the `urest.examples.simpleled.SimpleLED` is running
       * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun("green_led0", SimpleLED(1))` has been made
-
     """
     r = requests.get(f"http://{ IP_ADDRESS }/green_led0")
     assert r.status_code == requests.codes.ok
 
 
 def test_requests_get_setup():
-    """
-    Test
-    ----
+    """Test.
+
+    ----.
 
     Ensures the test server is in the known (default) state required for further tests. This is achieved by sending an HTTP `DELETE` method request to the
     server to return the `green_led0` noun to the default state.
@@ -61,16 +60,15 @@ def test_requests_get_setup():
     ----------
 
       * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun("green_led0", SimpleLED(1))` has been made
-
     """
     r = requests.delete(f"http://{ IP_ADDRESS }/green_led0")
     assert r.status_code == requests.codes.ok
 
 
 def test_requests_get_data():
-    """
-    Test
-    ----
+    """Test.
+
+    ----.
 
     Check the noun has been returned to the default state of `0`
 
@@ -84,16 +82,15 @@ def test_requests_get_data():
 
       * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun("green_led0", SimpleLED(1))` has been made
       * Check the results of the `test_requests_get_setup()` method, to ensure the noun was initialised correctly
-
     """
     r = requests.get(f"http://{ IP_ADDRESS }/green_led0")
     assert r.content == b'{"led": 0}'
 
 
 def test_requests_get_data_upper():
-    """
-    Test
-    ----
+    """Test.
+
+    ----.
 
     Check the name `LED` for the name of the noun is identical to `green_led0`: i.e. that the server handles upper case nouns correctly
 
@@ -107,7 +104,6 @@ def test_requests_get_data_upper():
 
       * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun("green_led0", SimpleLED(1))` has been made
       * Check the results of the `test_requests_get_data()` method, to ensure the canonical name of the noun is being processed correctly
-
     """
 
     r = requests.get(f"http://{ IP_ADDRESS }/green_led0")
@@ -115,9 +111,9 @@ def test_requests_get_data_upper():
 
 
 def test_requests_get_data_mixed():
-    """
-    Test
-    ----
+    """Test.
+
+    ----.
 
     Check the name `LeD` for the name of the noun is identical to `green_led0`: i.e. that the server handles mixed case correctly
 
@@ -131,7 +127,6 @@ def test_requests_get_data_mixed():
 
       * Check that a call to `urest.http.server.RESTServer.register_noun`, e.g. `app.register_noun("green_led0", SimpleLED(1))` has been made
       * Check the results of the `test_requests_get_data()` method, to ensure the canonical name of the noun is being processed correctly
-
     """
     r = requests.get(f"http://{ IP_ADDRESS }/green_led0")
     assert r.content == b'{"led": 0}'
