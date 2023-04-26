@@ -1,0 +1,65 @@
+@startuml sd_http_set
+participant Client
+participant "**EventLoop**" as ASync
+participant "**StreamReader**" as AReader
+participant "**StreamWriter**" as AWriter
+
+participant "**RESTServer**" as Server order 30
+participant "**HTTPResponse**" as Response order 40
+participant "**SimpleLED**" as API order 50
+
+box ""asyncio"" module
+participant ASync
+participant AReader
+participant AWriter
+end box
+
+box ""http"" module
+participant Server
+participant Response
+end box
+
+note over Client
+HTTP request includes << resource state >>
+end note
+
+Server -> ASync: start()
+activate Server
+activate ASync
+
+Client -> ASync: **PUT /LED HTTP/1.1**
+activate ASync
+
+ASync -> AReader: __init__()
+activate AReader
+
+ASync -> AWriter: __init__()
+activate AWriter
+
+ASync -> Server: dispatch_noun()
+activate Server
+
+Server -> Response: __init__()
+activate Response
+
+Server <-> AReader: HTTP << headers >>
+Server <-> Response: << headers >>
+
+Server <-> AReader: JSON << resource state >>
+
+Server -> API: set_state(<< resource state >>)
+activate API
+return
+
+Server -> Response: send()
+destroy Server
+
+Response -> AWriter: HTTP <<HTTP 200 OK>>
+destroy Response
+
+AWriter -> Client: HTTP<<HTTP 200 OK>>
+destroy AWriter
+destroy AReader
+destroy ASync
+
+@enduml

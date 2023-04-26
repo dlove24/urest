@@ -94,8 +94,7 @@ The API services for the network clients are then expected to be built from the 
 
 ![API Package Structure](/media/urest_examples.svg)
 
-Example Usage
--------
+## Example Usage
 
 ### Getting the Noun State
 

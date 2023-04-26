@@ -12,6 +12,11 @@
         show_object_full_path: false
         show_category_heading: false
 
+## Enumerations
+
+::: urest.http.response.HTTPStatus
+    options:
+        heading_level: 3
 
 ## Classes
 
