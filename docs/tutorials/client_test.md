@@ -9,7 +9,7 @@
 
 This tutorial aims to get a working development environment for the _clients_ of the `urest` library. We will also install a minimal 'echo' server to test the client against, and make sure all of the set-up steps are working.
 
-!!! note "Pick You Platform"
+!!! note "Pick Your Platform"
     'Step 1' below is deliberately repeated, as the steps required _will_ be different for Windows and Linux/Mac platforms. Pick the relevant version of 'Step 1' for your platform, and then continue to 'Step 2'.
 
 ## Step 1A: Setting Up (Linux and Mac)

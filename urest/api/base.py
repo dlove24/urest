@@ -58,11 +58,15 @@ class APIBase:
     made to the [`RESTServer`][urest.http.server.RESTServer] class).
 
     Where data is returned to the client by the, e.g by the `get_state`
-    method, JSON will ultimately be used as the encoding format. Sub-
-    classes do not need to implement the saving of the object state to
+    method, JSON will ultimately be used as the encoding format.
+    Sub-classes do not need to implement the saving of the object state to
     the client: however to assist they should be aware of the type of
     the each `value` returned as part of a `key/value` pair in the
-    dictionary.
+    dictionary. Specifically the data representing the resource state is
+    expected to be (coerced to) a `dict[str, Union[str, int]]` for _all_
+    methods. This type implies that the only acceptable 'key value' for the
+    `dic` is a Python string, and the 'value' itself is either a string
+    or an integer.
 
     When returning data to the client, the `value` of each entry in the
     dictionary will attempt to be inferred using the normal Python type
@@ -70,15 +74,24 @@ class APIBase:
     type of `string` or `integer` will be used as appropriate. If the
     type for the `value` of that dictionary entry cannot be determined,
     or cannot be coerced to an integer, then the value will be returned
-    as a string.
+    as a string. Note that `string` and `integer` are the _only_ types
+    returned to (and seen from) the client by sub-classes of `APIBase`.
 
-    !!! warning "Data will be returned to the client 'as is'"
+    !!! warning "Client Data is Handled 'as is'"
         No further checking on the validity (or otherwise)
         of the content of the dictionary will be undertaken past this
         point. Anything that appear to be in a valid dictionary (of type
         `dict[str, Union[str, int]]`) will be returned to the client. It
         is the module consumers responsibility to ensure the returned data
         follows the form expected by those clients.
+
+        Similar data sent from the client will be passed to sub-classes
+        of `APIBase` as a dictionary of type `dict[str, Union[str, int]]`.
+        If the [`RESTServer`][urest.http.server.RESTServer] class cannot
+        coerce client data into this format _it will be dropped_ and _will
+        not_ be passed onto sub-classes of `APIBase`. In this case an error
+        will be returned to the client, and the methods of `APIBase` _will
+        not_ be called with the partial data.
     """
 
     ##

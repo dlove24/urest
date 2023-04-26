@@ -21,52 +21,12 @@
 """An example of a 'noun' class, able to serve as the basis for PWM control of
 an LED attached to a suitable GPIO pin.
 
-Overview
---------
-
-This is a reasonably minimal example of a 'noun' class, which inherits from
-`urest.api.base.APIBase`. It also requires the `Pin` library from MicroPython:
-but should be able to be adapted to other GPIO libraries which provide a similar
-interface.
-
-In contrast to the `urest.examples.simpleled.SimpleLED` class, the
-`urest.examples.pwmled.PWMLED` class shows the use of the `ayncio`
-`create_tasks()` hook within a `urest.api.base.APIBase` 'noun' to set off slow
-running tasks. This allows the state update to be returned to the network client
-via the API 'immediately' (at least subject to the other tasks outstanding and
-network conditions); without waiting for the _actual_ internal state to
-complete. This is a much more realistic scenario for use in the control of
-external devices: especially devices such as motors which may take seconds (or
-longer) to obtain the correct state.
-
-API
----
-
-The 'noun' will return two objects in the JSON state, in response to `get_state`
-requests
-
-  * `actual` : The _current_ state of the output, which will be `0` for fully off
-and `1` for fully on
-  * `desired`: The _next_ state, if any, that the output is
-currently transitioning to; either `0` for fully off and `1` for fully on
-
-This gives a full state table as follows
-
-| Actual State | Desired State | Description                                                  |
-|--------------|---------------|--------------------------------------------------------------|
-| 0            | 0             | Output fully `off`                                           |
-| 0            | 1             | Output commanded `on`; currently turning from `off` to `on`  |
-| 1            | 0             | Output commanded `off`; currently turning from `on` to `off` |
-| 1            | 1             | Output fully `on`                                            |
-
-
-
 Tested Implementations
 ----------------------
 
 This version is written for MicroPython 3.4, and has been tested on:
 
-  * Raspberry Pi Pico W
+* Raspberry Pi Pico W
 """
 
 # Import the Asynchronous IO Library, preferring the MicroPython library if
@@ -94,6 +54,45 @@ PWM_LIMIT = 65000
 
 
 class PWMLED(APIBase):
+    """Controls an LED by PWM modulation, and gives a reasonably minimal
+    example of a 'noun' class, which inherits from `urest.api.base.APIBase`. It
+    also requires the `Pin` library from MicroPython: but should be able to be
+    adapted to other GPIO libraries which provide a similar interface.
+
+    In contrast to the `urest.examples.simpleled.SimpleLED` class, the
+    `urest.examples.pwmled.PWMLED` class shows the use of the `ayncio`
+    `create_tasks()` hook within a `urest.api.base.APIBase` 'noun' to set off slow
+    running tasks. This allows the state update to be returned to the network
+    client via the API 'immediately' (at least subject to the other tasks
+    outstanding and network conditions); without waiting for the _actual_ internal
+    state to complete. This is a much more realistic scenario for use in the
+    control of external devices: especially devices such as motors which may take
+    seconds (or longer) to obtain the correct state.
+
+    API
+    ---
+
+    The 'noun' exposes the following internal state, with allowed values as `0`
+    or `1` for both keys.
+
+    | JSON Key  | JSON Type | Description                                                             |
+    |-----------|-----------|-------------------------------------------------------------------------|
+    | `actual`  | `Integer` | The _current_ state of the controlled output                            |
+    | `desired` | `Integer` | The _next_ state, if any, that the output is currently transitioning to |
+
+    Since the class will not immediately set the `desired` state, but only once
+    the full transition is complete, the client may not see any immediate changes
+    in the `get_state` requests. Instead the full state table for the response,
+    and interpretation, is as follows
+
+    | Actual State | Desired State | Description                                                  |
+    |--------------|---------------|--------------------------------------------------------------|
+    | 0            | 0             | Output fully `off`                                           |
+    | 0            | 1             | Output commanded `on`; currently turning from `off` to `on`  |
+    | 1            | 0             | Output commanded `off`; currently turning from `on` to `off` |
+    | 1            | 1             | Output fully `on`                                            |
+    """
+
     def __init__(self, pin: int) -> None:
         self._gpio = PWM(Pin(pin))
         self._gpio.duty_u16(0)

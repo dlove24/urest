@@ -20,11 +20,12 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """Formats a basic HTTP/1.1 response. The actual body of the response is
-largely determined by the callers API layer: `urest.http.response.HTTPResponse`
-is a utility class designed just handles to handle the raw response to the
-network client. As such it should be largely invisible to the API layer, and
-most consumers of the `urest.http` module _should not_ create instance of the
-`urest.http.response.HTTPResponse` class directly.
+largely determined by the callers API layer:
+[`HTTPResponse`][urest.http.response.HTTPResponse] is a utility class designed
+just handles to handle the raw response to the network client. As such it
+should be largely invisible to the API layer, and most consumers of the
+`urest.http` module _should not_ create instance of the
+[`HTTPResponse`][urest.http.response.HTTPResponse] class directly.
 
 Standards
 ---------
@@ -53,14 +54,20 @@ try:
 except ImportError:
     from urest.typing import Optional, Union  # type: ignore
 
+###
+### Enumerations
+###
+
 
 class HTTPStatus(IntEnum):
     """Enumeration defining the valid HTTP responses, and the associated
     response codes to use.
 
-    See the Mozilla [HTTP response status
-    codes](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status) for more
-    details
+    Principally used internally by the [`RESTServer`][urest.http.RESTServer]
+    class when building an instance of the [`HTTPResponse`]
+    [urest.http.HTTPResponse] class when returning data to the client. The
+    enumerated values are used as the HTTP response status code for that
+    client response and should follow the relevant standards. See the Mozilla [HTTP response status codes](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status) for more details.
     """
 
     OK = 200
@@ -68,43 +75,47 @@ class HTTPStatus(IntEnum):
     NOT_FOUND = 404
 
 
+###
+### Classes
+###
+
+
 class HTTPResponse:
     """Create a response object, representing the raw HTTP header returned to
     the network client.
 
-    This instance is guaranteed to be a valid _class_ on creation, and
-    _should_ also be a valid HTTP response. However the caller should check the
-    validity of the header before returning to the client. In particular,  responses
-    returned to the client by this class _must_ be formatted according to the
-    [HTTP/1.1 specification](https://www.ietf.org/rfc/rfc2616.txt) and _must_ be
-    valid.
+    This instance is guaranteed to be a valid _instance_ on creation, and _should_
+    also be a valid HTTP response. However the caller should check the validity of
+    the header before returning to the client. In particular,  responses returned
+    to the client by this class _must_ be formatted according to the [HTTP/1.1
+    specification](https://www.ietf.org/rfc/rfc2616.txt) and _must_ be valid.
 
-    Parameters
+    Attributes
     ----------
 
     body: string
         The raw HTTP body returned to the client. This is `Empty` by default
         as the return string is usually built by the caller via the `getters`
-        and `setters` of `urest.http.response.HTTPResponse`.
+        and `setters` of [`HTTPResponse`][urest.http.response.HTTPResponse].
     status: urest.http.response.HTTPStatus
-        HTTP status code, which must be formed from the set
-        `urest.http.response.HTTPResponse`. Arbitrary return codes are **not**
+        HTTP status code, which must be formed from the set [`HTTPResponse`]
+        [urest.http.response.HTTPResponse]. Arbitrary return codes are **not**
         supported by this class.
     mimetype: string
-        A valid HTTP mime type. This is `Empty` by default and should be set
-        once the `body` of the `urest.http.response.HTTPResponse` has been
+        A valid HTTP mime type. This is `None` by default and should be set
+        once the `body` of the [`HTTPResponse`][urest.http.response.HTTPResponse] has been
         created.
     close: bool
         When set `True` the connection to the client will be closed by the
-        `urest.http.server.RESTServer` once the
-        `urest.http.response.HTTPResponse` has been sent. Otherwise, when set
+        [`RESTServer`][urest.http.server.RESTServer] once the
+        [`HTTPResponse`][urest.http.response.HTTPResponse] has been sent. Otherwise, when set
         to `False` this will flag to the client that the created
-        `urest.http.response.HTTPResponse` is part of a sequence to be sent
+        [`HTTPResponse`][urest.http.response.HTTPResponse] is part of a sequence to be sent
         over the same connection.
-    header:  Dictionary
+    header:  Optional[dict[str, str]]
         Raw (key, value) pairs for HTTP response header fields. This allows
-        setting of arbitrary fields by the caller, without extending/sub-
-        classing `urest.http.response.HTTPResponse`
+        setting of arbitrary fields by the caller, without extending or
+        sub-classing [`HTTPResponse`][urest.http.response.HTTPResponse].
     """
 
     ##
@@ -115,7 +126,7 @@ class HTTPResponse:
     _status: HTTPStatus
     _mimetype: Optional[str]
     _close: bool
-    _header: Optional[dict]
+    _header: Optional[dict[str, str]]
 
     ##
     ## Constructor
@@ -127,8 +138,38 @@ class HTTPResponse:
         status: HTTPStatus = HTTPStatus.OK,
         mimetype: Optional[str] = None,
         close: bool = True,
-        header: Optional[dict] = None,
+        header: Optional[dict[str, str]] = None,
     ) -> None:
+        """Encode a suitable HTTP response to send to the network client.
+
+        Parameters
+        ----------
+
+        body: string
+            The raw HTTP body returned to the client. This is `Empty` by default
+            as the return string is usually built by the caller via the `getters`
+            and `setters` of [`HTTPResponse`][urest.http.response.HTTPResponse].
+        status: urest.http.response.HTTPStatus
+            HTTP status code, which must be formed from the set [`HTTPResponse`]
+            [urest.http.response.HTTPResponse]. Arbitrary return codes are **not**
+            supported by this class.
+        mimetype: string
+            A valid HTTP mime type. This is `None` by default and should be set
+            once the `body` of the [`HTTPResponse`][urest.http.response.HTTPResponse] has been
+            created.
+        close: bool
+            When set `True` the connection to the client will be closed by the
+            [`RESTServer`][urest.http.server.RESTServer] once the
+            [`HTTPResponse`][urest.http.response.HTTPResponse] has been sent. Otherwise, when set
+            to `False` this will flag to the client that the created
+            [`HTTPResponse`][urest.http.response.HTTPResponse] is part of a sequence to be sent
+            over the same connection.
+        header:  Optional[dict[str, str]]
+            Raw (key, value) pairs for HTTP response header fields. This allows
+            setting of arbitrary fields by the caller, without extending or
+            sub-classing [`HTTPResponse`][urest.http.response.HTTPResponse].
+        """
+
         if status in HTTPStatus:
             self._status = status
         else:
@@ -172,7 +213,7 @@ class HTTPResponse:
 
     @property
     def status(self) -> HTTPStatus:
-        """A valid [`HTTPStatus][urest.http.response.HTTPStatus] representing
+        """A valid [`HTTPStatus`][urest.http.response.HTTPStatus] representing
         the current error/status code that will be returned to the client."""
         return self._status
 
@@ -196,10 +237,10 @@ class HTTPResponse:
         the content currently in the `body`, and the error code forming the
         `status` of the response to the client.
 
-        .. Note::
-          The the actual sending of this HTTP 1.1 header to the client
-          is the responsibility of the caller. This function only assists in correctly
-          forming that response
+        !!! Note
+             The the actual sending of this HTTP 1.1 header to the client
+             is the responsibility of the caller. This function only assists in
+             correctly forming that response
 
         Parameters
         ----------
@@ -209,15 +250,15 @@ class HTTPResponse:
             client. This is usually set-up indirectly by the caller as part of a network
             response to the client. As such is is usually just a pass-though from the
             dispatch call of the server. For an example see the dispatcher
-            `urest.http.server.RESTServer.dispatch_noun`.
+            [`RESTServer.dispatch_noun()`][urest.http.server.RESTServer.dispatch_noun].
 
         Returns
         -------
 
         `async`
 
-            The return type is complex, and indicates this method is expected to be run
-            as a co-routine under the `asyncio` library.
+            The return type is complex, and indicates this method is expected to
+            be run as a co-routine under the `asyncio` library.
         """
 
         # **NOTE**: This implementation should be in "match/case", but MicroPython

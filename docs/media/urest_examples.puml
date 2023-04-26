@@ -1,0 +1,51 @@
+@startuml urest_examples
+!theme vibrant
+namespace urest {
+    namespace api {
+        namespace base <<Rectangle>> {
+            abstract class APIBase {
+                - _state_attributes : dict
+                {abstract} + delete_state()
+                {abstract} + get_state()
+                {abstract} + set_state()
+                {abstract} + update_state()
+            }
+        }
+
+    }
+    namespace examples {
+        namespace echo <<Rectangle>> {
+            class EchoServer {
+                - _state_attributes : dict
+                + delete_state()
+                + get_state()
+                + set_state()
+                + update_state()
+            }
+        }
+        namespace pwmled <<Rectangle>> {
+            class PWMLED {
+                - _state_attributes : dict
+                + delete_state()
+                + get_state()
+                + set_state()
+                + update_state()
+            }
+        }
+        namespace simpleled <<Rectangle>> {
+            class SimpleLED {
+                - _state_attributes : dict
+                + delete_state()
+                + get_state()
+                + set_state()
+                + update_state()
+            }
+        }
+    }
+}
+
+urest.examples.echo.EchoServer <|-- urest.api.base.APIBase
+urest.examples.pwmled.PWMLED <|-- urest.api.base.APIBase
+urest.examples.simpleled.SimpleLED <|-- urest.api.base.APIBase
+
+@enduml

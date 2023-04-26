@@ -169,10 +169,9 @@ class RESTServer:
         `asyncio` module between Python 3.4 and Python 3.10, careful testing
         is required to ensure implementation compatibility.
 
-    Parameters
+    Attributes
     ----------
-
-    host: string
+        host: string
         A resolvable DNS host name or IP address. Note that the exact
         requirements are determined by the
         [`asyncio.BaseEventLoop.create_server`](https://docs.python.org/3.4/
@@ -206,7 +205,21 @@ class RESTServer:
         Length of time in seconds to wait for the network socket to accept a write to the
         client, before declaring failure.
 
-        **Default:** 5 seconds.
+    Methods
+    -------
+
+    * `dispatch_noun()`:
+        Handles the network request from the client, and marshals that request
+        to the appropriate handler [`APIBase`][urest.api.base.APIBase] handler further processing.
+    * `register_noun():`
+        Set-up a handler for a instance of [`APIBase`][urest.api.base.APIBase]
+        to respond to the specified noun from the network client.
+    * `start():`
+        Begin the event processing loop, responding to requests from network
+        clients.
+    * `stop:`
+        Stop processing events and responding to requests from the network
+        clients.
     """
 
     ##
@@ -229,6 +242,50 @@ class RESTServer:
         read_timeout: int = 30,
         write_timeout: int = 5,
     ) -> None:
+        """Create an instance of the `RESTServer` class to handle client
+        requests. In most cases there should only be once instance of
+        `RESTServer` in each application (i.e. `RESTServer` should be treated
+        as a singleton).
+
+        Parameters
+        ----------
+
+        host: string
+            A resolvable DNS host name or IP address. Note that the exact
+            requirements are determined by the
+            [`asyncio.BaseEventLoop.create_server`](https://docs.python.org/3.4/
+            library/asyncio-eventloop.html#asyncio.BaseEventLoop.create_server)
+            method, which should be checked carefully for implementation defined
+            limitations.
+
+            **Default:** An IPv4 sock on the local host.
+        port: integer
+            The local (server) port to bind the socket to. Note that the exact
+            requirements are determined by the [`asyncio.BaseEventLoop.create_server`](https://docs.python.org/3.4/library/asyncio-eventloop.html#asyncio.BaseEventLoop.create_server)
+            method, which should be checked carefully for implementation defined
+            limitations (e.g. extra privileges required for system ports).
+
+            **Default:** The IANA Assigned port 80 for an HTTP Server.
+        backlog: integer
+            Roughly the size of the pool of connections for the underlying
+            `socket`. Once this value has been exceeded, the tasks will be
+            suspended by the co-routine handler until the underlying `socket` can
+            clear them. Note that the size (and interpretation) of this value is
+            system dependent: see the [`socket` API](https://docs.python.org/3.4/library/socket.html#module-socket)
+            for more details.
+
+            **Default:** 5 (typically the maximum pool size allowed).
+        read_timeout: integer
+            Length of time in seconds to wait for a response from the client before declaring
+            failure.
+
+            **Default:** 30 seconds.
+        write_timeout: integer
+            Length of time in seconds to wait for the network socket to accept a write to the
+            client, before declaring failure.
+
+            **Default:** 5 seconds.
+        """
         self.host = host
         self.port = port
         self.backlog = backlog
@@ -375,15 +432,15 @@ class RESTServer:
 
         noun: string
             String representing the noun to use in the API
-
         handler: APIBase
-            Object handling the request from the client
+            Instance object handling the request from the client
 
         Raises
         ------
 
         KeyError:
-            When the handler cannot be registered
+            When the handler cannot be registered, or the `handler` is
+            not a sub-class of [`APIBase`][urest.api.base.APIBase].
         """
 
         old_handler = APIBase()
@@ -653,18 +710,20 @@ class RESTServer:
             await writer.wait_closed()
 
     async def start(self) -> None:
-        """Attach the method [`RESTServer.dispatch_noun()`][urest.http.server.R
-        ESTServer.dispatch_noun] to an `asyncio` event loop, allowing the [`RES
-        TServer.dispatch_noun()`][urest.http.server.RESTServer.dispatch_noun]
-        method to handle tasks representing network events from the client.
+        """Attach the method [`RESTServer.dispatch_noun()`]
+        [urest.http.server.RESTServer.dispatch_noun] to an `asyncio` event
+        loop, allowing the [`RESTServer.dispatch_noun()`]
+        [urest.http.server.RESTServer.dispatch_noun] method to handle tasks
+        representing network events from the client.
 
-        Most of the implementation of this method is handled by
-        [`asyncio.start_server`](https://docs.python.org/3.4/library/asyncio-stream.html# asyncio.start_server).
-        In particular the [`asyncio.start_server`](https://docs.python.org/3.4/library/asyncio-stream.html# asyncio.start_server)
+        Most of the implementation of this method is handled by [`asyncio.start_server`](https://docs.python.org/3.4/library/asyncio-stream.html# asyncio.start_server).
+        In particular the
+        [`asyncio.start_server`](https://docs.python.org/3.4/library/asyncio-stream.html# asyncio.start_server)
         method is responsible for setting up the lower-level networks socket,
         using the `host` and `port` class attributes holding the server (local)
         elements of the TCP/IP tuple. Lower level timers and queues are also
-        provided by the resolution of the [`asyncio.start_server`](https://docs.python.org/3.4/library/asyncio-stream.html# asyncio.start_server)
+        provided by the resolution of the
+        [`asyncio.start_server`](https://docs.python.org/3.4/library/asyncio-stream.html# asyncio.start_server)
         method, with the class attribute `backlog` being used to set the client
         (downstream) timeout.
         """
@@ -685,9 +744,8 @@ class RESTServer:
         termination of that loop.
 
         Most of the implementation of this method is handled by the
-        [`close`
-        method](https://docs.python.org/3.4/library/asyncio-protocol.html#asyncio.
-        BaseTransport.close) of `asyncio.BaseTransport`.
+        [`close`](https://docs.python.org/3.4/library/asyncio-protocol.html#asyncio.BaseTransport.close)
+        method of `asyncio.BaseTransport`.
         """
 
         if self._server is not None:

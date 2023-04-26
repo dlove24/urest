@@ -1,0 +1,20 @@
+,--------------------------.  ,--------------------------.   ,--------------------------.
+|EchoServer                |  |PWMLED                    |   |SimpleLED                 |
+|--------------------------|  |--------------------------|   |--------------------------|
+|- _state_attributes : dict|  |- _state_attributes : dict|   |- _state_attributes : dict|
+|+ delete_state()          |  |+ delete_state()          |   |+ delete_state()          |
+|+ get_state()             |  |+ get_state()             |   |+ get_state()             |
+|+ set_state()             |  |+ set_state()             |   |+ set_state()             |
+|+ update_state()          |  |+ update_state()          |   |+ update_state()          |
+`--------------------------'  `--------------------------'   `--------------------------'
+                                            |                                            
+                                            |                                            
+                              ,---------------------------.                              
+                              |APIBase                    |                              
+                              |---------------------------|                              
+                              |- _state_attributes : dict |                              
+                              |{abstract} + delete_state()|                              
+                              |{abstract} + get_state()   |                              
+                              |{abstract} + set_state()   |                              
+                              |{abstract} + update_state()|                              
+                              `---------------------------'                              

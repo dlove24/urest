@@ -87,11 +87,21 @@ summary::marker {
 
 /**
  ** Images. Changes to frame images in the same way as for other
- ** objects
+ ** objects.
+ **
  **/
 
 .section > p > img {
   border-color: rgb(225, 228, 229);
   border-style: solid;
   border-width: 1px;
+}
+
+/**
+ ** Code Links. Ensure consistency for boxed and un-boxed objects.
+ **
+ */
+
+.rst-content .admonition code {
+  color: rgb(48, 145, 209);
 }

@@ -21,16 +21,6 @@
 """An example of a 'noun' class, able to serve as the basis for control of an
 LED attached to a GPIO pin.
 
-Overview
---------
-
-This is a reasonably minimal example of a 'noun' class, which inherits from
-`urest.api.base.APIBase`. It also requires the `Pin` library from MicroPython:
-but should be able to be adapted to other GPIO libraries which provide a similar
-interface.
-
-For an example of an application which uses this library, see: `urest.examples.led_control`
-
 Tested Implementations
 ----------------------
 
@@ -58,6 +48,34 @@ from urest.api.base import APIBase
 
 
 class SimpleLED(APIBase):
+    """A minimal example of a 'noun' class, which inherits from
+    `urest.api.base.APIBase`. It also requires the `Pin` library from
+    MicroPython: but should be able to be adapted to other GPIO libraries which
+    provide a similar interface.
+
+    For an example of an application which uses this library, see the example
+    [`led_control`](https://github.com/dlove24/urest/blob/trunk/examples/led_control.py).
+    This class is also referred to the
+    [Creating a Network Server][creating-a-network-server] How-To.
+
+    API
+    ---
+
+    The 'noun' exposes the following internal state, with allowed values as `0`
+    or `1` for both keys.
+
+    | JSON Key  | JSON Type | Description                                                          |
+    |-----------|-----------|----------------------------------------------------------------------|
+    | `led`  | `Integer` | The _current_ state of the controlled output                            |
+
+
+    The class will attempt to set the GPIO output (assumed to be an LED, but any
+    digital output should work) to the commanded value immediately. Values
+    equivalent to `0` for `led` will result in the output being set `off`
+    ('`low`'): any other integer value will be interpreted as `1` and set the
+    input `on` ('`high`').
+    """
+
     def __init__(self, pin: Pin) -> None:
         self._gpio = Pin(pin, Pin.OUT)
         self._gpio.off()
