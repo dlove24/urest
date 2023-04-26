@@ -53,6 +53,10 @@ try:
 except ImportError:
     from urest.typing import Optional, Union  # type: ignore
 
+###
+### Enumerations
+###
+
 
 class HTTPStatus(IntEnum):
     """Enumeration defining the valid HTTP responses, and the associated
@@ -66,6 +70,11 @@ class HTTPStatus(IntEnum):
     OK = 200
     NOT_OK = 400
     NOT_FOUND = 404
+
+
+###
+### Classes
+###
 
 
 class HTTPResponse:

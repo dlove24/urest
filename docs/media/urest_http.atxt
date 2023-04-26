@@ -1,0 +1,39 @@
+                                  ,-------------------.                                             
+                                  |RESTServer         |                                             
+                                  |-------------------|                                             
+                                  |- _server          |                                             
+                                  |- dict _nouns      |                                             
+                                  |+ str host         |                                             
+                                  |+ int port         |                                             
+                                  |+ int backlog      |                                             
+                                  |+ int read_timeout |                                             
+                                  |+ int write_timeout|                                             
+                                  |                   |                                             
+                                  |- parse_data()     |                                             
+                                  |+ dispatch_noun()  |                                             
+                                  |+ register_noun()  |                                             
+                                  |+ start()          |                                             
+                                  |+ stop()           |                                             
+                                  `-------------------'                                             
+                                            |                                                       
+                                            |                                                       
+,------------.                              |                                                       
+|HTTPResponse|                              |                                                       
+|------------|                              |                                                       
+|- _status   |                              |                                                       
+|- _body     |  ,---------------.   ,--------------.   ,----------.   ,--------.   ,---------------.
+|- _mimetype |  |RESTClientError|   |RESTParseError|   |IndexError|   |KeyError|   |RESTServerError|
+|- _close    |  |---------------|   |--------------|   |----------|   |--------|   |---------------|
+|- _header   |  `---------------'   `--------------'   `----------'   `--------'   `---------------'
+|+ body      |                                               |                                      
+|+ status    |                                               |                                      
+|+ send()    |                                               |                                      
+`------------'                                               |                                      
+       |                                                     |                                      
+,-----------.                                                |                                      
+|HTTPStatus |                                                |                                      
+|-----------|                                           ,---------.                                 
+|+ OK       |                                           |Exception|                                 
+|+ NOT_OK   |                                           |---------|                                 
+|+ NOT_FOUND|                                           `---------'                                 
+`-----------'                                                                                       

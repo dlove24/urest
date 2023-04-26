@@ -21,6 +21,7 @@ plugins:
             show_signature_annotations: True
             show_category_heading: True
             show_source: True
+  - search
 
 markdown_extensions:
   - admonition
@@ -28,6 +29,7 @@ markdown_extensions:
   - md_in_html
   - pymdownx.details
   - pymdownx.superfences
+  - smarty
 
 nav:
   - Home: 'index.md'
@@ -35,11 +37,12 @@ nav:
     - 'Pico Network Server': 'tutorials/pico_server.md'
     - 'A Simple Echo Server': 'tutorials/client_test.md'
   - 'How-To':
+    - 'Creating a Network Server': 'how_to/api_server.md'
     - 'Set-Up the Pico Board': 'how_to/pico_setup.md'
     - 'Testing the Library': 'how_to/run_tests.md'
   - 'Reference':
-    - 'Creating an API': 'ref/api.md'
-    - 'Serving the API': 'ref/http.md'
+    - 'Building an API for Network Clients': 'ref/api.md'
+    - 'The uREST Server Implementation': 'ref/http.md'
     - 'Library Exceptions': 'ref/exceptions.md'
     - 'Library Utilities': 'ref/utils.md'
   - 'Background':

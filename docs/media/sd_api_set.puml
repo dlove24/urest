@@ -1,0 +1,26 @@
+@startuml sd_api_set
+participant Client
+participant "**RESTServer**" as Server
+participant "**SimpleLED**" as API
+
+box ""urest""
+participant Server
+participant API
+end box
+
+note over Client
+HTTP request includes << resource state >>
+end note
+
+Client -> Server: **PUT /LED HTTP/1.1**
+activate Server
+
+Server -> API: set_state(<< resource state >>)
+activate API
+
+API -> Server: return
+deactivate API
+
+Server -> Client: <<HTTP 200 OK>>
+deactivate Server
+@enduml

@@ -44,6 +44,32 @@ from urest.api.base import APIBase
 
 
 class EchoServer(APIBase):
+    """An example of a 'noun' class which echo's responses to the client. The
+    main use of this library is as a test: it should work on both the Pico (W)
+    boards and any 'normal' installation of Python. As such it provides very
+    little functionality, but could in principle also be used as a the basis
+    for a more useful test harness or stub.
+
+    For an example of the client part of the 'echo server', see the example
+    [`echo_server.py`](https://github.com/dlove24/urest/blob/trunk/examples/echo_server.py).
+    A full example of this class is also described in the
+    [_Simple Echo Server_][a-simple-echo-server-windows-linux-and-mac] How-To.
+
+    API
+    ---
+
+    The 'noun' exposes the following internal state
+
+    | JSON Key | JSON Type | Description                                                       |
+    |----------|-----------|-------------------------------------------------------------------|
+    | `echo`   | `Integer` | Holds the current state of the resource, determined by the client |
+
+    This state can be altered by the client sending either a `0` or `1` to the
+    `noun`: which will record the last value seen from the client. This last
+    value can then be returned to the client on request. Values greater than `1`
+    will be treated as `1` for the purposes of setting the state.
+    """
+
     def __init__(self) -> None:
         self._state = False
         self._state_attributes = {"echo": 0}

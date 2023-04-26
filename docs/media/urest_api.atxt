@@ -1,0 +1,9 @@
+,---------------------------.
+|APIBase                    |
+|---------------------------|
+|- _state_attributes : dict |
+|{abstract} + delete_state()|
+|{abstract} + get_state()   |
+|{abstract} + set_state()   |
+|{abstract} + update_state()|
+`---------------------------'

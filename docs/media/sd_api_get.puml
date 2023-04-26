@@ -1,0 +1,22 @@
+@startuml sd_api_get
+participant Client
+participant "**RESTServer**" as Server
+participant "**SimpleLED**" as API
+
+box ""urest""
+participant Server
+participant API
+end box
+
+Client -> Server: **GET /led HTTP 1.1**
+activate Server
+
+Server -> API: get_state()
+activate API
+
+API -> Server: << resource state >>
+deactivate API
+
+Server -> Client: << JSON state representation >>
+deactivate Server
+@enduml
