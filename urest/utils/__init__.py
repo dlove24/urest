@@ -25,6 +25,3 @@ which assist in the building of servers using the library.
 All code in here is strictly optional, and nothing inside the library
 should directly depend on it.
 """
-
-### Expose the `utils` helper classes
-from .network_connect import WirelessNetworkError, netcode_to_str, wireless_enable

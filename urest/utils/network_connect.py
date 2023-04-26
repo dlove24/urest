@@ -29,8 +29,8 @@ code of the C library.
 
 !!! warning "Pico W Only"
 
-    This function will _only_ work on the Pico W, and with the Pico W
-    network library. Loading this function on a Pico H, or without the Pico W
+    This module will _only_ work on the Pico W, and with the Pico W
+    network library. Loading this module on a Pico H, or without the Pico W
     network library, will result in an error.
 
 References
