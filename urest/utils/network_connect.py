@@ -20,10 +20,12 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """Utility function and exceptions which handle the network initialisation for
-the Pico W. The majority of this library is boiler-plate, and mimics the C
-library set-up required by the Pico W. For compatibility with that library (and
-the documentation) the `Exception` names in this module mirror those of the C
-library.
+the Pico W are provided by the `urest.utils.network_connect` module. The
+majority of the `urest.utils.network_connect` module is boiler-plate, and
+mimics the C library set-up required by the Pico W. For compatibility with that
+library (and the documentation) the errors enumerated by the
+[`LinkStatus`][urest.utils.network_connect.LinkStatus] mirror the names and the
+code of the C library.
 
 !!! warning "Pico W Only"
 
@@ -44,6 +46,13 @@ try:
 except ImportError:
     print("The Python type library isn't present. Ignoring.")
 
+# Import the enumerations library. Unfortunately the full version in not
+# in MicroPython yet, so this is a bit of a hack
+try:
+    from enum import IntEnum
+except ImportError:
+    from urest.enum import IntEnum  # type: ignore
+
 try:
     import time
 
@@ -58,45 +67,48 @@ except ImportError:
     print("Warning: Cannot find the network library. Ignoring")
 
 ##
-## Attributes. Taken from the Pico W C library headers
+## Enumerations. Taken from the Pico W C library headers
 ##
 
-CYW43_LINK_DOWN = const(0)
-"""Failure code indicating the wireless link is unavailable.
 
-Check the SSID is correct.
-"""
-CYW43_LINK_JOIN = const(1)
-"""Failure code indicating the SSID or password is incorrect and the specified
-SSID cannot be joined.
+class LinkStatus(IntEnum):
+    CYW43_LINK_DOWN = const(0)
+    """Failure code indicating the wireless link is unavailable.
 
-Check the SSID and password.
-"""
-CYW43_LINK_NOIP = const(2)
-"""Failure code indicating the join request was successful: but no IP address
-was returned.
+    Check the SSID is correct.
+    """
+    CYW43_LINK_JOIN = const(1)
+    """Failure code indicating the SSID or password is incorrect and the
+    specified SSID cannot be joined.
 
-Check the DHCP settings for the specified SSID
-"""
-CYW43_LINK_UP = const(3)
-"""Success code indicating a successful join, and that an IP address was
-obtained from the network."""
-CYW43_LINK_FAIL = const(-1)
-"""General failure code.
+    Check the SSID and password.
+    """
+    CYW43_LINK_NOIP = const(2)
+    """Failure code indicating the join request was successful: but no IP
+    address was returned.
 
-The link specified by the SSID is unavailable for unknown reasons.
-"""
-CYW43_LINK_NONET = const(-2)
-"""General failure code _after_ authentication.
+    Check the DHCP settings for the specified SSID
+    """
+    CYW43_LINK_UP = const(3)
+    """Success code indicating a successful join, and that an IP address was
+    obtained from the network."""
+    CYW43_LINK_FAIL = const(-1)
+    """General failure code.
 
-The authentication likely succeeded: but the subsequent attempts to
-complete the connection failed.
-"""
-CYW43_LINK_BADAUTH = const(-3)
-"""General failure code _before_ authentication.
+    The link specified by the SSID is unavailable for unknown reasons.
+    """
+    CYW43_LINK_NONET = const(-2)
+    """General failure code _after_ authentication.
 
-Check the supplied password.
-"""
+    The authentication likely succeeded: but the subsequent attempts to
+    complete the connection failed.
+    """
+    CYW43_LINK_BADAUTH = const(-3)
+    """General failure code _before_ authentication.
+
+    Check the supplied password.
+    """
+
 
 ##
 ## Exceptions
@@ -123,7 +135,7 @@ class WirelessNetworkError(Exception):
 ##
 
 
-def netcode_to_str(error_code: int) -> str:
+def netcode_to_str(error_code: LinkStatus) -> str:
     """Convert the given wireless network error code to a short string,
     indicating the possible error.
 
@@ -132,25 +144,25 @@ def netcode_to_str(error_code: int) -> str:
     displayed directly to the user, and so should indicate (at least
     minimally) where further investigation might be helpful.
     """
-    if error_code == CYW43_LINK_DOWN:
+    if error_code == LinkStatus.CYW43_LINK_DOWN:
         return "The wireless link is unavailable - check the SSID is correct"
-    elif error_code == CYW43_LINK_JOIN:
+    elif error_code == LinkStatus.CYW43_LINK_JOIN:
         return "The SSID or password is incorrect  - check the SSID and password."
-    elif error_code == CYW43_LINK_NOIP:
+    elif error_code == LinkStatus.CYW43_LINK_NOIP:
         return (
             "The join request was successful, but no IP address was returned - check"
             " the DHCP settings for the specified SSID"
         )
-    elif error_code == CYW43_LINK_UP:
+    elif error_code == LinkStatus.CYW43_LINK_UP:
         return "Successfully joined, and an IP address was obtained from the network"
-    elif error_code == CYW43_LINK_FAIL:
+    elif error_code == LinkStatus.CYW43_LINK_FAIL:
         return "The link specified by the SSID is unavailable for unknown reasons"
-    elif error_code == CYW43_LINK_NONET:
+    elif error_code == LinkStatus.CYW43_LINK_NONET:
         return (
             "The authentication likely succeeded: but the subsequent attempts to"
             " complete the connection failed"
         )
-    elif error_code == CYW43_LINK_BADAUTH:
+    elif error_code == LinkStatus.CYW43_LINK_BADAUTH:
         return (
             "General failure code before authentication - check the supplied password."
         )
@@ -161,7 +173,7 @@ def netcode_to_str(error_code: int) -> str:
 def wireless_enable(
     ssid: str,
     password: str,
-    link_light: int | str = "WL_GPIO0",
+    link_light: Union[int, str] = "WL_GPIO0",
 ) -> None:
     """Enable the default wireless interface, connecting to the networking
     using the specified `ssid` and `password`. Optionally also supply the name,
@@ -213,7 +225,7 @@ def wireless_enable(
     max_wait = 10
 
     while max_wait > 0:
-        if wlan.status() == CYW43_LINK_UP:
+        if wlan.status() == LinkStatus.CYW43_LINK_UP:
             break
 
         max_wait -= 1
@@ -221,7 +233,7 @@ def wireless_enable(
         time.sleep(1)
 
     # Handle connection error
-    if wlan.status() != CYW43_LINK_UP:
+    if wlan.status() != LinkStatus.CYW43_LINK_UP:
         msg = f"Network connection attempt failed: { netcode_to_str(wlan.status()) } (Code: {wlan.status()})"
         raise WirelessNetworkError(msg)
     else:
@@ -229,7 +241,7 @@ def wireless_enable(
         print("IP: " + wlan.ifconfig()[0])
 
     # Display the link light if connected
-    if wlan.status() == CYW43_LINK_UP:
+    if wlan.status() == LinkStatus.CYW43_LINK_UP:
         link_status.on()
     else:
         link_status.off()
