@@ -47,6 +47,7 @@ nav:
     - 'Library Utilities': 'ref/utils.md'
   - 'Background':
     - 'REST APIs': 'background/rest.md'
+    - 'Concurrent API Access': 'background/async.md'
 
 watch:
   - urest

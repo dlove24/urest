@@ -1,0 +1,103 @@
+@startuml sd_async_set
+participant "Client A" as ClientA #a8cde2
+participant "Client B" as ClientB #ffedcc
+participant "**EventLoop**" as ASync
+participant "**StreamReader**" as AReader
+participant "**StreamWriter**" as AWriter
+
+participant "**RESTServer**" as Server order 30
+participant "**HTTPResponse**" as Response order 40
+participant "**PWMLED**" as API order 50
+participant "LED" as LED order 60
+
+box ""asyncio"" module
+participant ASync
+participant AReader
+participant AWriter
+end box
+
+box ""http"" module
+participant Server
+participant Response
+end box
+
+note over ClientA
+HTTP request includes << resource state >>
+end note
+
+note over ClientB
+HTTP request includes << resource state >>
+end note
+
+Server -> ASync: start()
+activate Server
+activate ASync
+
+ClientA -> ASync: **PUT /LED HTTP/1.1**
+activate ASync #a8cde2
+
+ASync -> AReader: __init__()
+activate AReader #a8cde2
+
+ASync -> AWriter: __init__()
+activate AWriter #a8cde2
+
+ASync -> Server: dispatch_noun()
+activate Server #a8cde2
+
+Server -> Response: __init__()
+activate Response #a8cde2
+
+Server <-> AReader: HTTP << headers >>
+Server <-> Response: << headers >>
+
+Server <-> AReader: JSON << resource state >>
+
+Server -> API: set_state(<< resource state >>)
+activate API #a8cde2
+
+API -> LED: **on**
+activate LED
+
+API --> Response
+deactivate API
+
+Server -> Response: send()
+destroy Server
+
+Response -> AWriter: HTTP <<HTTP 200 OK>>
+destroy Response
+
+AWriter -> ClientA: HTTP<<HTTP 200 OK>>
+destroy AWriter
+destroy AReader
+destroy ASync
+
+ClientB -> ASync: **PUT /LED HTTP/1.1**
+activate ASync #ffedcc
+
+ASync -> AReader: __init__()
+activate AReader #ffedcc
+
+ASync -> AWriter: __init__()
+activate AWriter #ffedcc
+
+ASync -> Server: dispatch_noun()
+activate Server #ffedcc
+deactivate LED
+
+Server -> Response: __init__()
+activate Response #ffedcc
+
+Server <-> AReader: HTTP << headers >>
+Server <-> Response: << headers >>
+
+Server <-> AReader: JSON << resource state >>
+
+Server -> API: set_state(<< resource state >>)
+activate API #ffedcc
+
+API -> LED: **off**
+activate LED
+
+@enduml
