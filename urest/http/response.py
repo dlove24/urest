@@ -34,12 +34,9 @@ Standards
   * For MIME types see: https://www.iana.org/assignments/media-types/media-types.xhtml
 """
 
-# Import the Asynchronous IO Library, preferring the MicroPython library if
-# available
-try:
-    import uasyncio as asyncio
-except ImportError:
-    import asyncio
+# Import the Asynchronous IO Library. Since v1.20 of MicroPython, standard Python names
+# can be used
+import asyncio
 
 # Import the enumerations library. Unfortunately the full version in not
 # in MicroPython yet, so this is a bit of a hack
