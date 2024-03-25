@@ -37,16 +37,19 @@ Standards
   * For the JSON specification see: https://www.ecma-international.org/publications-and-standards/standards/ecma-404
 """
 
+
+# Import the Asynchronous IO Library. Since v1.20 of MicroPython, standard Python names
+# can be used
+import asyncio
+
 # Import the standard error library
 import errno
 
-# Import the Asynchronous IO Library, preferring the MicroPython library if
-# available
+# Import const support, falling back to the fake version on Python/CPython
 try:
-    import const
-    import uasyncio as asyncio
+    from micropython import const
 except ImportError:
-    import asyncio
+    from urest.const import const  # type: ignore
 
 # Import the typing support
 try:
@@ -220,6 +223,7 @@ class RESTServer:
     * `stop:`
         Stop processing events and responding to requests from the network
         clients.
+
     """
 
     ##
@@ -285,6 +289,7 @@ class RESTServer:
             client, before declaring failure.
 
             **Default:** 5 seconds.
+
         """
         self.host = host
         self.port = port
@@ -334,6 +339,7 @@ class RESTServer:
             A mapping of (key, value) pairs which defines the dictionary of the
             `data_str` object. All `key` values will be in Python string format:
             values will be as defined in the `data_str` object.
+
         """
 
         return_dictionary: dict[str, Union[str, int]] = {"": 0}
@@ -441,6 +447,7 @@ class RESTServer:
         KeyError:
             When the handler cannot be registered, or the `handler` is
             not a sub-class of [`APIBase`][urest.api.base.APIBase].
+
         """
 
         old_handler = APIBase()
@@ -495,6 +502,7 @@ class RESTServer:
         RESTClientError:
             When a handler exists, but cannot be used to service the request
             due to errors in the request from the client.
+
         """
 
         # Attempt the parse whatever rubbish the client sends, and assemble the
@@ -503,10 +511,11 @@ class RESTServer:
         try:
             # Get the raw network request and decode into UTF-8
             request_uri = await asyncio.wait_for(reader.readline(), self.read_timeout)
-            request_uri = request_uri.decode("utf8")
+
+            request_string = request_uri.decode("utf8")
 
             # Check for empty requests, and if found terminate the connection
-            if request_uri in [b"", b"\r\n"]:
+            if request_string in [b"", b"\r\n"]:
                 # DEBUG
                 if __debug__:
                     print(
@@ -517,7 +526,7 @@ class RESTServer:
             # DEBUG
             if __debug__:
                 print(
-                    f"CLIENT URI : [{writer.get_extra_info('peername')[0]}] {request_uri.strip()}",
+                    f"CLIENT URI : [{writer.get_extra_info('peername')[0]}] {request_string.strip()}",
                 )
 
             # Get the header of the request, if it is available, decoded into UTF-8
@@ -558,20 +567,21 @@ class RESTServer:
                             reader.read(request_length),
                             self.read_timeout,
                         )
-                        request_body = self._parse_data(request_data)
+                        decoded_data = request_data.decode("utf8")
+                        request_body = self._parse_data(decoded_data)
                     except IndexError as e:
                         # DEBUG
                         if __debug__:
                             print(f"!EXCEPTION!: {e}")
                             print(
-                                f"!INVALID DATA!: [{writer.get_extra_info('peername')[0]}] {request_data}",
+                                f"!INVALID DATA!: [{writer.get_extra_info('peername')[0]}] {decoded_data}",
                             )
                         request_body = {}
 
                     # DEBUG
                     if __debug__:
                         print(
-                            f"CLIENT DATA: [{writer.get_extra_info('peername')[0]}] {request_data}",
+                            f"CLIENT DATA: [{writer.get_extra_info('peername')[0]}] {decoded_data}",
                         )
                         print(
                             f"CLIENT BODY: [{writer.get_extra_info('peername')[0]}] {request_body}",
@@ -598,7 +608,7 @@ class RESTServer:
 
             # Work out the action we need to take ...
 
-            first_space = request_uri.find(" ", 0, 7)
+            first_space = request_uri.decode("utf8").find(" ", 0, 7)
 
             if first_space > HTTP_LONGEST_VERB:
                 first_space = HTTP_LONGEST_VERB
@@ -608,7 +618,7 @@ class RESTServer:
             # ... Work out the noun defining the class we need to use to resolve the
             # action ...
 
-            uri_root = request_uri.find("/", first_space)
+            uri_root = request_uri.decode("utf8").find("/", first_space)
 
             noun = ""
             start_noun = False
@@ -620,7 +630,7 @@ class RESTServer:
                     or (char in ASCII_EXTRA)
                 ):
                     start_noun = True
-                    noun = noun + char
+                    noun = noun + str(char)
                 else:
                     if start_noun:
                         break
@@ -682,7 +692,7 @@ class RESTServer:
                 pass
             else:
                 if hasattr(e, "message"):
-                    raise RESTClientError(e.message) from None
+                    raise RESTClientError(e.message) from None  # type: ignore
                 else:
                     msg = "Unknown client Error"
                     raise RESTClientError(msg) from None
@@ -737,7 +747,7 @@ class RESTServer:
             host=self.host,
             port=self.port,
             backlog=self.backlog,
-        )
+        )  # type: ignore
 
     async def stop(self) -> None:
         """Remove the tasks from an event loop, in preparation for the

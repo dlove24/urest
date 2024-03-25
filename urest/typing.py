@@ -208,6 +208,7 @@ def _overload_dummy(*args, **kwds):
 
     NotImplementedError:
         This is a stub and cannot be called directly,
+
     """
     msg = (
         "You should not call an overloaded function. "

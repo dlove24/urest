@@ -34,12 +34,9 @@ Standards
   * For MIME types see: https://www.iana.org/assignments/media-types/media-types.xhtml
 """
 
-# Import the Asynchronous IO Library, preferring the MicroPython library if
-# available
-try:
-    import uasyncio as asyncio
-except ImportError:
-    import asyncio
+# Import the Asynchronous IO Library. Since v1.20 of MicroPython, standard Python names
+# can be used
+import asyncio
 
 # Import the enumerations library. Unfortunately the full version in not
 # in MicroPython yet, so this is a bit of a hack
@@ -116,6 +113,7 @@ class HTTPResponse:
         Raw (key, value) pairs for HTTP response header fields. This allows
         setting of arbitrary fields by the caller, without extending or
         sub-classing [`HTTPResponse`][urest.http.response.HTTPResponse].
+
     """
 
     ##
@@ -168,6 +166,7 @@ class HTTPResponse:
             Raw (key, value) pairs for HTTP response header fields. This allows
             setting of arbitrary fields by the caller, without extending or
             sub-classing [`HTTPResponse`][urest.http.response.HTTPResponse].
+
         """
 
         if status in HTTPStatus:
@@ -259,6 +258,7 @@ class HTTPResponse:
 
             The return type is complex, and indicates this method is expected to
             be run as a co-routine under the `asyncio` library.
+
         """
 
         # **NOTE**: This implementation should be in "match/case", but MicroPython

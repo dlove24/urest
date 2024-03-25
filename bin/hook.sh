@@ -5,7 +5,7 @@ black .
 
 # Check the code for obvious errors/style
 # violations
-ruff check .
+ruff check urest
 
 # Check for less obvious errors using 'mypy. We don't do strict (yet)
 # as the MicroPython parser has problems with some of the needed type

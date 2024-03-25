@@ -3,6 +3,7 @@
 
 Run as: `py.test test_simple_get.py`
 """
+
 import requests
 
 IP_ADDRESS = "10.0.30.220"
