@@ -36,7 +36,7 @@ mkdocs-autorefs==0.4.1
 mkdocs-glightbox==0.3.3
 mkdocs-material==9.1.7
 mkdocs-material-extensions==1.1.1
-mkdocs_puml==1.2.0
+mkdocs_puml==1.2.4
 mkdocstrings==0.21.2
 mkdocstrings-python==0.9.0
 more-itertools==9.1.0
