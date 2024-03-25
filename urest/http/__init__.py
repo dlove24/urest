@@ -45,7 +45,7 @@ The core classes of the `HTTP` module are organised as follows. In most cases on
 the [`RESTServer`][urest.http.server.RESTServer] class will be directly used by
 library users.
 
-![Package Layout for urest.http](/media/urest_http.svg)
+![Package Layout for urest.http](../media/urest_http.svg)
 
 ## Example Implementation
 
@@ -88,7 +88,7 @@ GET /led HTTP 1.1
 
 On receiving the above request from the client, the [`RESTServer`][urest.http.server.RESTServer] instance will call the relevant methods of the [`SimpleLED`][urest.examples.simpleled.SimpleLED] (as a sub-class of [`APIBase`][urest.api.base.APIBase]) as shown in Figure 1. Note that the '`<< resource state>>`' returned by [`SimpleLED.get_state()`] [urest.examples.simpleled.SimpleLED] is as a Python `dict[str, Union[str, int]]`. The `<< headers >>` are also assumed to follow the [HTTP/1.1 specification](https://www.ietf.org/rfc/rfc2616.txt); whether read from the HTTP response itself, or stored internally by [`HTTPResponse`] [urest.http.response.HTTPResponse].
 
-![Figure 1: A Sequence Diagram for the Noun Get Request](/media/sd_http_get.svg)
+![Figure 1: A Sequence Diagram for the Noun Get Request](../media/sd_http_get.svg)
 
 **Figure 1: A Sequence Diagram for the Noun Get Request of the Example**
 
@@ -155,7 +155,7 @@ Content-Length: 11
 !!! Note "JSON is Required"
     The only format accepted by the [`RESTServer`][urest.http.server.RESTServer] for the state of the nouns is [JSON](https://www.json.org/json-en.html). The [`RESTServer`][urest.http.server.RESTServer] will also only accept a sub-set of the JSON standard: notably assuming a single object, and a collection of key/value pairs.
 
-![Figure 2: A Sequence Diagram for the Noun Set Request](/media/sd_http_set.svg)
+![Figure 2: A Sequence Diagram for the Noun Set Request](../media/sd_http_set.svg)
 
 **Figure 2: A Sequence Diagram for the Noun Set Request of the Example**
 

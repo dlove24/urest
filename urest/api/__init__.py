@@ -88,11 +88,11 @@ will **also** route to the same noun with the canonical name `led`.
 
 The [`APIBase`][urest.api.base.APIBase] class is an _abstract base class_ and provides minimal services beyond defining the core interface (or protocol) for [`RESTServer`][urest.http.server.RESTServer]. As outlined above, this interface is provided though the core class methods as shown below
 
-![API Package Structure](/media/urest_api.svg)
+![API Package Structure](../media/urest_api.svg)
 
 The API services for the network clients are then expected to be built from the _abstract base class_ of [`APIBase`][urest.api.base.APIBase]. The `urest` library provides a number of examples in the `urest.examples` package, which illustrate some way of using the library. Many of these are also used by the code in the [`examples` folder](https://github.com/dlove24/urest/tree/trunk/examples) of the source repository. The classes of the `urest.examples` package are described later, but can be conceptually defined as follows
 
-![API Package Structure](/media/urest_examples.svg)
+![API Package Structure](../media/urest_examples.svg)
 
 ## Example Usage
 
@@ -135,7 +135,7 @@ On receiving the above request from the client, the [`RESTServer`][urest.http.se
 [urest.examples.simpleled.SimpleLED] (as a sub-class of [`APIBase`][urest.api.base.APIBase]) as shown in Figure 1. Note that the '`<< resource state>>`' returned by [`SimpleLED.get_state()`]
 [urest.examples.simpleled.SimpleLED] is as a Python `dict[str, Union[str, int]]`. The full return of data to the client, including relevant HTTP headers, conversion to JSON, etc. is handeled by the [`RESTServer`][urest.http.server.RESTServer] instance.
 
-![Figure 1: A Sequence Diagram for the Noun Get Request](/media/sd_api_get.svg)
+![Figure 1: A Sequence Diagram for the Noun Get Request](../media/sd_api_get.svg)
 
 **Figure 1: A Sequence Diagram for the Noun Get Request of the Example**
 
@@ -169,7 +169,7 @@ Content-Length: 11
 !!! Note "JSON is Required"
     The only format accepted by the [`RESTServer`][urest.http.server.RESTServer] for the state of the nouns is [JSON](https://www.json.org/json-en.html). The [`RESTServer`][urest.http.server.RESTServer] will also only accept a sub-set of the JSON standard: notably assuming a single object, and a collection of key/value pairs.
 
-![Figure 2: A Sequence Diagram for the Noun Set Request](/media/sd_api_set.svg)
+![Figure 2: A Sequence Diagram for the Noun Set Request](../media/sd_api_set.svg)
 
 **Figure 2: A Sequence Diagram for the Noun Set Request of the Example**
 
