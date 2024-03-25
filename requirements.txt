@@ -9,7 +9,7 @@ charset-normalizer==3.1.0
 click==8.1.7
 colorama==0.4.6
 cryptography==42.0.5
-dnspython==2.3.0
+dnspython==2.6.1
 docformatter==1.6.1
 docutils==0.19
 exceptiongroup==1.1.1
