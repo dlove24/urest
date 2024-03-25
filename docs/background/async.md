@@ -136,7 +136,7 @@ Nonetheless, in some cases the code of the methods above will appear to work.
 For instance if we draw this interaction more clearly as a _sequence_ diagram
 for the two clients we might get Figure 1.
 
-![Example of Sequential API Access](/media/sd_async_set.svg)
+![Example of Sequential API Access](../media/sd_async_set.svg)
 
 **Figure 1: Example of 'Sequential' API Access**
 
@@ -148,7 +148,7 @@ before the LED has fully turned on?
 In that case the API _itself_ will work. But there will be clash at the
 controlled resource as shown in the sequence diagram in Figure 2.
 
-![Example of Concurrent API Access](/media/sd_async_set_conflict.svg)
+![Example of Concurrent API Access](../media/sd_async_set_conflict.svg)
 
 **Figure 2: Resource Contention in the 'Sequential' API Access**
 
