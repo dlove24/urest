@@ -3,6 +3,7 @@
 
 Run as: `py.test test_simple_update.py`
 """
+
 import requests
 
 IP_ADDRESS = "10.0.30.220"

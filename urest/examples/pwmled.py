@@ -126,7 +126,7 @@ class PWMLED(APIBase):
 
         # Set the duty cycle to maximum before we leave,
         # and release the GPIO lock
-        self._duty = 2 ** 16
+        self._duty = 2**16
         self._gpio.duty_u16(self._duty)
 
         self._gpio_lock.release()
@@ -140,7 +140,7 @@ class PWMLED(APIBase):
         # allow other co-routines to run whilst we
         # are waiting for the next step to take place
 
-        self._duty = 2 ** 16
+        self._duty = 2**16
 
         while self._duty > PWM_STEP:
             print(f"duty off: {self._duty}")
