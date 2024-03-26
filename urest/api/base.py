@@ -125,7 +125,6 @@ class APIBase:
         dict[str, Union[str, int]]
             A mapping of (key, value) pairs which defines the resource state to return to the
             client.
-
         """
 
         return self._state_attributes
@@ -145,7 +144,6 @@ class APIBase:
         state_attributes: dict[str, Union[str, int]]
             A list of (key, value) pairs representing the _full_ state of the
             resource. No merging of state is undertaken, or attempted.
-
         """
 
         if state_attributes is not None and isinstance(state_attributes, dict):
@@ -173,7 +171,6 @@ class APIBase:
             A list of (key, value) pairs representing the _partial_ state of the
             resource. The exact mechanism for merging this partial state if left
             to the implementation of the sub-classes.
-
         """
 
         if state_attributes is not None and isinstance(state_attributes, dict):

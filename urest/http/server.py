@@ -223,7 +223,6 @@ class RESTServer:
     * `stop:`
         Stop processing events and responding to requests from the network
         clients.
-
     """
 
     ##
@@ -289,7 +288,6 @@ class RESTServer:
             client, before declaring failure.
 
             **Default:** 5 seconds.
-
         """
         self.host = host
         self.port = port
@@ -339,10 +337,9 @@ class RESTServer:
             A mapping of (key, value) pairs which defines the dictionary of the
             `data_str` object. All `key` values will be in Python string format:
             values will be as defined in the `data_str` object.
-
         """
 
-        return_dictionary: dict[str, Union[str, int]] = {"": 0}
+        return_dictionary: dict[str, Union[str, int]] = {}
         parse_stack = []
         object_start = False
 
@@ -352,7 +349,7 @@ class RESTServer:
         token_type = JSON_TYPE_INT
         token_str = ""
 
-        for char in data_str.encode("ascii"):
+        for char in data_str:
             # Look for the first object
             if char in ["{"]:
                 object_start = True
@@ -447,7 +444,6 @@ class RESTServer:
         KeyError:
             When the handler cannot be registered, or the `handler` is
             not a sub-class of [`APIBase`][urest.api.base.APIBase].
-
         """
 
         old_handler = APIBase()
@@ -608,22 +604,24 @@ class RESTServer:
 
             # Work out the action we need to take ...
 
-            first_space = request_uri.decode("utf8").find(" ", 0, 7)
+            request_string = request_uri.decode("utf8").strip()
+
+            first_space = request_string.find(" ", 0, 7)
 
             if first_space > HTTP_LONGEST_VERB:
                 first_space = HTTP_LONGEST_VERB
 
-            verb = request_uri[0:first_space].upper()
+            verb = request_string[0:first_space].upper()
 
             # ... Work out the noun defining the class we need to use to resolve the
             # action ...
 
-            uri_root = request_uri.decode("utf8").find("/", first_space)
+            uri_root = request_string.find("/", first_space)
 
             noun = ""
             start_noun = False
 
-            for char in request_uri[uri_root:]:
+            for char in request_string[uri_root:]:
                 if (
                     (char in ASCII_UPPERCASE)
                     or (char in ASCII_DIGITS)
@@ -673,7 +671,9 @@ class RESTServer:
 
             else:
                 # Clearly not one of ours
-                response.body = "<http><body><p>Invalid Request</p></body></http>"
+                response.body = (
+                    "<http><body><p>Invalid Method in Request</p></body></http>"
+                )
                 response.status = HTTPStatus.NOT_OK
 
             await response.send(writer)

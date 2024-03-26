@@ -113,7 +113,6 @@ class HTTPResponse:
         Raw (key, value) pairs for HTTP response header fields. This allows
         setting of arbitrary fields by the caller, without extending or
         sub-classing [`HTTPResponse`][urest.http.response.HTTPResponse].
-
     """
 
     ##
@@ -166,7 +165,6 @@ class HTTPResponse:
             Raw (key, value) pairs for HTTP response header fields. This allows
             setting of arbitrary fields by the caller, without extending or
             sub-classing [`HTTPResponse`][urest.http.response.HTTPResponse].
-
         """
 
         if status in HTTPStatus:
@@ -258,7 +256,6 @@ class HTTPResponse:
 
             The return type is complex, and indicates this method is expected to
             be run as a co-routine under the `asyncio` library.
-
         """
 
         # **NOTE**: This implementation should be in "match/case", but MicroPython
