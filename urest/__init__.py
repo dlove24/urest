@@ -191,4 +191,5 @@ Putting the above together, a minimal main loop looks something like
 
 An example of a small application which uses the above pattern can be found in
 the _Examples_ section as `urest.examples.led_control`
+
 """

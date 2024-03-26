@@ -38,6 +38,7 @@ References
 
 * [Raspberry Pi Pico Python SDK](https://datasheets.raspberrypi.com/pico/raspberry-pi-pico-python-sdk.pdf)
 * [Connecting to the Internet with Raspberry Pi Pico W, Chapter 3, Section 3.6](https://datasheets.raspberrypi.com/picow/connecting-to-the-internet-with-pico-w.pdf)
+
 """
 
 # Import the Python type libraries if available
@@ -206,6 +207,7 @@ def wireless_enable(
         The name (`int` or `str`) for the `link_light` is invalid, and a `Pin` with this name cannot be created.
     WirelessNetworkError
         The network named `ssid` cannot be joined with the specified `password`. See the exact `msg` of the `Exception` to determine whether this is a temporary (and may be retried) or a permanent error.
+
     """
 
     # Set-up the link status LED

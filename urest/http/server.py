@@ -223,6 +223,7 @@ class RESTServer:
     * `stop:`
         Stop processing events and responding to requests from the network
         clients.
+
     """
 
     ##
@@ -288,6 +289,7 @@ class RESTServer:
             client, before declaring failure.
 
             **Default:** 5 seconds.
+
         """
         self.host = host
         self.port = port
@@ -337,6 +339,7 @@ class RESTServer:
             A mapping of (key, value) pairs which defines the dictionary of the
             `data_str` object. All `key` values will be in Python string format:
             values will be as defined in the `data_str` object.
+
         """
 
         return_dictionary: dict[str, Union[str, int]] = {}
@@ -444,6 +447,7 @@ class RESTServer:
         KeyError:
             When the handler cannot be registered, or the `handler` is
             not a sub-class of [`APIBase`][urest.api.base.APIBase].
+
         """
 
         old_handler = APIBase()
