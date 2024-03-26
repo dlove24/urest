@@ -29,10 +29,11 @@ This version is written for MicroPython 3.4, and has been tested on:
 * Raspberry Pi Pico W
 """
 
-# Import the Asynchronous IO Library, preferring the MicroPython library if
-# available
+# Import the Asynchronous IO Library
+import asyncio
+
+# Import the MicroPython library machine support library if available
 try:
-    import uasyncio as asyncio
     from machine import PWM, Pin
 except ImportError:
     print("Ignoring MicroPython include: machine")
@@ -43,7 +44,7 @@ try:
 except ImportError:
     from urest.typing import Union  # type: ignore
 
-
+# Import the Interface Class for the server API
 from urest.api.base import APIBase
 
 PWM_STEP = 6550
@@ -120,7 +121,7 @@ class PWMLED(APIBase):
             self._duty += PWM_STEP
             self._gpio.duty_u16(self._duty)
 
-            await asyncio.sleep_ms(1000)
+            await asyncio.sleep_ms(1000)  # type: ignore
 
         self._state_attributes["current"] = 1
 
@@ -148,7 +149,7 @@ class PWMLED(APIBase):
             self._duty -= PWM_STEP
             self._gpio.duty_u16(self._duty)
 
-            await asyncio.sleep_ms(1000)
+            await asyncio.sleep_ms(1000)  # type: ignore
 
         self._state_attributes["current"] = 0
 
@@ -168,11 +169,11 @@ class PWMLED(APIBase):
             if self._state_attributes["desired"] == 0:
                 self._state_attributes["current"] = 1
 
-                loop.create_task(self._slow_off())
+                loop.create_task(self._slow_off())  # noqa: RUF006
             else:
                 self._state_attributes["current"] = 0
 
-                loop.create_task(self._slow_on())
+                loop.create_task(self._slow_on())  # noqa: RUF006
 
         except KeyError:
             # On exception try to return to a known good
@@ -204,9 +205,9 @@ class PWMLED(APIBase):
             self._state_attributes["desired"] = 1
             self._state_attributes["current"] = 0
 
-            loop.create_task(self._slow_on())
+            loop.create_task(self._slow_on())  # noqa: RUF006
         else:
             self._state_attributes["desired"] = 0
             self._state_attributes["current"] = 1
 
-            loop.create_task(self._slow_off())
+            loop.create_task(self._slow_off())  # noqa: RUF006
