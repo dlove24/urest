@@ -1,5 +1,5 @@
 attrs==23.2.0
-Babel==2.14.0
+Babel==2.15.0
 beautifulsoup4==4.12.3
 black==24.4.2
 bleach==6.1.0
