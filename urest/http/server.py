@@ -612,8 +612,7 @@ class RESTServer:
 
             first_space = request_string.find(" ", 0, 7)
 
-            if first_space > HTTP_LONGEST_VERB:
-                first_space = HTTP_LONGEST_VERB
+            first_space = min(first_space, HTTP_LONGEST_VERB)
 
             verb = request_string[0:first_space].upper()
 
