@@ -67,9 +67,6 @@ line-length = 110
 # Allow unused variables when underscore-prefixed.
 lint.dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 
-# Handle modules slightly differently
-lint.ignore-init-module-imports = true
-
 # Assume Python 3.10.
 target-version = "py310"
 

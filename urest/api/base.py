@@ -177,9 +177,9 @@ class APIBase:
         """
 
         if state_attributes is not None and isinstance(state_attributes, dict):
-            for key in state_attributes:
+            for key, value in state_attributes.items():
                 try:
-                    self._state_attributes[key] = state_attributes[key]
+                    self._state_attributes[key] = value
                 except KeyError:
                     self._state_attributes[key] = ""
         else:
