@@ -23,6 +23,11 @@ except NameError:
     print("Cannot initalise the API")
 
 if __name__ == "__main__":
+    background_tasks = set()
     loop = asyncio.new_event_loop()
-    loop.create_task(app.start())
+
+    # Create and add a task to the asyncio set
+    task = loop.create_task(app.start())
+    background_tasks.add(task)
+
     loop.run_forever()
